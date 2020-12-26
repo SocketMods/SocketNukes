@@ -1,0 +1,31 @@
+modLoader="javafml"
+loaderVersion="[35,)"
+license="MIT License"
+issueTrackerURL="https://github.com/SocketMods/SocketNukes/issues"
+
+[[mods]]
+modId="socketnukes"
+version="${file.jarVersion}"
+displayName="SocketNukes"
+#updateJSONURL=""
+displayURL="https://socketsmod.dev/"
+#logoFile="examplemod.png"
+credits="Calclavia for the original ICBM mod, BuiltBrokenModding for their ICBM-Classic continuation"
+authors="The team at SocketMods"
+description='''
+Boom goes the bombs and the missiles!
+'''
+
+[[dependencies.socketnukes]]
+    modId="forge"
+    mandatory=true
+    versionRange="[35,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.socketnukes]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.16.4,1.17)"
+    ordering="NONE"
+    side="BOTH"
