@@ -30,6 +30,7 @@ public class DataGen {
         LOGGER.info(DATAGEN, "Gathering data providers");
         DataGenerator generator = event.getGenerator();
         if(event.includeServer()){
+            LOGGER.info(DATAGEN, "Adding data providers for server data");
             generator.addProvider(new RecipeProviders(generator));
             generator.addProvider(new AdvancementsProvider(generator));
             generator.addProvider(new GLMProvider(generator));
@@ -42,6 +43,7 @@ public class DataGen {
         }
 
         if(event.includeClient()){
+            LOGGER.info(DATAGEN, "Adding data providers for client assets");
             generator.addProvider(new BlockModelProviders(generator, event.getExistingFileHelper()));
             generator.addProvider(new ItemModelProviders(generator, event.getExistingFileHelper()));
             generator.addProvider(new EnUsLangProvider(generator));

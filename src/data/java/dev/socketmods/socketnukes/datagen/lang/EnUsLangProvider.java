@@ -7,8 +7,8 @@ import net.minecraftforge.common.data.LanguageProvider;
 public class EnUsLangProvider extends LanguageProvider {
 
 
-    public EnUsLangProvider(DataGenerator gen) {
-        super(gen, SocketNukes.MODID, "en_us");
+    public EnUsLangProvider(DataGenerator generatorIn) {
+        super(generatorIn, SocketNukes.MODID, "en_us");
     }
 
     @Override

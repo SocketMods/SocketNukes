@@ -8,8 +8,8 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 public class ItemModelProviders extends ItemModelProvider {
 
 
-    public ItemModelProviders(DataGenerator generator, ExistingFileHelper existingFileHelper) {
-        super(generator, SocketNukes.MODID, existingFileHelper);
+    public ItemModelProviders(DataGenerator generatorIn, ExistingFileHelper existingFileHelper) {
+        super(generatorIn, SocketNukes.MODID, existingFileHelper);
     }
 
     @Override

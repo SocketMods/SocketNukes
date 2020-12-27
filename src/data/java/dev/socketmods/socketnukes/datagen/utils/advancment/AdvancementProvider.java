@@ -43,8 +43,6 @@ public abstract class AdvancementProvider implements IDataProvider {
 
       }
     });
-
-
   }
 
   protected abstract void registerAdvancement(Consumer<Advancement> consumer);
