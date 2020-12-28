@@ -7,7 +7,6 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 
 public class ItemModelProviders extends ItemModelProvider {
 
-
     public ItemModelProviders(DataGenerator generatorIn, ExistingFileHelper existingFileHelper) {
         super(generatorIn, SocketNukes.MODID, existingFileHelper);
     }

@@ -7,8 +7,8 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 
 public class BlockModelProviders extends BlockModelProvider {
 
-    public BlockModelProviders(DataGenerator generator, ExistingFileHelper existingFileHelper) {
-        super(generator, SocketNukes.MODID, existingFileHelper);
+    public BlockModelProviders(DataGenerator generatorIn, ExistingFileHelper existingFileHelper) {
+        super(generatorIn, SocketNukes.MODID, existingFileHelper);
     }
 
     @Override

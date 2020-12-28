@@ -6,7 +6,6 @@ import net.minecraftforge.common.data.GlobalLootModifierProvider;
 
 public class GLMProvider extends GlobalLootModifierProvider {
 
-
     public GLMProvider(DataGenerator generatorIn) {
         super(generatorIn, SocketNukes.MODID);
     }

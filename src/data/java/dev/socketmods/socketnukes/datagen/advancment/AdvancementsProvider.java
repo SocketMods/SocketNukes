@@ -7,6 +7,7 @@ import net.minecraft.data.DataGenerator;
 import java.util.function.Consumer;
 
 public class AdvancementsProvider extends AdvancementProvider {
+
     public AdvancementsProvider(DataGenerator generatorIn) {
         super(generatorIn);
     }
