@@ -1,0 +1,62 @@
+import java.nio.file.Paths
+
+/**
+ *  Generates package-info.java for appropriate packages
+ *
+ *  Based on: https://stackoverflow.com/a/40091450
+ */
+task generatePackageInfos() {
+    group = "utility"
+    description = "Generates package-info.java for all packages"
+
+    outputs.upToDateWhen { false }
+
+    doLast {
+        // TODO: Base off of SourceSets rather than hardcoded paths
+        def sourceDirectories = [
+                file(Paths.get(projectDir.absolutePath, "src", "main", "java")),
+                file(Paths.get(projectDir.absolutePath, "src", "data", "java")),
+        ]
+
+        sourceDirectories.forEach { sourceDirectory ->
+            sourceDirectory.eachDirRecurse { directory ->
+                // If file contains java source files
+                def files = directory.list { _, name -> name.endsWith(".java") }
+                if (files == null || files.size() == 0) return
+
+                println "[PackageInfo] Visiting: $directory"
+
+                // And package-info.java doesn't exist
+                def packageInfo = new File(directory, "package-info.java")
+                if (packageInfo.exists()) return
+
+                // Create package-info.java
+                println "[PackageInfo] Creating: $packageInfo"
+                packageInfo.write(generatePackageInfo(getPackageName(sourceDirectory, directory)))
+            }
+        }
+    }
+}
+
+static String generatePackageInfo(String packageName) {
+    return """@MethodsReturnNonnullByDefault
+             |@ParametersAreNonnullByDefault
+             |package $packageName;
+             |
+             |import javax.annotation.ParametersAreNonnullByDefault;
+             |
+             |import mcp.MethodsReturnNonnullByDefault;""".stripMargin()
+}
+
+static String getPackageName(File root, File current) {
+    def src = root.absolutePath
+    def cur = current.absolutePath
+
+    def prefix = cur.indexOf(src)
+    def result = cur.substring(prefix + src.size()).replace("\\", "/")
+
+    result = result.replace("/", ".")
+    if (result.startsWith(".")) result = result.substring(1)
+
+    return result
+}
