@@ -1,17 +1,20 @@
 package dev.socketmods.socketnukes.registry;
 
 import dev.socketmods.socketnukes.SocketNukes;
+import dev.socketmods.socketnukes.item.SocketItems;
+import dev.socketmods.socketnukes.item.util.ExploderItem;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.*;
 
 import java.util.function.Supplier;
 
-@ObjectHolder(SocketNukes.MODID)
+//@ObjectHolder(SocketNukes.MODID)
 public class SNRegistry {
 
     /***********************************************
@@ -34,12 +37,13 @@ public class SNRegistry {
             new RegistryBuilder<ExtendedExplosionType>().setMaxID(Integer.MAX_VALUE - 1).onAdd((owner, stage, id, obj, old) -> SocketNukes.LOGGER.info("ExplosionType Added: " + id + " "))
     );
 
-
     /***********************************************
      *          Registry Object Instances          *
      * Class is ObjectHolder, so make these names  *
      *         correspond to registry names.       *
      ***********************************************/
+
+    public static final RegistryObject<Item> EXPLODER_ITEM = ITEMS.register("exploder_item", () -> new ExploderItem(SocketItems.EXPLODER_PROPERTIES));
 
 
     public static void initialize() {

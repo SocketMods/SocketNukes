@@ -29,20 +29,30 @@ public class ExtendedExplosionType extends ForgeRegistryEntry<ExtendedExplosionT
 
     // Blocks that are known to be immune to this explosion
     private List<Block> immuneBlocks;
+    private List<Block> getImmuneBlocks() { return immuneBlocks; }
+    private void setImmuneBlocks(List<Block> blocks) { this.immuneBlocks = blocks; }
 
     // For conventional circular-crater explosions, this is the distance from the explosive to the outer edge of the crater.
     private int radius;
+    private int getRadius() { return radius; }
+    private void setRadius(int radius) { this.radius = radius; }
 
     // For explosives that don't use conventional "big boom" damage, they can specify their own.
     // eg. napalm bombs cause fire damage
     private DamageSource damageSource;
+    private DamageSource getDamageSource() { return damageSource; }
+    private void setDamageSource(DamageSource source) { this.damageSource = source; }
 
     // For explosives that totally annihilate the area, return false.
     // Analogous to Explosion.Mode.BREAK/DESTROY
     private boolean doBlocksDrop;
+    private boolean getDoBlocksDrop() { return doBlocksDrop; }
+    private void setDoBlocksDrop(boolean newBlocksDrop) { this.doBlocksDrop = newBlocksDrop; }
 
     // Large explosions may require multiple "stages" of explosion, in order to avoid thrashing the server.
     private int explosionStages;
+    private int getExplosionStages() { return explosionStages; }
+    private void setExplosionStages(int stages) { this.explosionStages = stages; }
 
     public ExtendedExplosionType(int blastRadius, List<Block> immuneBlocks, int stages, DamageSource damage, boolean annihilateMode) {
         this.immuneBlocks = immuneBlocks;
