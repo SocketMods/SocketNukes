@@ -12,4 +12,9 @@ public class FluidTagsProviders extends FluidTagsProvider {
     public FluidTagsProviders(DataGenerator generatorIn, @Nullable ExistingFileHelper existingFileHelper) {
         super(generatorIn, SocketNukes.MODID, existingFileHelper);
     }
+
+    @Override
+    protected void registerTags() {
+
+    }
 }

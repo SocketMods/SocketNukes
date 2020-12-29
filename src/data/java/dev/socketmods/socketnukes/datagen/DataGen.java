@@ -21,7 +21,7 @@ import org.apache.logging.log4j.MarkerManager;
 
 import static dev.socketmods.socketnukes.SocketNukes.LOGGER;
 
-@Mod.EventBusSubscriber(modid = SocketNukes.MODID)
+@Mod.EventBusSubscriber(modid = SocketNukes.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class DataGen {
     public static final Marker DATAGEN = MarkerManager.getMarker("DATAGEN");
 
@@ -49,4 +49,5 @@ public class DataGen {
             generator.addProvider(new EnUsLangProvider(generator));
         }
     }
+
 }

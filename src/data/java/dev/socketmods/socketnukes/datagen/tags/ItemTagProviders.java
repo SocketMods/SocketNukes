@@ -13,4 +13,9 @@ public class ItemTagProviders extends ItemTagsProvider {
     public ItemTagProviders(DataGenerator generatorIn, BlockTagsProvider blockTagProvider, @Nullable ExistingFileHelper existingFileHelper) {
         super(generatorIn, blockTagProvider, SocketNukes.MODID, existingFileHelper);
     }
+
+    @Override
+    protected void registerTags() {
+
+    }
 }
