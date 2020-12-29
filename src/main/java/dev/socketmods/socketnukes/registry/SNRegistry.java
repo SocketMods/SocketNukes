@@ -14,7 +14,6 @@ import net.minecraftforge.registries.*;
 
 import java.util.function.Supplier;
 
-//@ObjectHolder(SocketNukes.MODID)
 public class SNRegistry {
 
     /***********************************************
@@ -39,8 +38,6 @@ public class SNRegistry {
 
     /***********************************************
      *          Registry Object Instances          *
-     * Class is ObjectHolder, so make these names  *
-     *         correspond to registry names.       *
      ***********************************************/
 
     public static final RegistryObject<Item> EXPLODER_ITEM = ITEMS.register("exploder_item", () -> new ExploderItem(SocketItems.EXPLODER_PROPERTIES));
