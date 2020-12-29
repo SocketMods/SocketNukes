@@ -6,7 +6,6 @@ import dev.socketmods.socketnukes.datagen.blockmodel.BlockModelProviders;
 import dev.socketmods.socketnukes.datagen.global_loot_modifier.GLMProvider;
 import dev.socketmods.socketnukes.datagen.itemmodel.ItemModelProviders;
 import dev.socketmods.socketnukes.datagen.lang.EnUsLangProvider;
-import dev.socketmods.socketnukes.datagen.lang.HeIlLangProvider;
 import dev.socketmods.socketnukes.datagen.loot_tables.LootTableProviders;
 import dev.socketmods.socketnukes.datagen.recipes.RecipeProviders;
 import dev.socketmods.socketnukes.datagen.tags.BlockTagProviders;
@@ -48,7 +47,6 @@ public class DataGen {
             generator.addProvider(new BlockModelProviders(generator, event.getExistingFileHelper()));
             generator.addProvider(new ItemModelProviders(generator, event.getExistingFileHelper()));
             generator.addProvider(new EnUsLangProvider(generator));
-            generator.addProvider(new HeIlLangProvider(generator));
         }
     }
 
