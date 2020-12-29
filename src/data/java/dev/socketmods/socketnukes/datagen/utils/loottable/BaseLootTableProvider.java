@@ -37,9 +37,9 @@ public abstract class BaseLootTableProvider extends LootTableProvider {
   public static Map<ResourceLocation, LootTable> tables = new HashMap<>();
   protected final DataGenerator generator;
 
-  public BaseLootTableProvider(DataGenerator dataGeneratorIn) {
-    super(dataGeneratorIn);
-    this.generator = dataGeneratorIn;
+  public BaseLootTableProvider(DataGenerator generatorIn) {
+    super(generatorIn);
+    this.generator = generatorIn;
   }
 
   protected abstract void addTables();
@@ -76,7 +76,7 @@ public abstract class BaseLootTableProvider extends LootTableProvider {
       try {
         IDataProvider.save(GSON, cache, LootTableManager.toJson(lootTable), path);
       } catch (IOException e) {
-        LOGGER.error("Couldn't write loot table {}", path, (Object) e);
+        LOGGER.error("Couldn't write loot table {}", path, e);
       }
     });
   }

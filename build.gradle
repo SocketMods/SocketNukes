@@ -13,6 +13,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.ajoberstar.grgit'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
+apply from: 'utils/package-info.gradle'
 
 version = getVersion()
 println('Mod version: ' + version)
@@ -29,7 +30,10 @@ sourceSets {
     }
 }
 
-println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+println('Java: ' + System.getProperty('java.version') +
+        ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ')' +
+        ' Arch: ' + System.getProperty('os.arch'))
+
 minecraft {
     mappings channel: mappings_channel, version: mappings_version
 
