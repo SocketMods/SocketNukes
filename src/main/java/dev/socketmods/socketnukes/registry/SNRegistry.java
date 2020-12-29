@@ -7,9 +7,9 @@ import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.ObjectHolder;
+import net.minecraftforge.registries.*;
+
+import java.util.function.Supplier;
 
 @ObjectHolder(SocketNukes.MODID)
 public class SNRegistry {
@@ -24,13 +24,22 @@ public class SNRegistry {
     public static final DeferredRegister<TileEntityType<?>> TETYPES = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, SocketNukes.MODID);
     public static final DeferredRegister<ContainerType<?>> CONTAINERTYPES = DeferredRegister.create(ForgeRegistries.CONTAINERS, SocketNukes.MODID);
 
+    public static final DeferredRegister<ExtendedExplosionType> EXPLOSIONS = DeferredRegister.create(ExtendedExplosionType.class, SocketNukes.MODID);
+
+    /***********************************************
+     *            SocketNukes Registries           *
+     **********************************************/
+
+    public static Supplier<IForgeRegistry<ExtendedExplosionType>> EXPLOSION_TYPE_REGISTRY = EXPLOSIONS.makeRegistry("explosion_types", () ->
+            new RegistryBuilder<ExtendedExplosionType>().setMaxID(Integer.MAX_VALUE - 1).onAdd((owner, stage, id, obj, old) -> SocketNukes.LOGGER.info("ExplosionType Added: " + id + " "))
+    );
+
+
     /***********************************************
      *          Registry Object Instances          *
      * Class is ObjectHolder, so make these names  *
      *         correspond to registry names.       *
      ***********************************************/
-
-
 
 
     public static void initialize() {
@@ -39,5 +48,6 @@ public class SNRegistry {
         BLOCKS.register(modBus);
         TETYPES.register(modBus);
         CONTAINERTYPES.register(modBus);
+        EXPLOSIONS.register(modBus);
     }
 }
