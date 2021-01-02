@@ -7,11 +7,11 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class EssentialsRecipe implements ICommonRecipe {
+public abstract class SNRecipe implements ICommonRecipe {
   protected ResourceLocation id;
   protected IRecipeType<?> recipeType;
 
-  public EssentialsRecipe(ResourceLocation id, IRecipeType<?> recipeType) {
+  public SNRecipe(ResourceLocation id, IRecipeType<?> recipeType) {
     this.id = id;
     this.recipeType = recipeType;
   }

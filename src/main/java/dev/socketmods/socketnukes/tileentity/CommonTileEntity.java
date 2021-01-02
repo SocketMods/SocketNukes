@@ -13,13 +13,13 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 
-public abstract class EssentialsCommonTileEntity extends TileEntity {
+public abstract class CommonTileEntity extends TileEntity {
 
   protected ItemStackHandler itemHandler;
 
   protected LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemHandler);
 
-  public EssentialsCommonTileEntity(TileEntityType<?> tileEntityTypeIn) {
+  public CommonTileEntity(TileEntityType<?> tileEntityTypeIn) {
     super(tileEntityTypeIn);
     itemHandler = createHandler();
   }

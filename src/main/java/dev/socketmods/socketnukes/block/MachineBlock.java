@@ -1,13 +1,12 @@
 package dev.socketmods.socketnukes.block;
 
-import dev.socketmods.socketnukes.tileentity.EssentialsCommonTileEntity;
-import dev.socketmods.socketnukes.tileentity.EssentialsMachineTileEntity;
+import dev.socketmods.socketnukes.tileentity.CommonTileEntity;
+import dev.socketmods.socketnukes.tileentity.MachineTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -28,9 +27,9 @@ import net.minecraftforge.items.IItemHandler;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public abstract class EssentialsMachineBlock extends EssentialsCommonMachineBlock {
+public abstract class MachineBlock extends CommonMachineBlock {
 
-  public EssentialsMachineBlock(Properties properties) {
+  public MachineBlock(Properties properties) {
     super(properties);
   }
 
@@ -55,7 +54,7 @@ public abstract class EssentialsMachineBlock extends EssentialsCommonMachineBloc
   public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
     if (!state.isIn(newState.getBlock())) {
       TileEntity te = worldIn.getTileEntity(pos);
-      if (te instanceof EssentialsCommonTileEntity) {
+      if (te instanceof CommonTileEntity) {
         LazyOptional<IItemHandler> inventory = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
         if (inventory.isPresent()) {
           dropInventoryItems(worldIn, pos, inventory.resolve().get());
@@ -70,8 +69,8 @@ public abstract class EssentialsMachineBlock extends EssentialsCommonMachineBloc
   public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
     if (!worldIn.isRemote) {
       TileEntity tile = worldIn.getTileEntity(pos);
-      if (tile instanceof EssentialsMachineTileEntity) {
-        EssentialsMachineTileEntity CommonTe = (EssentialsMachineTileEntity) tile;
+      if (tile instanceof MachineTileEntity) {
+        MachineTileEntity CommonTe = (MachineTileEntity) tile;
         NetworkHooks.openGui((ServerPlayerEntity) player, CommonTe, tile.getPos());
       } else {
         throw new IllegalStateException("Missing Container provider");

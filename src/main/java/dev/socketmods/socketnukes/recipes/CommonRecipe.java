@@ -11,7 +11,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
-public abstract class CommonRecipe extends EssentialsRecipe {
+public abstract class CommonRecipe extends SNRecipe {
 
   protected final NonNullList<ItemStack> result;
   protected final NonNullList<Ingredient> ingredients;

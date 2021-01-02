@@ -24,7 +24,7 @@ import net.minecraftforge.items.wrapper.RecipeWrapper;
 import javax.annotation.Nullable;
 import java.util.Set;
 
-public abstract class EssentialsMachineTileEntity<T extends IRecipe<?>> extends EssentialsRecipeTileEntity<T> implements ITickableTileEntity, INamedContainerProvider {
+public abstract class MachineTileEntity<T extends IRecipe<?>> extends RecipeTileEntity<T> implements ITickableTileEntity, INamedContainerProvider {
 
   protected int burnTime;
   protected int cookingTime;
@@ -38,13 +38,13 @@ public abstract class EssentialsMachineTileEntity<T extends IRecipe<?>> extends 
     public int get(int index) {
       switch (index) {
         case 0:
-          return EssentialsMachineTileEntity.this.isBurning() ? EssentialsMachineTileEntity.this.burnTime : 0;
+          return MachineTileEntity.this.isBurning() ? MachineTileEntity.this.burnTime : 0;
         case 1:
-          return EssentialsMachineTileEntity.this.cookingTime;
+          return MachineTileEntity.this.cookingTime;
         case 2:
-          return EssentialsMachineTileEntity.this.cookingTimeTotal;
+          return MachineTileEntity.this.cookingTimeTotal;
         case 3:
-          return EssentialsMachineTileEntity.this.recipeUsed;
+          return MachineTileEntity.this.recipeUsed;
         default:
           throw new IllegalArgumentException("Invalid index: " + index);
       }
@@ -62,7 +62,7 @@ public abstract class EssentialsMachineTileEntity<T extends IRecipe<?>> extends 
   };
 
 
-  public EssentialsMachineTileEntity(TileEntityType<?> tileEntityTypeIn, IRecipeType<?> recipeType) {
+  public MachineTileEntity(TileEntityType<?> tileEntityTypeIn, IRecipeType<?> recipeType) {
     super(tileEntityTypeIn, recipeType);
   }
 

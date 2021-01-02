@@ -17,9 +17,9 @@ import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 
-public abstract class EssentialsCommonMachineBlock extends Block {
+public abstract class CommonMachineBlock extends Block {
 
-  public EssentialsCommonMachineBlock(Properties properties) {
+  public CommonMachineBlock(Properties properties) {
     super(properties);
   }
 

@@ -21,11 +21,11 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public abstract class EssentialsRecipeTileEntity<T extends IRecipe<?>> extends EssentialsCommonTileEntity {
+public abstract class RecipeTileEntity<T extends IRecipe<?>> extends CommonTileEntity {
 
   protected IRecipeType<?> type;
 
-  public EssentialsRecipeTileEntity(TileEntityType<?> tileEntityTypeIn, IRecipeType<?> recipeType) {
+  public RecipeTileEntity(TileEntityType<?> tileEntityTypeIn, IRecipeType<?> recipeType) {
     super(tileEntityTypeIn);
     type = recipeType;
   }
