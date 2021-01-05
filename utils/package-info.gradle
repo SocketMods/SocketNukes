@@ -41,6 +41,11 @@ task generatePackageInfos() {
     }
 }
 
+// Always generate the package-infos when any of the javas
+tasks.withType(JavaCompile) {
+    dependsOn generatePackageInfos
+}
+
 static String generatePackageInfo(String packageName) {
     return """@MethodsReturnNonnullByDefault
              |@ParametersAreNonnullByDefault
