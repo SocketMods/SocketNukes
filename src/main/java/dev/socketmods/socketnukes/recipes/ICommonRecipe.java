@@ -7,28 +7,25 @@ import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 public interface ICommonRecipe extends IRecipe<RecipeWrapper> {
 
-  @Override
-  default boolean canFit(int width, int height) {
-    return false;
-  }
+    @Override
+    default boolean canFit(int width, int height) {
+        return false;
+    }
 
-  int getTimer();
+    int getTimer();
 
-  NonNullList<ItemStack> getOutput();
+    NonNullList<ItemStack> getOutput();
 
-  float getXp();
+    float getXp();
 
-  /**
-   * Use the NonNullList Version {@link ICommonRecipe#getOutput()}
-   *
-   * @return
-   */
-  @Deprecated
-  @Override
-  ItemStack getRecipeOutput();
+    /**
+     * Use the NonNullList Version {@link ICommonRecipe#getOutput()}
+     */
+    @Deprecated
+    @Override
+    ItemStack getRecipeOutput();
 
-  @Deprecated
-  @Override
-  ItemStack getCraftingResult(RecipeWrapper inv);
-
+    @Deprecated
+    @Override
+    ItemStack getCraftingResult(RecipeWrapper inv);
 }

@@ -29,76 +29,73 @@ import java.util.Random;
 
 public abstract class MachineBlock extends CommonMachineBlock {
 
-  public MachineBlock(Properties properties) {
-    super(properties);
-  }
+    public MachineBlock(Properties properties) {
+        super(properties);
+    }
 
-  @Override
-  protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-    builder.add(BlockStateProperties.FACING);
-    builder.add(BlockStateProperties.LIT);
-    super.fillStateContainer(builder);
-  }
+    @Override
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+        builder.add(BlockStateProperties.FACING);
+        builder.add(BlockStateProperties.LIT);
+        super.fillStateContainer(builder);
+    }
 
-  @Nullable
-  @Override
-  public BlockState getStateForPlacement(BlockItemUseContext context) {
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
 
-    return getDefaultState()
-        .with(BlockStateProperties.FACING, context.getPlacementHorizontalFacing().getOpposite())
-        .with(BlockStateProperties.LIT, false);
-  }
+        return getDefaultState()
+            .with(BlockStateProperties.FACING, context.getPlacementHorizontalFacing().getOpposite())
+            .with(BlockStateProperties.LIT, false);
+    }
 
-  @SuppressWarnings("deprecation")
-  @Override
-  public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-    if (!state.isIn(newState.getBlock())) {
-      TileEntity te = worldIn.getTileEntity(pos);
-      if (te instanceof CommonTileEntity) {
-        LazyOptional<IItemHandler> inventory = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
-        if (inventory.isPresent()) {
-          dropInventoryItems(worldIn, pos, inventory.resolve().get());
+    @SuppressWarnings("deprecation")
+    @Override
+    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (!state.isIn(newState.getBlock())) {
+            TileEntity te = worldIn.getTileEntity(pos);
+            if (te instanceof CommonTileEntity) {
+                LazyOptional<IItemHandler> inventory = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+                inventory.ifPresent(inv -> dropInventoryItems(worldIn, pos, inv));
+            }
         }
-      }
-    }
-    super.onReplaced(state, worldIn, pos, newState, isMoving);
-  }
-
-  @SuppressWarnings("rawtypes")
-  @Override
-  public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-    if (!worldIn.isRemote) {
-      TileEntity tile = worldIn.getTileEntity(pos);
-      if (tile instanceof MachineTileEntity) {
-        MachineTileEntity CommonTe = (MachineTileEntity) tile;
-        NetworkHooks.openGui((ServerPlayerEntity) player, CommonTe, tile.getPos());
-      } else {
-        throw new IllegalStateException("Missing Container provider");
-      }
+        super.onReplaced(state, worldIn, pos, newState, isMoving);
     }
 
-    return ActionResultType.SUCCESS;
-  }
+    @SuppressWarnings("rawtypes")
+    @Override
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if (!worldIn.isRemote) {
+            TileEntity tile = worldIn.getTileEntity(pos);
+            if (tile instanceof MachineTileEntity) {
+                MachineTileEntity CommonTe = (MachineTileEntity) tile;
+                NetworkHooks.openGui((ServerPlayerEntity) player, CommonTe, tile.getPos());
+            } else {
+                throw new IllegalStateException("Missing Container provider");
+            }
+        }
 
-  public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
-    if (stateIn.get(BlockStateProperties.LIT)) {
-      double d0 = (double) pos.getX() + 0.5D;
-      double d1 = pos.getY();
-      double d2 = (double) pos.getZ() + 0.5D;
-      if (rand.nextDouble() < 0.1D) {
-        worldIn.playSound(d0, d1, d2, SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
-      }
-
-      Direction direction = stateIn.get(BlockStateProperties.FACING);
-      Direction.Axis axis = direction.getAxis();
-      double d3 = 0.52D;
-      double d4 = rand.nextDouble() * 0.6D - 0.3D;
-      double d5 = axis == Direction.Axis.X ? (double) direction.getXOffset() * 0.52D : d4;
-      double d6 = rand.nextDouble() * 6.0D / 16.0D;
-      double d7 = axis == Direction.Axis.Z ? (double) direction.getZOffset() * 0.52D : d4;
-      worldIn.addParticle(ParticleTypes.SMOKE, d0 + d5, d1 + d6, d2 + d7, 0.0D, 0.0D, 0.0D);
-      worldIn.addParticle(ParticleTypes.FLAME, d0 + d5, d1 + d6, d2 + d7, 0.0D, 0.0D, 0.0D);
+        return ActionResultType.SUCCESS;
     }
-  }
 
+    public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
+        if (stateIn.get(BlockStateProperties.LIT)) {
+            double d0 = (double) pos.getX() + 0.5D;
+            double d1 = pos.getY();
+            double d2 = (double) pos.getZ() + 0.5D;
+            if (rand.nextDouble() < 0.1D) {
+                worldIn.playSound(d0, d1, d2, SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+            }
+
+            Direction direction = stateIn.get(BlockStateProperties.FACING);
+            Direction.Axis axis = direction.getAxis();
+            double d3 = 0.52D;
+            double d4 = rand.nextDouble() * 0.6D - 0.3D;
+            double d5 = axis == Direction.Axis.X ? (double) direction.getXOffset() * 0.52D : d4;
+            double d6 = rand.nextDouble() * 6.0D / 16.0D;
+            double d7 = axis == Direction.Axis.Z ? (double) direction.getZOffset() * 0.52D : d4;
+            worldIn.addParticle(ParticleTypes.SMOKE, d0 + d5, d1 + d6, d2 + d7, 0.0D, 0.0D, 0.0D);
+            worldIn.addParticle(ParticleTypes.FLAME, d0 + d5, d1 + d6, d2 + d7, 0.0D, 0.0D, 0.0D);
+        }
+    }
 }

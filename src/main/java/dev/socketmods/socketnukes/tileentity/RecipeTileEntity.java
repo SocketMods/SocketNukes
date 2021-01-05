@@ -20,84 +20,87 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.annotation.Nullable;
 
 public abstract class RecipeTileEntity<T extends IRecipe<?>> extends CommonTileEntity {
 
-  protected IRecipeType<?> type;
+    protected IRecipeType<?> type;
 
-  public RecipeTileEntity(TileEntityType<?> tileEntityTypeIn, IRecipeType<?> recipeType) {
-    super(tileEntityTypeIn);
-    type = recipeType;
-  }
-
-  protected abstract T getRecipe(ItemStack stack);
-
-  public static Set<IRecipe<?>> findRecipeByType(IRecipeType<?> recipeType) {
-    ClientWorld world = Minecraft.getInstance().world;
-    return world != null ?
-        world.getRecipeManager().getRecipes().stream().filter(iRecipe -> iRecipe.getType() == recipeType).collect(Collectors.toSet())
-        : Collections.emptySet();
-  }
-
-  public static Set<IRecipe<?>> findRecipeByType(IRecipeType<?> recipeType, World world) {
-    return world != null ?
-        world.getRecipeManager().getRecipes().stream().filter(
-            iRecipe -> iRecipe.getType() == recipeType
-        ).collect(Collectors.toSet())
-        : Collections.emptySet();
-  }
-
-  public static Set<ItemStack> getAllRecipeInputs(IRecipeType<?> type, World world) {
-    Set<ItemStack> inputs = new HashSet<>();
-    Set<IRecipe<?>> recipes = findRecipeByType(type, world);
-    for (IRecipe<?> recipe : recipes) {
-      NonNullList<Ingredient> ingredients = recipe.getIngredients();
-      ingredients.forEach(
-          ingredient ->
-              inputs.addAll(Arrays.asList(ingredient.getMatchingStacks()))
-      );
-    }
-    return inputs;
-  }
-
-  public abstract T getRecipeFromOutput(ItemStack result);
-
-  public static Set<Item> getAllRecipeOutputAsItems(IRecipeType<?> type, World world) {
-    Set<Item> outputs = new HashSet<>();
-    Set<IRecipe<?>> recipes = findRecipeByType(type, world);
-    for (IRecipe<?> recipe : recipes) {
-      if (recipe instanceof CommonRecipe) {
-        NonNullList<ItemStack> output = ((CommonRecipe) recipe).getOutput();
-        output.forEach(itemStack -> outputs.add(itemStack.getItem()));
-      } else {
-        ItemStack output = recipe.getRecipeOutput();
-        outputs.add(output.getItem());
-      }
-    }
-    return outputs;
-  }
-
-  public static Set<Item> getAllRecipeInputsAsItems(IRecipeType<?> type, World world) {
-    Set<Item> inputs = new HashSet<>();
-    Set<IRecipe<?>> recipes = findRecipeByType(type, world);
-    for (IRecipe<?> recipe : recipes) {
-      NonNullList<Ingredient> ingredients = recipe.getIngredients();
-      ingredients.forEach(ingredient -> Arrays.stream(ingredient.getMatchingStacks()).collect(Collectors.toList()).forEach(itemStack -> inputs.add(itemStack.getItem())));
-    }
-    return inputs;
-  }
-
-  protected static void splitAndSpawnExperience(World world, BlockPos pos, int craftedAmount, float experience) {
-    int i = MathHelper.floor((float) craftedAmount * experience);
-    float f = MathHelper.frac((float) craftedAmount * experience);
-    if (f != 0.0F && Math.random() < (double) f) {
-      ++i;
+    public RecipeTileEntity(TileEntityType<?> tileEntityTypeIn, IRecipeType<?> recipeType) {
+        super(tileEntityTypeIn);
+        type = recipeType;
     }
 
-    while (i > 0) {
-      int j = ExperienceOrbEntity.getXPSplit(i);
-      i -= j;
-      world.addEntity(new ExperienceOrbEntity(world, pos.getX(), pos.getY(), pos.getZ(), j));
+    @Nullable
+    protected abstract T getRecipe(ItemStack stack);
+
+    public static Set<IRecipe<?>> findRecipeByType(IRecipeType<?> recipeType) {
+        ClientWorld world = Minecraft.getInstance().world;
+        return world != null ?
+            world.getRecipeManager().getRecipes().stream().filter(iRecipe -> iRecipe.getType() == recipeType).collect(Collectors.toSet())
+            : Collections.emptySet();
     }
-  }
+
+    public static Set<IRecipe<?>> findRecipeByType(IRecipeType<?> recipeType, @Nullable World world) {
+        return world != null ?
+            world.getRecipeManager().getRecipes().stream().filter(
+                iRecipe -> iRecipe.getType() == recipeType
+            ).collect(Collectors.toSet())
+            : Collections.emptySet();
+    }
+
+    public static Set<ItemStack> getAllRecipeInputs(IRecipeType<?> type, World world) {
+        Set<ItemStack> inputs = new HashSet<>();
+        Set<IRecipe<?>> recipes = findRecipeByType(type, world);
+        for (IRecipe<?> recipe : recipes) {
+            NonNullList<Ingredient> ingredients = recipe.getIngredients();
+            ingredients.forEach(
+                ingredient ->
+                    inputs.addAll(Arrays.asList(ingredient.getMatchingStacks()))
+            );
+        }
+        return inputs;
+    }
+
+    @Nullable
+    public abstract T getRecipeFromOutput(ItemStack result);
+
+    public static Set<Item> getAllRecipeOutputAsItems(IRecipeType<?> type, World world) {
+        Set<Item> outputs = new HashSet<>();
+        Set<IRecipe<?>> recipes = findRecipeByType(type, world);
+        for (IRecipe<?> recipe : recipes) {
+            if (recipe instanceof CommonRecipe) {
+                NonNullList<ItemStack> output = ((CommonRecipe) recipe).getOutput();
+                output.forEach(itemStack -> outputs.add(itemStack.getItem()));
+            } else {
+                ItemStack output = recipe.getRecipeOutput();
+                outputs.add(output.getItem());
+            }
+        }
+        return outputs;
+    }
+
+    public static Set<Item> getAllRecipeInputsAsItems(IRecipeType<?> type, World world) {
+        Set<Item> inputs = new HashSet<>();
+        Set<IRecipe<?>> recipes = findRecipeByType(type, world);
+        for (IRecipe<?> recipe : recipes) {
+            NonNullList<Ingredient> ingredients = recipe.getIngredients();
+            ingredients.forEach(ingredient -> Arrays.stream(ingredient.getMatchingStacks()).collect(Collectors.toList()).forEach(itemStack -> inputs.add(itemStack.getItem())));
+        }
+        return inputs;
+    }
+
+    protected static void splitAndSpawnExperience(World world, BlockPos pos, int craftedAmount, float experience) {
+        int i = MathHelper.floor((float) craftedAmount * experience);
+        float f = MathHelper.frac((float) craftedAmount * experience);
+        if (f != 0.0F && Math.random() < (double) f) {
+            ++i;
+        }
+
+        while (i > 0) {
+            int j = ExperienceOrbEntity.getXPSplit(i);
+            i -= j;
+            world.addEntity(new ExperienceOrbEntity(world, pos.getX(), pos.getY(), pos.getZ(), j));
+        }
+    }
 }
