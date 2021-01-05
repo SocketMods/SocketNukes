@@ -1,4 +1,4 @@
-import java.nio.file.Paths
+import java.util.stream.Collectors
 
 /**
  *  Generates package-info.java for appropriate packages
@@ -12,11 +12,10 @@ task generatePackageInfos() {
     outputs.upToDateWhen { false }
 
     doLast {
-        // TODO: Base off of SourceSets rather than hardcoded paths
-        def sourceDirectories = [
-                file(Paths.get(projectDir.absolutePath, "src", "main", "java")),
-                file(Paths.get(projectDir.absolutePath, "src", "data", "java")),
-        ]
+        def sourceDirectories = sourceSets.stream()
+                .map { source -> source.java.srcDirs }
+                .flatMap { fileSet -> fileSet.stream() }
+                .collect(Collectors.toList())
 
         sourceDirectories.forEach { sourceDirectory ->
             sourceDirectory.eachDirRecurse { directory ->
@@ -26,13 +25,17 @@ task generatePackageInfos() {
 
                 println "[PackageInfo] Visiting: $directory"
 
-                // And package-info.java doesn't exist
-                def packageInfo = new File(directory, "package-info.java")
-                if (packageInfo.exists()) return
+                // Create package-info string
+                def packageString = generatePackageInfo(getPackageName(sourceDirectory, directory))
 
-                // Create package-info.java
-                println "[PackageInfo] Creating: $packageInfo"
-                packageInfo.write(generatePackageInfo(getPackageName(sourceDirectory, directory)))
+                // Skip if package-info.java exists and contains the expected string
+                def packageInfo = new File(directory, "package-info.java")
+                if (packageInfo.exists() && packageString.replace('\r\n', '\n').equals(packageInfo.text)) return
+
+                // Write package-info.java
+                println "[PackageInfo] Writing: $packageInfo"
+                if (packageInfo.exists()) packageInfo.delete()
+                packageInfo.write(packageString)
             }
         }
     }
