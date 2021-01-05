@@ -23,7 +23,7 @@ task generatePackageInfos() {
                 def files = directory.list { _, name -> name.endsWith(".java") }
                 if (files == null || files.size() == 0) return
 
-                println "[PackageInfo] Visiting: $directory"
+                logger.debug "Visiting $directory for package-info.java"
 
                 // Create package-info string
                 def packageString = generatePackageInfo(getPackageName(sourceDirectory, directory))
@@ -33,7 +33,7 @@ task generatePackageInfos() {
                 if (packageInfo.exists() && packageString.replace('\r\n', '\n').equals(packageInfo.text)) return
 
                 // Write package-info.java
-                println "[PackageInfo] Writing: $packageInfo"
+                logger.info "Writing package-info.java for: $packageInfo"
                 if (packageInfo.exists()) packageInfo.delete()
                 packageInfo.write(packageString)
             }
