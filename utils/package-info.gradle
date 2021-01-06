@@ -18,6 +18,7 @@ task generatePackageInfos() {
                 .collect(Collectors.toList())
 
         sourceDirectories.forEach { sourceDirectory ->
+            if (!sourceDirectory.exists()) return
             sourceDirectory.eachDirRecurse { directory ->
                 // If file contains java source files
                 def files = directory.list { _, name -> name.endsWith(".java") }
@@ -30,7 +31,7 @@ task generatePackageInfos() {
 
                 // Skip if package-info.java exists and contains the expected string
                 def packageInfo = new File(directory, "package-info.java")
-                if (packageInfo.exists() && packageString.replace('\r\n', '\n').equals(packageInfo.text)) return
+                if (packageInfo.exists() && packageString.equals(packageInfo.text.replace('\r\n', '\n'))) return
 
                 // Write package-info.java
                 logger.info "Writing package-info.java for: $packageInfo"
