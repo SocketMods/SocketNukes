@@ -41,7 +41,7 @@ task generatePackageInfos() {
     }
 }
 
-// Always generate the package-infos when any of the javas
+// Always generate the package-infos for all of the compile tasks
 tasks.withType(JavaCompile) {
     dependsOn generatePackageInfos
 }
