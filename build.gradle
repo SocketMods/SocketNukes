@@ -97,16 +97,6 @@ dependencies {
     dataImplementation sourceSets.main.output
 }
 
-def commit_id = "unknown"
-def git_timestamp = "unknown"
-try {
-    commit_id = grgit.head().id
-    def datetime = grgit.head().dateTime
-    git_timestamp = datetime.toLocalDateTime().toString() + datetime.getOffset().toString().replace(':', '')
-} catch (Exception e) {
-    logger.error("Error while trying to get commit info: {}", e.toString())
-}
-
 jar {
     finalizedBy 'reobfJar'
     manifest {
@@ -118,8 +108,8 @@ jar {
                 "Implementation-Version"  : version,
                 "Implementation-Vendor"   : "socketmods",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                "Git-Commit"              : commit_id,
-                "Git-Commit-Timestamp"    : git_timestamp
+                "Git-Commit"              : getCommitHash(),
+                "Git-Commit-Timestamp"    : getCommitTimestamp()
         ] as LinkedHashMap)
     }
     includeEmptyDirs false

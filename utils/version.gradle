@@ -46,6 +46,48 @@ String calculateVersion() {
     return "unknown"
 }
 
+ext.commit_id = null
+ext.commit_timestamp = null
+
+/**
+ * Returns the hash of the current commit.
+ *
+ * Retrieves both the hash and timestamp from the current commit, and stores both.
+ * If there is an error retrieving the hash or the timestamp, it will be left as "unknown".
+ *
+ * @return The current commit hash, or "unknown"
+ */
+String getCommitHash() {
+    if (ext.commit_id == null) {
+        ext.commit_id = "unknown"
+        ext.commit_timestamp = "unknown"
+        try {
+            ext.commit_id = grgit.head().id
+            def datetime = grgit.head().dateTime
+            ext.commit_timestamp = datetime.toLocalDateTime().toString() + datetime.getOffset().toString().replace(':', '')
+        } catch (Exception e) {
+            logger.error("Error while trying to get commit info: {}", e.toString())
+        }
+    }
+    return ext.commit_id
+}
+
+/**
+ * Returns the timestamp of the current commit.
+ *
+ * Internally calls {@code getCommitHash( )} to retrieve the hash and timestamp first, if not already stored.
+ *
+ * @return The current commit timestamp, or "unknown"
+ */
+String getCommitTimestamp() {
+    if (ext.commit_timestamp == null) {
+        getCommitHash()
+    }
+    return ext.commit_timestamp
+}
+
 ext {
     calculateVersion = this.&calculateVersion
+    getCommitHash = this.&getCommitHash
+    getCommitTimestamp = this.&getCommitTimestamp
 }
