@@ -1,0 +1,93 @@
+/**
+ * Checks if the given branch name is a main branch, and therefore should not have the commit and branch
+ * information in the version.
+ * @param branchName the branch name to check
+ * @return If the version should not contain the commit and branch information
+ */
+static boolean isMainBranch(String branchName) {
+    return branchName.equals("HEAD") || branchName.equals("main") || branchName.matches("\\d+.\\d+.[\\dx]+")
+}
+
+/**
+ * Calculates the version string, based on the current commit and branch, nearest tag, and release type.
+ *
+ * If there is an exception while calculating the version information (such as Grgit being absent), the
+ * returned version shall be "unknown".
+ *
+ * @return The calculated version string
+ */
+String calculateVersion() {
+    try {
+        final String branchName = grgit.branch.current().name
+        boolean nonMainBranch = !isMainBranch(branchName)
+        if (nonMainBranch) println("Currently on non-main branch: " + branchName)
+        String ver = grgit.describe(commit: grgit.head(), longDescr: true, tags: true)
+        if (ver == null) throw new RuntimeException("Could not retrieve version information from grgit")
+
+        String[] split = ver.split("-")
+
+        String tag = split[0]
+        String commitCount = split[1]
+        String commitHash = split[2]
+        if (tag.startsWith("v")) tag = tag.substring(1) // Remove 'v' prefixes from tags
+
+        boolean hasClassifier = release_type != null && !release_type.equals("release")
+
+        String version = "${tag}.${commitCount}"
+        // Append classifier if it exists
+        if (hasClassifier) version += "-${release_type}"
+        // Append branch and commit hash if not on main branch
+        if (nonMainBranch) version += "-${commitHash}-${branchName}"
+
+        return version
+    } catch (Exception e) {
+        logger.error("Error while getting version information: {}", e)
+    }
+    return "unknown"
+}
+
+ext.commit_id = null
+ext.commit_timestamp = null
+
+/**
+ * Returns the hash of the current commit.
+ *
+ * Retrieves both the hash and timestamp from the current commit, and stores both.
+ * If there is an error retrieving the hash or the timestamp, it will be left as "unknown".
+ *
+ * @return The current commit hash, or "unknown"
+ */
+String getCommitHash() {
+    if (ext.commit_id == null) {
+        ext.commit_id = "unknown"
+        ext.commit_timestamp = "unknown"
+        try {
+            ext.commit_id = grgit.head().id
+            def datetime = grgit.head().dateTime
+            ext.commit_timestamp = datetime.toLocalDateTime().toString() + datetime.getOffset().toString().replace(':', '')
+        } catch (Exception e) {
+            logger.error("Error while trying to get commit info: {}", e.toString())
+        }
+    }
+    return ext.commit_id
+}
+
+/**
+ * Returns the timestamp of the current commit.
+ *
+ * Internally calls {@code getCommitHash( )} to retrieve the hash and timestamp first, if not already stored.
+ *
+ * @return The current commit timestamp, or "unknown"
+ */
+String getCommitTimestamp() {
+    if (ext.commit_timestamp == null) {
+        getCommitHash()
+    }
+    return ext.commit_timestamp
+}
+
+ext {
+    calculateVersion = this.&calculateVersion
+    getCommitHash = this.&getCommitHash
+    getCommitTimestamp = this.&getCommitTimestamp
+}

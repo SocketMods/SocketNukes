@@ -1,4 +1,4 @@
-import java.nio.file.Paths
+import java.util.stream.Collectors
 
 /**
  *  Generates package-info.java for appropriate packages
@@ -12,30 +12,39 @@ task generatePackageInfos() {
     outputs.upToDateWhen { false }
 
     doLast {
-        // TODO: Base off of SourceSets rather than hardcoded paths
-        def sourceDirectories = [
-                file(Paths.get(projectDir.absolutePath, "src", "main", "java")),
-                file(Paths.get(projectDir.absolutePath, "src", "data", "java")),
-        ]
+        def sourceDirectories = sourceSets.stream()
+                .map { source -> source.java.srcDirs }
+                .flatMap { fileSet -> fileSet.stream() }
+                .collect(Collectors.toList())
 
         sourceDirectories.forEach { sourceDirectory ->
+            if (!sourceDirectory.exists()) return
             sourceDirectory.eachDirRecurse { directory ->
                 // If file contains java source files
                 def files = directory.list { _, name -> name.endsWith(".java") }
                 if (files == null || files.size() == 0) return
 
-                println "[PackageInfo] Visiting: $directory"
+                logger.debug "Visiting $directory for package-info.java"
 
-                // And package-info.java doesn't exist
+                // Create package-info string
+                def packageString = generatePackageInfo(getPackageName(sourceDirectory, directory))
+
+                // Skip if package-info.java exists and contains the expected string
                 def packageInfo = new File(directory, "package-info.java")
-                if (packageInfo.exists()) return
+                if (packageInfo.exists() && packageString.equals(packageInfo.text.replace('\r\n', '\n'))) return
 
-                // Create package-info.java
-                println "[PackageInfo] Creating: $packageInfo"
-                packageInfo.write(generatePackageInfo(getPackageName(sourceDirectory, directory)))
+                // Write package-info.java
+                logger.info "Writing package-info.java for: $packageInfo"
+                if (packageInfo.exists()) packageInfo.delete()
+                packageInfo.write(packageString)
             }
         }
     }
+}
+
+// Always generate the package-infos for all of the compile tasks
+tasks.withType(JavaCompile) {
+    dependsOn generatePackageInfos
 }
 
 static String generatePackageInfo(String packageName) {
