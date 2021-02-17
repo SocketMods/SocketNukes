@@ -28,31 +28,31 @@ public class ExtendedExplosionType extends ForgeRegistryEntry<ExtendedExplosionT
      */
 
     // Blocks that are known to be immune to this explosion
-    private List<Block> immuneBlocks;
-    private List<Block> getImmuneBlocks() { return immuneBlocks; }
-    private void setImmuneBlocks(List<Block> blocks) { this.immuneBlocks = blocks; }
+    protected List<Block> immuneBlocks;
+    protected List<Block> getImmuneBlocks() { return immuneBlocks; }
+    protected void setImmuneBlocks(List<Block> blocks) { this.immuneBlocks = blocks; }
 
     // For conventional circular-crater explosions, this is the distance from the explosive to the outer edge of the crater.
-    private int radius;
-    private int getRadius() { return radius; }
-    private void setRadius(int radius) { this.radius = radius; }
+    protected int radius;
+    protected int getRadius() { return radius; }
+    protected void setRadius(int radius) { this.radius = radius; }
 
     // For explosives that don't use conventional "big boom" damage, they can specify their own.
     // eg. napalm bombs cause fire damage
-    private DamageSource damageSource;
-    private DamageSource getDamageSource() { return damageSource; }
-    private void setDamageSource(DamageSource source) { this.damageSource = source; }
+    protected DamageSource damageSource;
+    protected DamageSource getDamageSource() { return damageSource; }
+    protected void setDamageSource(DamageSource source) { this.damageSource = source; }
 
     // For explosives that totally annihilate the area, return false.
     // Analogous to Explosion.Mode.BREAK/DESTROY
-    private boolean doBlocksDrop;
-    private boolean getDoBlocksDrop() { return doBlocksDrop; }
-    private void setDoBlocksDrop(boolean newBlocksDrop) { this.doBlocksDrop = newBlocksDrop; }
+    protected boolean doBlocksDrop;
+    protected boolean getDoBlocksDrop() { return doBlocksDrop; }
+    protected void setDoBlocksDrop(boolean newBlocksDrop) { this.doBlocksDrop = newBlocksDrop; }
 
     // Large explosions may require multiple "stages" of explosion, in order to avoid thrashing the server.
-    private int explosionStages;
-    private int getExplosionStages() { return explosionStages; }
-    private void setExplosionStages(int stages) { this.explosionStages = stages; }
+    protected int explosionStages;
+    protected int getExplosionStages() { return explosionStages; }
+    protected void setExplosionStages(int stages) { this.explosionStages = stages; }
 
     public ExtendedExplosionType(int blastRadius, List<Block> immuneBlocks, int stages, DamageSource damage, boolean annihilateMode) {
         this.immuneBlocks = immuneBlocks;
@@ -69,7 +69,7 @@ public class ExtendedExplosionType extends ForgeRegistryEntry<ExtendedExplosionT
      * @return boolean; whether to continue with the explosion
      */
 
-    private boolean prepareExplosion(World worldIn, BlockPos source) {
+    protected boolean prepareExplosion(World worldIn, BlockPos source) {
 
         return true;
     }
@@ -78,7 +78,7 @@ public class ExtendedExplosionType extends ForgeRegistryEntry<ExtendedExplosionT
      * If prepareExplosion returned true, execute the stages of explosion.
      */
 
-    private void explode(World worldIn, BlockPos source, int stage) {
+    protected void explode(World worldIn, BlockPos source, int stage) {
     }
 
     /**
@@ -86,7 +86,7 @@ public class ExtendedExplosionType extends ForgeRegistryEntry<ExtendedExplosionT
      * This allows the explosion to handle these interactions.
      */
 
-    private void stopExploding() {
+    protected void stopExploding() {
 
     }
 
