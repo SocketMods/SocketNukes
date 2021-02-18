@@ -6,10 +6,7 @@ import dev.socketmods.socketnukes.explosion.DummyExplosion;
 import dev.socketmods.socketnukes.explosion.ExplosionProperties;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.block.AbstractFireBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+ import net.minecraft.block.*;
 import net.minecraft.enchantment.ProtectionEnchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -17,6 +14,7 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.item.TNTEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.LavaFluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootContext;
 import net.minecraft.loot.LootParameters;
@@ -30,6 +28,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.world.ExplosionContext;
 import net.minecraft.world.World;
 
 import java.util.*;
@@ -41,9 +40,13 @@ import net.minecraftforge.event.ForgeEventFactory;
 public class VanillaExplosionType extends ExtendedExplosionType {
     private ExplosionProperties properties;
 
+    private static final int STAGE_DAMAGE = 1;
+    private static final int STAGE_BLOCKS = 2;
+    private static final int STAGE_FLUIDS = 3;
+
     public VanillaExplosionType(ExplosionProperties properties) {
         super(4, Arrays.asList(Blocks.BEDROCK, Blocks.OBSIDIAN, Blocks.CRYING_OBSIDIAN),
-                2, DamageSource.GENERIC, false);
+                3, DamageSource.GENERIC, false);
 
         this.properties = properties;
     }
@@ -54,16 +57,15 @@ public class VanillaExplosionType extends ExtendedExplosionType {
     }
 
     @Override
-    public List<BlockPos> explode(World worldIn, BlockPos source, int stage, Entity placer, List<BlockPos> blocksFromLastState) {
+    public List<BlockPos> explode(World worldIn, BlockPos sourceOld, int stage, Entity placer, List<BlockPos> blocksFromLastState) {
         List<BlockPos> affectedBlocks = (blocksFromLastState.size() == 0) ? new ArrayList<>() : blocksFromLastState;
         Map<Entity, Vector3d> entityDisplacements = new HashMap<>();
+        BlockPos source = new BlockPos(sourceOld.getX(), sourceOld.getY() + 1, sourceOld.getZ());
 
         switch(stage) {
-            case 1:
-                // Break blocks
+            case STAGE_DAMAGE:
+                // Damage entities, calculate blocks to be broken
                 Set<BlockPos> set = Sets.newHashSet();
-                int i = 16;
-
                 for (int j = 0; j < 16; ++j) {
                     for (int k = 0; k < 16; ++k) {
                         for (int l = 0; l < 16; ++l) {
@@ -80,18 +82,20 @@ public class VanillaExplosionType extends ExtendedExplosionType {
                                 double d6 = source.getY();
                                 double d8 = source.getZ();
 
-                                for (float f1 = 0.3F; f > 0.0F; f -= 0.22500001F) {
+                                for (; f > 0.0F; f -= 0.22500001F) {
                                     BlockPos blockpos = new BlockPos(d4, d6, d8);
                                     BlockState blockstate = worldIn.getBlockState(blockpos);
                                     FluidState fluidstate = worldIn.getFluidState(blockpos);
-                                    // this.context.getExplosionResistance(this, this.world, blockpos, blockstate, fluidstate);
-                                    // We use the hardcoded Block#getExplosionResistance & FluidState.getExplosionResistance
-                                    Optional<Float> optional = (blockstate != null && fluidstate != null) ? Optional.of(Math.max(blockstate.getBlock().getExplosionResistance(), fluidstate.getExplosionResistance())) : Optional.empty();
+
+                                    ExplosionContext dummyContext = new ExplosionContext();
+                                    Explosion vanillaExplosion = new DummyExplosion(worldIn, placer, d4, d6, d8, this);
+
+                                    Optional<Float> optional = dummyContext.getExplosionResistance(vanillaExplosion, worldIn, blockpos, blockstate, fluidstate);
                                     if (optional.isPresent()) {
                                         f -= (optional.get() + 0.3F) * 0.3F;
                                     }
 
-                                    if (f > 0.0F && !immuneBlocks.contains(worldIn.getBlockState(blockpos).getBlock())) {
+                                    if (f > 0.0F/* && !immuneBlocks.contains(worldIn.getBlockState(blockpos).getBlock())*/) {
                                         set.add(blockpos);
                                     }
 
@@ -119,8 +123,7 @@ public class VanillaExplosionType extends ExtendedExplosionType {
                 ForgeEventFactory.onExplosionDetonate(worldIn, vanillaExplosion, list, radiusx2);
                 Vector3d explosionPos = new Vector3d(source.getX(), source.getY(), source.getZ());
 
-                for (int entityID = 0; entityID < list.size(); ++entityID) {
-                    Entity currentEntity = list.get(entityID);
+                for (Entity currentEntity : list) {
                     if (!currentEntity.isImmuneToExplosions()) {
                         double currentEntityDistanceToExplosion = MathHelper.sqrt(currentEntity.getDistanceSq(explosionPos)) / radiusx2;
                         if (currentEntityDistanceToExplosion <= 1.0D) {
@@ -151,7 +154,7 @@ public class VanillaExplosionType extends ExtendedExplosionType {
                     }
                 }
                 return affectedBlocks;
-            case 2:
+            case STAGE_BLOCKS:
                 if (worldIn.isRemote) {
                     worldIn.playSound(source.getX(), source.getY(), source.getZ(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (worldIn.rand.nextFloat() - worldIn.rand.nextFloat()) * 0.2F) * 0.7F, false);
                 }
@@ -166,7 +169,6 @@ public class VanillaExplosionType extends ExtendedExplosionType {
 
                     for (BlockPos blockpos : affectedBlocks) {
                         BlockState blockstate = worldIn.getBlockState(blockpos);
-                        Block block = blockstate.getBlock();
                         if (!blockstate.isAir(worldIn, blockpos)) {
                             BlockPos blockpos1 = blockpos.toImmutable();
                             worldIn.getProfiler().startSection("explosion_blocks");
@@ -202,9 +204,21 @@ public class VanillaExplosionType extends ExtendedExplosionType {
                         }
                     }
                 }
+
+                return affectedBlocks;
+
+            case STAGE_FLUIDS:
+                for(BlockPos pos : affectedBlocks) {
+                    BlockState state = worldIn.getBlockState(pos);
+
+                    if (!state.isAir(worldIn, pos)) {
+                        state.neighborChanged(worldIn, pos, state.getBlock(), sourceOld, false);
+                    }
+                }
+
             default:
                 // Handle unknown stage? maybe? perhaps?
-                return new ArrayList<>();
+                return affectedBlocks;
         }
     }
 
