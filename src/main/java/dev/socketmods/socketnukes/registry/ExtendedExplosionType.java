@@ -65,7 +65,7 @@ public class ExtendedExplosionType extends ForgeRegistryEntry<ExtendedExplosionT
         this.immuneBlocks = immuneBlocks;
         this.radius = blastRadius;
         this.damageSource = damage;
-        this.doBlocksDrop = annihilateMode;
+        this.doBlocksDrop = !annihilateMode;
         this.explosionStages = stages;
     }
 
