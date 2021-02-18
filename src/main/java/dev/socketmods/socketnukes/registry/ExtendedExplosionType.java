@@ -9,6 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -76,16 +77,19 @@ public class ExtendedExplosionType extends ForgeRegistryEntry<ExtendedExplosionT
      * @return boolean; whether to continue with the explosion
      */
 
-    protected boolean prepareExplosion(World worldIn, BlockPos source, Entity placer) {
-
+    public boolean prepareExplosion(World worldIn, BlockPos source, Entity placer) {
         return true;
     }
 
     /**
      * If prepareExplosion returned true, execute the stages of explosion.
+     * We return a list of blockstates for compatibility with the vanilla explosion (for now), as it returns the list
+     *  on the first pass, and uses it on the second.
+     *
+     * TODO: split this out into ExplosionMetaPackage to make it reusable for every Explosion?
      */
-
-    protected void explode(World worldIn, BlockPos source, int stage, Entity placer) {
+    public List<BlockPos> explode(World worldIn, BlockPos source, int stage, Entity placer, List<BlockPos> blocksFromLastState) {
+        return new ArrayList<>();
     }
 
     /**
@@ -93,7 +97,7 @@ public class ExtendedExplosionType extends ForgeRegistryEntry<ExtendedExplosionT
      * This allows the explosion to handle these interactions.
      */
 
-    protected void stopExploding() {
+    public void stopExploding() {
 
     }
 

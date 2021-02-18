@@ -54,8 +54,8 @@ public class VanillaExplosionType extends ExtendedExplosionType {
     }
 
     @Override
-    public void explode(World worldIn, BlockPos source, int stage, Entity placer) {
-        List<BlockPos> affectedBlocks = new ArrayList<>();
+    public List<BlockPos> explode(World worldIn, BlockPos source, int stage, Entity placer, List<BlockPos> blocksFromLastState) {
+        List<BlockPos> affectedBlocks = (blocksFromLastState.size() == 0) ? new ArrayList<>() : blocksFromLastState;
         Map<Entity, Vector3d> entityDisplacements = new HashMap<>();
 
         switch(stage) {
@@ -150,7 +150,7 @@ public class VanillaExplosionType extends ExtendedExplosionType {
                         }
                     }
                 }
-                break;
+                return affectedBlocks;
             case 2:
                 if (worldIn.isRemote) {
                     worldIn.playSound(source.getX(), source.getY(), source.getZ(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (worldIn.rand.nextFloat() - worldIn.rand.nextFloat()) * 0.2F) * 0.7F, false);
@@ -202,9 +202,9 @@ public class VanillaExplosionType extends ExtendedExplosionType {
                         }
                     }
                 }
-                break;
             default:
                 // Handle unknown stage? maybe? perhaps?
+                return new ArrayList<>();
         }
     }
 
