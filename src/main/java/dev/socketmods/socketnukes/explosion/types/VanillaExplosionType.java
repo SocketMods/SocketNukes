@@ -1,39 +1,62 @@
 package dev.socketmods.socketnukes.explosion.types;
 
 import com.google.common.collect.Sets;
+import com.mojang.datafixers.util.Pair;
+import dev.socketmods.socketnukes.explosion.DummyExplosion;
+import dev.socketmods.socketnukes.explosion.ExplosionProperties;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.block.AbstractFireBlock;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.ProtectionEnchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.item.TNTEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
+import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootParameters;
+import net.minecraft.particles.ParticleTypes;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.World;
 
 import java.util.*;
 
-public class VanillaExplosionType extends ExtendedExplosionType {
+import net.minecraft.world.Explosion;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.event.ForgeEventFactory;
 
-    public VanillaExplosionType() {
+public class VanillaExplosionType extends ExtendedExplosionType {
+    private ExplosionProperties properties;
+
+    public VanillaExplosionType(ExplosionProperties properties) {
         super(4, Arrays.asList(Blocks.BEDROCK, Blocks.OBSIDIAN, Blocks.CRYING_OBSIDIAN),
                 2, DamageSource.GENERIC, false);
+
+        this.properties = properties;
     }
 
     @Override
-    public boolean prepareExplosion(World worldIn, BlockPos source) {
-
+    public boolean prepareExplosion(World worldIn, BlockPos source, Entity placer) {
         return true;
     }
 
     @Override
-    public void explode(World worldIn, BlockPos source, int stage) {
+    public void explode(World worldIn, BlockPos source, int stage, Entity placer) {
+        List<BlockPos> affectedBlocks = new ArrayList<>();
+        Map<Entity, Vector3d> entityDisplacements = new HashMap<>();
 
         switch(stage) {
             case 1:
@@ -41,13 +64,13 @@ public class VanillaExplosionType extends ExtendedExplosionType {
                 Set<BlockPos> set = Sets.newHashSet();
                 int i = 16;
 
-                for(int j = 0; j < 16; ++j) {
-                    for(int k = 0; k < 16; ++k) {
-                        for(int l = 0; l < 16; ++l) {
+                for (int j = 0; j < 16; ++j) {
+                    for (int k = 0; k < 16; ++k) {
+                        for (int l = 0; l < 16; ++l) {
                             if (j == 0 || j == 15 || k == 0 || k == 15 || l == 0 || l == 15) {
-                                double d0 = (double)((float)j / 15.0F * 2.0F - 1.0F);
-                                double d1 = (double)((float)k / 15.0F * 2.0F - 1.0F);
-                                double d2 = (double)((float)l / 15.0F * 2.0F - 1.0F);
+                                double d0 = (float) j / 15.0F * 2.0F - 1.0F;
+                                double d1 = (float) k / 15.0F * 2.0F - 1.0F;
+                                double d2 = (float) l / 15.0F * 2.0F - 1.0F;
                                 double d3 = Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
                                 d0 = d0 / d3;
                                 d1 = d1 / d3;
@@ -57,7 +80,7 @@ public class VanillaExplosionType extends ExtendedExplosionType {
                                 double d6 = source.getY();
                                 double d8 = source.getZ();
 
-                                for(float f1 = 0.3F; f > 0.0F; f -= 0.22500001F) {
+                                for (float f1 = 0.3F; f > 0.0F; f -= 0.22500001F) {
                                     BlockPos blockpos = new BlockPos(d4, d6, d8);
                                     BlockState blockstate = worldIn.getBlockState(blockpos);
                                     FluidState fluidstate = worldIn.getFluidState(blockpos);
@@ -72,62 +95,134 @@ public class VanillaExplosionType extends ExtendedExplosionType {
                                         set.add(blockpos);
                                     }
 
-                                    d4 += d0 * (double)0.3F;
-                                    d6 += d1 * (double)0.3F;
-                                    d8 += d2 * (double)0.3F;
+                                    d4 += d0 * (double) 0.3F;
+                                    d6 += d1 * (double) 0.3F;
+                                    d8 += d2 * (double) 0.3F;
                                 }
                             }
                         }
                     }
                 }
 
-                this.affectedBlockPositions.addAll(set);
-                float f2 = radius * 2.0F;
-                int k1 = MathHelper.floor(source.getX() - (double)f2 - 1.0D);
-                int l1 = MathHelper.floor(source.getX() + (double)f2 + 1.0D);
-                int i2 = MathHelper.floor(source.getY() - (double)f2 - 1.0D);
-                int i1 = MathHelper.floor(source.getY() + (double)f2 + 1.0D);
-                int j2 = MathHelper.floor(source.getZ() - (double)f2 - 1.0D);
-                int j1 = MathHelper.floor(source.getZ() + (double)f2 + 1.0D);
-                List<Entity> list = worldIn.getEntitiesWithinAABBExcludingEntity(this.exploder, new AxisAlignedBB((double)k1, (double)i2, (double)j2, (double)l1, (double)i1, (double)j1));
-                net.minecraftforge.event.ForgeEventFactory.onExplosionDetonate(this.world, this, list, f2);
-                Vector3d vector3d = new Vector3d(this.x, this.y, this.z);
+                affectedBlocks.addAll(set);
+                float radiusx2 = radius * 2.0F;
+                int eastBound = MathHelper.floor(source.getX() - (double) radiusx2 - 1.0D);
+                int westBound = MathHelper.floor(source.getX() + (double) radiusx2 + 1.0D);
+                int lowerBound = MathHelper.floor(source.getY() - (double) radiusx2 - 1.0D);
+                int upperBound = MathHelper.floor(source.getY() + (double) radiusx2 + 1.0D);
+                int southBound = MathHelper.floor(source.getZ() - (double) radiusx2 - 1.0D);
+                int northBound = MathHelper.floor(source.getZ() + (double) radiusx2 + 1.0D);
 
-                for(int k2 = 0; k2 < list.size(); ++k2) {
-                    Entity entity = list.get(k2);
-                    if (!entity.isImmuneToExplosions()) {
-                        double d12 = (double)(MathHelper.sqrt(entity.getDistanceSq(vector3d)) / f2);
-                        if (d12 <= 1.0D) {
-                            double d5 = entity.getPosX() - this.x;
-                            double d7 = (entity instanceof TNTEntity ? entity.getPosY() : entity.getPosYEye()) - this.y;
-                            double d9 = entity.getPosZ() - this.z;
-                            double d13 = (double)MathHelper.sqrt(d5 * d5 + d7 * d7 + d9 * d9);
-                            if (d13 != 0.0D) {
-                                d5 = d5 / d13;
-                                d7 = d7 / d13;
-                                d9 = d9 / d13;
-                                double d14 = (double)getBlockDensity(vector3d, entity);
-                                double d10 = (1.0D - d12) * d14;
-                                entity.attackEntityFrom(this.getDamageSource(), (float)((int)((d10 * d10 + d10) / 2.0D * 7.0D * (double)f2 + 1.0D)));
-                                double d11 = d10;
-                                if (entity instanceof LivingEntity) {
-                                    d11 = ProtectionEnchantment.getBlastDamageReduction((LivingEntity)entity, d10);
+                List<Entity> list = worldIn.getEntitiesWithinAABBExcludingEntity(placer, new AxisAlignedBB(eastBound, lowerBound, southBound, westBound, upperBound, northBound));
+
+                Explosion vanillaExplosion = new DummyExplosion(worldIn, placer, source.getX(), source.getY(), source.getZ(), radiusx2, affectedBlocks);
+                ForgeEventFactory.onExplosionDetonate(worldIn, vanillaExplosion, list, radiusx2);
+                Vector3d explosionPos = new Vector3d(source.getX(), source.getY(), source.getZ());
+
+                for (int entityID = 0; entityID < list.size(); ++entityID) {
+                    Entity currentEntity = list.get(entityID);
+                    if (!currentEntity.isImmuneToExplosions()) {
+                        double currentEntityDistanceToExplosion = MathHelper.sqrt(currentEntity.getDistanceSq(explosionPos)) / radiusx2;
+                        if (currentEntityDistanceToExplosion <= 1.0D) {
+                            double currentEntityDistanceX = currentEntity.getPosX() - source.getX();
+                            double currentEntityDistanceY = (currentEntity instanceof TNTEntity ? currentEntity.getPosY() : currentEntity.getPosYEye()) - source.getY();
+                            double currentEntityDistanceZ = currentEntity.getPosZ() - source.getZ();
+                            double pythagoreanDistance = MathHelper.sqrt(currentEntityDistanceX * currentEntityDistanceX + currentEntityDistanceY * currentEntityDistanceY + currentEntityDistanceZ * currentEntityDistanceZ);
+                            if (pythagoreanDistance != 0.0D) {
+                                currentEntityDistanceX = currentEntityDistanceX / pythagoreanDistance;
+                                currentEntityDistanceY = currentEntityDistanceY / pythagoreanDistance;
+                                currentEntityDistanceZ = currentEntityDistanceZ / pythagoreanDistance;
+                                double rayLength = Explosion.getBlockDensity(explosionPos, currentEntity);
+                                double damageFalloff = (1.0D - currentEntityDistanceToExplosion) * rayLength;
+                                currentEntity.attackEntityFrom(this.getDamageSource(), (float) ((int) ((damageFalloff * damageFalloff + damageFalloff) / 2.0D * 7.0D * (double) radiusx2 + 1.0D)));
+                                if (currentEntity instanceof LivingEntity) {
+                                    damageFalloff = ProtectionEnchantment.getBlastDamageReduction((LivingEntity) currentEntity, damageFalloff);
                                 }
 
-                                entity.setMotion(entity.getMotion().add(d5 * d11, d7 * d11, d9 * d11));
-                                if (entity instanceof PlayerEntity) {
-                                    PlayerEntity playerentity = (PlayerEntity)entity;
+                                currentEntity.setMotion(currentEntity.getMotion().add(currentEntityDistanceX * damageFalloff, currentEntityDistanceY * damageFalloff, currentEntityDistanceZ * damageFalloff));
+                                if (currentEntity instanceof PlayerEntity) {
+                                    PlayerEntity playerentity = (PlayerEntity) currentEntity;
                                     if (!playerentity.isSpectator() && (!playerentity.isCreative() || !playerentity.abilities.isFlying)) {
-                                        this.playerKnockbackMap.put(playerentity, new Vector3d(d5 * d10, d7 * d10, d9 * d10));
+                                        entityDisplacements.put(playerentity, new Vector3d(currentEntityDistanceX * damageFalloff, currentEntityDistanceY * damageFalloff, currentEntityDistanceZ * damageFalloff));
                                     }
                                 }
                             }
                         }
                     }
                 }
+                break;
             case 2:
-                // Sounds & Damage
+                if (worldIn.isRemote) {
+                    worldIn.playSound(source.getX(), source.getY(), source.getZ(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (worldIn.rand.nextFloat() - worldIn.rand.nextFloat()) * 0.2F) * 0.7F, false);
+                }
+
+                if (properties.doesMakeParticles()) {
+                    worldIn.addParticle(properties.getParticleToEmit(), source.getX(), source.getY(), source.getZ(), 1.0D, 0.0D, 0.0D);
+                }
+
+                if (doBlocksDrop) {
+                    ObjectArrayList<Pair<ItemStack, BlockPos>> objectarraylist = new ObjectArrayList<>();
+                    Collections.shuffle(affectedBlocks, worldIn.rand);
+
+                    for (BlockPos blockpos : affectedBlocks) {
+                        BlockState blockstate = worldIn.getBlockState(blockpos);
+                        Block block = blockstate.getBlock();
+                        if (!blockstate.isAir(worldIn, blockpos)) {
+                            BlockPos blockpos1 = blockpos.toImmutable();
+                            worldIn.getProfiler().startSection("explosion_blocks");
+
+                            Explosion vanillaExplosion2 = new DummyExplosion(worldIn, placer, source.getX(), source.getY(), source.getZ(), radius, affectedBlocks);
+
+                            if (blockstate.canDropFromExplosion(worldIn, blockpos, vanillaExplosion2) && worldIn instanceof ServerWorld) {
+                                TileEntity tileentity = blockstate.hasTileEntity() ? worldIn.getTileEntity(blockpos) : null;
+                                LootContext.Builder lootcontext$builder = (new LootContext.Builder((ServerWorld) worldIn)).withRandom(worldIn.rand).withParameter(LootParameters.field_237457_g_, Vector3d.copyCentered(blockpos)).withParameter(LootParameters.TOOL, ItemStack.EMPTY).withNullableParameter(LootParameters.BLOCK_ENTITY, tileentity).withNullableParameter(LootParameters.THIS_ENTITY, placer);
+                                if (this.doBlocksDrop) {
+                                    lootcontext$builder.withParameter(LootParameters.EXPLOSION_RADIUS, (float) radius);
+                                }
+
+                                blockstate.getDrops(lootcontext$builder).forEach((stack) -> {
+                                    handleExplosionDrops(objectarraylist, stack, blockpos1);
+                                });
+                            }
+
+                            blockstate.onBlockExploded(worldIn, blockpos, vanillaExplosion2);
+                            worldIn.getProfiler().endSection();
+                        }
+                    }
+
+                    for (Pair<ItemStack, BlockPos> pair : objectarraylist) {
+                        Block.spawnAsEntity(worldIn, pair.getSecond(), pair.getFirst());
+                    }
+                }
+
+                if (properties.causesFire()) {
+                    for (BlockPos blockpos2 : affectedBlocks) {
+                        if (worldIn.rand.nextInt(3) == 0 && worldIn.getBlockState(blockpos2).isAir() && worldIn.getBlockState(blockpos2.down()).isOpaqueCube(worldIn, blockpos2.down())) {
+                            worldIn.setBlockState(blockpos2, AbstractFireBlock.getFireForPlacement(worldIn, blockpos2));
+                        }
+                    }
+                }
+                break;
+            default:
+                // Handle unknown stage? maybe? perhaps?
+        }
+    }
+
+    private static void handleExplosionDrops(ObjectArrayList<Pair<ItemStack, BlockPos>> dropPositionArray, ItemStack stack, BlockPos pos) {
+        int i = dropPositionArray.size();
+
+        for(int j = 0; j < i; ++j) {
+            Pair<ItemStack, BlockPos> pair = dropPositionArray.get(j);
+            ItemStack itemstack = pair.getFirst();
+            if (ItemEntity.canMergeStacks(itemstack, stack)) {
+                ItemStack itemstack1 = ItemEntity.mergeStacks(itemstack, stack, 16);
+                dropPositionArray.set(j, Pair.of(itemstack1, pair.getSecond()));
+                if (stack.isEmpty()) {
+                    return;
+                }
+            }
         }
 
+        dropPositionArray.add(Pair.of(stack, pos));
     }
 }

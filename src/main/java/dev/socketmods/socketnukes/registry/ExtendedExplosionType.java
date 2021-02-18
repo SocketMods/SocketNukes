@@ -1,7 +1,9 @@
 package dev.socketmods.socketnukes.registry;
 
 
+import dev.socketmods.socketnukes.explosion.ExplosionProperties;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -29,30 +31,35 @@ public class ExtendedExplosionType extends ForgeRegistryEntry<ExtendedExplosionT
 
     // Blocks that are known to be immune to this explosion
     protected List<Block> immuneBlocks;
-    protected List<Block> getImmuneBlocks() { return immuneBlocks; }
-    protected void setImmuneBlocks(List<Block> blocks) { this.immuneBlocks = blocks; }
+    public List<Block> getImmuneBlocks() { return immuneBlocks; }
+    public void setImmuneBlocks(List<Block> blocks) { this.immuneBlocks = blocks; }
 
     // For conventional circular-crater explosions, this is the distance from the explosive to the outer edge of the crater.
     protected int radius;
-    protected int getRadius() { return radius; }
-    protected void setRadius(int radius) { this.radius = radius; }
+    public int getRadius() { return radius; }
+    public void setRadius(int radius) { this.radius = radius; }
 
     // For explosives that don't use conventional "big boom" damage, they can specify their own.
     // eg. napalm bombs cause fire damage
     protected DamageSource damageSource;
-    protected DamageSource getDamageSource() { return damageSource; }
-    protected void setDamageSource(DamageSource source) { this.damageSource = source; }
+    public DamageSource getDamageSource() { return damageSource; }
+    public void setDamageSource(DamageSource source) { this.damageSource = source; }
 
     // For explosives that totally annihilate the area, return false.
     // Analogous to Explosion.Mode.BREAK/DESTROY
     protected boolean doBlocksDrop;
-    protected boolean getDoBlocksDrop() { return doBlocksDrop; }
-    protected void setDoBlocksDrop(boolean newBlocksDrop) { this.doBlocksDrop = newBlocksDrop; }
+    public boolean getDoBlocksDrop() { return doBlocksDrop; }
+    public void setDoBlocksDrop(boolean newBlocksDrop) { this.doBlocksDrop = newBlocksDrop; }
 
     // Large explosions may require multiple "stages" of explosion, in order to avoid thrashing the server.
     protected int explosionStages;
-    protected int getExplosionStages() { return explosionStages; }
-    protected void setExplosionStages(int stages) { this.explosionStages = stages; }
+    public int getExplosionStages() { return explosionStages; }
+    public void setExplosionStages(int stages) { this.explosionStages = stages; }
+
+    // Other properties about the explosion itself, the sound it makes, particles, etc.
+    protected ExplosionProperties properties;
+    public void setProperties(ExplosionProperties properties) { this.properties = properties; }
+    public ExplosionProperties getProperties() { return properties; }
 
     public ExtendedExplosionType(int blastRadius, List<Block> immuneBlocks, int stages, DamageSource damage, boolean annihilateMode) {
         this.immuneBlocks = immuneBlocks;
@@ -69,7 +76,7 @@ public class ExtendedExplosionType extends ForgeRegistryEntry<ExtendedExplosionT
      * @return boolean; whether to continue with the explosion
      */
 
-    protected boolean prepareExplosion(World worldIn, BlockPos source) {
+    protected boolean prepareExplosion(World worldIn, BlockPos source, Entity placer) {
 
         return true;
     }
@@ -78,7 +85,7 @@ public class ExtendedExplosionType extends ForgeRegistryEntry<ExtendedExplosionT
      * If prepareExplosion returned true, execute the stages of explosion.
      */
 
-    protected void explode(World worldIn, BlockPos source, int stage) {
+    protected void explode(World worldIn, BlockPos source, int stage, Entity placer) {
     }
 
     /**
