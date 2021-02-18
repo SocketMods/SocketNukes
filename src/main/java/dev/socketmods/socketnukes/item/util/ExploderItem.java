@@ -1,7 +1,6 @@
 package dev.socketmods.socketnukes.item.util;
 
 import dev.socketmods.socketnukes.explosion.DummyExplosion;
-import dev.socketmods.socketnukes.explosion.types.VanillaExplosionType;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUseContext;
