@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.TNTMinecartRenderer;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
@@ -44,7 +45,7 @@ public class ExplosiveEntityRenderer extends EntityRenderer<ExplosiveEntity> {
      */
     @Override
     public ResourceLocation getEntityTexture(ExplosiveEntity entity) {
-        return new ResourceLocation(SocketNukes.MODID, "block/explosive");
+        return AtlasTexture.LOCATION_BLOCKS_TEXTURE;
     }
 
 }
