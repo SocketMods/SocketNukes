@@ -19,7 +19,7 @@ public class ExploderItem extends Item {
             explosion.prepareExplosion(context.getWorld(), context.getPos(), context.getPlayer());
 
             for(int stage = 0; stage < explosion.getExplosionStages(); stage++) {
-                explosion.explode(context.getWorld(), context.getPos(), stage, context.getPlayer());
+                explosion.explode(context.getWorld(), context.getPos(), stage + 1, context.getPlayer());
             }
         }
         return super.onItemUse(context);
