@@ -22,5 +22,9 @@ public class ItemModelProviders extends ItemModelProvider {
                 mcLoc("item/generated"),                // "parent": ###
                 "layer0",                            // ###: TEXTURE
                 modLoc("items/" + exploderResource));   // LAYER: ###
+
+        String vanillaExplosive = SNRegistry.VANILLA_EXPLOSIVE.get().getRegistryName().getPath();
+        cubeBottomTop(vanillaExplosive, modLoc("blocks/" + vanillaExplosive + "_side"), modLoc("blocks/" + vanillaExplosive + "_bottom"), modLoc("blocks/" + vanillaExplosive + "_top"));
+
     }
 }

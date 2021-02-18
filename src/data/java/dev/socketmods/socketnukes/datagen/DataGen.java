@@ -2,7 +2,8 @@ package dev.socketmods.socketnukes.datagen;
 
 import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.datagen.advancment.AdvancementsProvider;
-import dev.socketmods.socketnukes.datagen.blockmodel.BlockModelProviders;
+import dev.socketmods.socketnukes.datagen.block.model.BlockModelProviders;
+import dev.socketmods.socketnukes.datagen.block.state.BlockStateProvider;
 import dev.socketmods.socketnukes.datagen.global_loot_modifier.GLMProvider;
 import dev.socketmods.socketnukes.datagen.itemmodel.ItemModelProviders;
 import dev.socketmods.socketnukes.datagen.lang.EnUsLangProvider;
@@ -40,6 +41,7 @@ public class DataGen {
             generator.addProvider(blockTags);
             generator.addProvider(new ItemTagProviders(generator, blockTags, event.getExistingFileHelper()));
             generator.addProvider(new FluidTagsProviders(generator, event.getExistingFileHelper()));
+
         }
 
         if(event.includeClient()){
@@ -47,6 +49,7 @@ public class DataGen {
             generator.addProvider(new BlockModelProviders(generator, event.getExistingFileHelper()));
             generator.addProvider(new ItemModelProviders(generator, event.getExistingFileHelper()));
             generator.addProvider(new EnUsLangProvider(generator));
+            generator.addProvider(new BlockStateProvider(generator, event.getExistingFileHelper()));
         }
     }
 
