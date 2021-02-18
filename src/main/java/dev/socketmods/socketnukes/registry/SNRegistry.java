@@ -37,7 +37,7 @@ public class SNRegistry {
      **********************************************/
 
     public static Supplier<IForgeRegistry<ExtendedExplosionType>> EXPLOSION_TYPE_REGISTRY = EXPLOSIONS.makeRegistry("explosion_types", () ->
-            new RegistryBuilder<ExtendedExplosionType>().setMaxID(Integer.MAX_VALUE - 1).onAdd((owner, stage, id, obj, old) -> SocketNukes.LOGGER.info("ExplosionType Added: " + id + " "))
+            new RegistryBuilder<ExtendedExplosionType>().setMaxID(Integer.MAX_VALUE - 1).onAdd((owner, stage, id, obj, old) -> SocketNukes.LOGGER.info("ExplosionType Added: " + obj.getRegistryName().toString() + " "))
     );
 
     /***********************************************
