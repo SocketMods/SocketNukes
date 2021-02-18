@@ -1,5 +1,6 @@
 package dev.socketmods.socketnukes.item.util;
 
+import dev.socketmods.socketnukes.explosion.DummyExplosion;
 import dev.socketmods.socketnukes.explosion.types.VanillaExplosionType;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.item.Item;
@@ -14,14 +15,12 @@ public class ExploderItem extends Item {
 
     @Override
     public ActionResultType onItemUse(ItemUseContext context) {
-        VanillaExplosionType explosion = SNRegistry.VANILLA_EXPLOSION.get();
+        DummyExplosion explosion = new DummyExplosion(context.getWorld(), context.getPlayer(),
+                context.getPos().getX(), context.getPos().getY(), context.getPos().getZ(),
+                SNRegistry.VANILLA_EXPLOSION.get());
 
-        explosion.prepareExplosion(context.getWorld(), context.getPos(), context.getPlayer());
+        explosion.runExplosion();
 
-        for (int stage = 0; stage < explosion.getExplosionStages(); stage++) {
-            explosion.explode(context.getWorld(), context.getPos(), stage + 1, context.getPlayer());
-
-        }
         return super.onItemUse(context);
     }
 }
