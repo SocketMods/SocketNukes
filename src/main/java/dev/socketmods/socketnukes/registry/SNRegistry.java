@@ -70,7 +70,7 @@ public class SNRegistry {
     public static final RegistryObject<Item> VANILLA_EXPLOSIVE_ITEM = ITEMS.register("explosive", () -> new BlockItem(VANILLA_EXPLOSIVE.get(), new Item.Properties().group(ItemGroup.REDSTONE)));
 
     // EXPLOSIONS
-    public static final RegistryObject<VanillaExplosionType> VANILLA_EXPLOSION = EXPLOSIONS.register("vanilla_explosion", () ->
+    public static final RegistryObject<VanillaExplosionType> VANILLA_EXPLOSION = EXPLOSIONS.register("vanilla", () ->
             new VanillaExplosionType(new ExplosionProperties(true, false, ParticleTypes.EXPLOSION_EMITTER, SoundEvents.ENTITY_GENERIC_EXPLODE))
     );
 

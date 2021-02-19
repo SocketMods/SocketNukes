@@ -55,7 +55,9 @@ public class CubicExplosionType extends ExtendedExplosionType {
                 for (int xPos = source.getX() - radius; xPos < source.getX() + radius; xPos++) {
                     for (int yPos = source.getY() - radius; yPos < source.getY() + radius; yPos++) {
                         for (int zPos = source.getZ() - radius; zPos < source.getZ() + radius; zPos++) {
-                            meta.affectedBlocks.add(new BlockPos(xPos, yPos, zPos));
+                            BlockPos pos = new BlockPos(xPos, yPos, zPos);
+                            if(!immuneBlocks.contains(worldIn.getBlockState(pos).getBlock()))
+                                meta.affectedBlocks.add(new BlockPos(xPos, yPos, zPos));
                         }
                     }
                 }

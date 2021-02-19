@@ -1,6 +1,8 @@
 package dev.socketmods.socketnukes.block.explosive;
 
+import dev.socketmods.socketnukes.capability.Capabilities;
 import dev.socketmods.socketnukes.entity.ExplosiveEntity;
+import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -30,7 +32,7 @@ public class TNTExplosive extends Block {
     }
 
     public void catchFire(BlockState state, World world, BlockPos pos, @Nullable net.minecraft.util.Direction face, @Nullable LivingEntity igniter) {
-        explode(world, pos, igniter);
+        explode(world, pos, igniter, SNRegistry.VANILLA_EXPLOSION.get());
     }
 
     public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
@@ -50,10 +52,9 @@ public class TNTExplosive extends Block {
         }
     }
 
-    private static void explode(World worldIn, BlockPos pos, @Nullable LivingEntity entityIn) {
+    private static void explode(World worldIn, BlockPos pos, @Nullable LivingEntity entityIn, ExtendedExplosionType explosion) {
         //if (!worldIn.isRemote) {
-            ExplosiveEntity explosiveEntity = new ExplosiveEntity(worldIn, pos, SNRegistry.VANILLA_EXPLOSION.get(), entityIn);
-            explosiveEntity.setExplosion(SNRegistry.VANILLA_EXPLOSION.get());
+            ExplosiveEntity explosiveEntity = new ExplosiveEntity(worldIn, pos, explosion, entityIn);
             worldIn.addEntity(explosiveEntity);
             worldIn.playSound(null, explosiveEntity.getPosX(), explosiveEntity.getPosY(), explosiveEntity.getPosZ(),
                     SoundEvents.ENTITY_TNT_PRIMED, SoundCategory.BLOCKS, 1.0F, 1.0F);
@@ -61,14 +62,22 @@ public class TNTExplosive extends Block {
     }
 
     public void onExplosionDestroy(World worldIn, BlockPos pos, Explosion explosionIn) {
-        explode(worldIn, pos, explosionIn.getExplosivePlacedBy());
+        explode(worldIn, pos, explosionIn.getExplosivePlacedBy(), SNRegistry.VANILLA_EXPLOSION.get());
     }
 
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand
             handIn, BlockRayTraceResult hit) {
         ItemStack itemstack = player.getHeldItem(handIn);
         Item item = itemstack.getItem();
-        if (item != Items.FLINT_AND_STEEL && item != Items.FIRE_CHARGE) {
+
+        if(item == SNRegistry.EXPLODER_ITEM.get()) {
+            itemstack.getCapability(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY).ifPresent(cap ->
+                    explode(worldIn, pos, player, SNRegistry.parseExplosion(cap.getConfig()))
+            );
+            worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 11);
+            return ActionResultType.func_233537_a_(worldIn.isRemote);
+
+        } else if (item != Items.FLINT_AND_STEEL && item != Items.FIRE_CHARGE) {
             return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
         } else {
             catchFire(state, worldIn, pos, hit.getFace(), player);

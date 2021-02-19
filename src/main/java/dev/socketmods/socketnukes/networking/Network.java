@@ -1,5 +1,6 @@
 package dev.socketmods.socketnukes.networking;
 
+import dev.socketmods.socketnukes.networking.packet.ExploderConfigChangedPacket;
 import dev.socketmods.socketnukes.networking.packet.ExtendedExplosionPacket;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
@@ -25,9 +26,18 @@ public class Network {
                 .decoder(ExtendedExplosionPacket::new)
                 .consumer(ExtendedExplosionPacket::handle)
                 .add();
+        CHANNEL.messageBuilder(ExploderConfigChangedPacket.class, 1, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(ExploderConfigChangedPacket::toBytes)
+                .decoder(ExploderConfigChangedPacket::new)
+                .consumer(ExploderConfigChangedPacket::handle)
+                .add();
     }
 
     public static void sendToClient(Object packet, ServerPlayerEntity player) {
         CHANNEL.sendTo(packet, player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
+    }
+
+    public static void sendToServer(Object packet) {
+        CHANNEL.sendToServer(packet);
     }
 }
