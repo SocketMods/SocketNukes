@@ -5,6 +5,7 @@ import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.block.explosive.TNTExplosive;
 import dev.socketmods.socketnukes.entity.ExplosiveEntity;
 import dev.socketmods.socketnukes.explosion.ExplosionProperties;
+import dev.socketmods.socketnukes.explosion.types.NullExplosionType;
 import dev.socketmods.socketnukes.explosion.types.VanillaExplosionType;
 import dev.socketmods.socketnukes.item.SocketItems;
 import dev.socketmods.socketnukes.item.util.ExploderItem;
@@ -64,12 +65,16 @@ public class SNRegistry {
 
     // EXPLOSIONS
     public static final RegistryObject<VanillaExplosionType> VANILLA_EXPLOSION = EXPLOSIONS.register("vanilla_explosion", () ->
-        new VanillaExplosionType(new ExplosionProperties(true, false, ParticleTypes.EXPLOSION_EMITTER, SoundEvents.ENTITY_GENERIC_EXPLODE))
+            new VanillaExplosionType(new ExplosionProperties(true, false, ParticleTypes.EXPLOSION_EMITTER, SoundEvents.ENTITY_GENERIC_EXPLODE))
+    );
+
+    public static final RegistryObject<ExtendedExplosionType> NULL_EXPLOSION = EXPLOSIONS.register("null", () ->
+            new NullExplosionType()
     );
 
     // ENTITY TYPE
     public static final RegistryObject<EntityType<ExplosiveEntity>> EXPLOSIVE_ENTITY_TYPE = ENTITYTYPES.register("explosive", () ->
-        new EntityType<>(ExplosiveEntity::create, EntityClassification.MISC, true, true, false, false, ImmutableSet.of(), EntitySize.fixed(1f, 1f), 0, 1)
+        new EntityType<>(ExplosiveEntity::create, EntityClassification.MISC, true, true, false, false, ImmutableSet.of(), EntitySize.fixed(1f, 1f), 200, 1)
     );
 
 
