@@ -13,11 +13,13 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.item.TNTEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.LavaFluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootContext;
 import net.minecraft.loot.LootParameters;
+import net.minecraft.network.play.server.SExplosionPacket;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
@@ -42,7 +44,7 @@ public class VanillaExplosionType extends ExtendedExplosionType {
 
     private static final int STAGE_DAMAGE = 1;
     private static final int STAGE_BLOCKS = 2;
-    private static final int STAGE_FLUIDS = 3;
+    private static final int STAGE_SYNC = 3;
 
     public VanillaExplosionType(ExplosionProperties properties) {
         super(4, Arrays.asList(Blocks.BEDROCK, Blocks.OBSIDIAN, Blocks.CRYING_OBSIDIAN),
@@ -211,12 +213,14 @@ public class VanillaExplosionType extends ExtendedExplosionType {
 
                 return affectedBlocks;
 
-            case STAGE_FLUIDS:
-                for(BlockPos pos : affectedBlocks) {
-                    BlockState state = worldIn.getBlockState(pos);
-
-                    if (!state.isAir(worldIn, pos)) {
-                        state.neighborChanged(worldIn, pos, state.getBlock(), sourceOld, false);
+            case STAGE_SYNC:
+                if(!worldIn.isRemote) {
+                    ServerWorld sWorld = (ServerWorld) worldIn;
+                    for (ServerPlayerEntity serverplayerentity : sWorld.getPlayers()) {
+                        if (serverplayerentity.getDistanceSq(source.getX(), source.getY(), source.getZ()) < 4096.0D) {
+                            serverplayerentity.connection.sendPacket(new SExplosionPacket(source.getX(), source.getY(), source.getZ(),
+                                    this.radius, affectedBlocks, entityDisplacements.get(serverplayerentity)));
+                        }
                     }
                 }
 
