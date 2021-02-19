@@ -19,6 +19,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -50,12 +51,17 @@ public class TNTExplosive extends Block {
     }
 
     private static void explode(World worldIn, BlockPos pos, @Nullable LivingEntity entityIn) {
-        if (!worldIn.isRemote) {
+        //if (!worldIn.isRemote) {
             ExplosiveEntity explosiveEntity = new ExplosiveEntity(worldIn, pos, SNRegistry.VANILLA_EXPLOSION.get(), entityIn);
+            explosiveEntity.setExplosion(SNRegistry.VANILLA_EXPLOSION.get());
             worldIn.addEntity(explosiveEntity);
             worldIn.playSound(null, explosiveEntity.getPosX(), explosiveEntity.getPosY(), explosiveEntity.getPosZ(),
                     SoundEvents.ENTITY_TNT_PRIMED, SoundCategory.BLOCKS, 1.0F, 1.0F);
-        }
+        //}
+    }
+
+    public void onExplosionDestroy(World worldIn, BlockPos pos, Explosion explosionIn) {
+        explode(worldIn, pos, explosionIn.getExplosivePlacedBy());
     }
 
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand
