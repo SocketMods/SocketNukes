@@ -1,3 +1,5 @@
 {
+    "block.socketnukes.explosive": "פופ פילטר",
+    "entity.socketnukes.explosive": "פופ פילטר",
     "item.socketnukes.exploder_item": "מפוצצניון 9000"
 }
