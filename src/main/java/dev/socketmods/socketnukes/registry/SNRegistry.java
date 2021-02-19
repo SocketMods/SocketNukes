@@ -25,10 +25,12 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.*;
 
-import javax.management.ImmutableDescriptor;
+import java.util.HashMap;
 import java.util.function.Supplier;
 
 public class SNRegistry {
+
+    private static HashMap<String, ExtendedExplosionType> explosions = new HashMap<>();
 
     /***********************************************
      *         Deferred Register Instances         *
@@ -49,7 +51,10 @@ public class SNRegistry {
      **********************************************/
 
     public static Supplier<IForgeRegistry<ExtendedExplosionType>> EXPLOSION_TYPE_REGISTRY = EXPLOSIONS.makeRegistry("explosion_types", () ->
-            new RegistryBuilder<ExtendedExplosionType>().setMaxID(Integer.MAX_VALUE - 1).onAdd((owner, stage, id, obj, old) -> SocketNukes.LOGGER.info("ExplosionType Added: " + obj.getRegistryName().toString() + " "))
+            new RegistryBuilder<ExtendedExplosionType>().setMaxID(Integer.MAX_VALUE - 1).onAdd((owner, stage, id, obj, old) -> {
+                SocketNukes.LOGGER.info("ExplosionType Added: " + obj.getRegistryName().toString() + " ");
+                explosions.put(obj.getRegistryName().getPath(), obj);
+            })
     );
 
     /***********************************************
@@ -87,5 +92,9 @@ public class SNRegistry {
         CONTAINERTYPES.register(modBus);
         EXPLOSIONS.register(modBus);
         ENTITYTYPES.register(modBus);
+    }
+
+    public static ExtendedExplosionType parseExplosion(String name) {
+        return explosions.get(name);
     }
 }

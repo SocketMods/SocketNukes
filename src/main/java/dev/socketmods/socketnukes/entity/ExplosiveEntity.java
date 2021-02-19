@@ -54,7 +54,10 @@ public class ExplosiveEntity extends Entity {
 
     @Override
     public void tick() {
-
+        if(explosion == null) {
+            explosion = SNRegistry.NULL_EXPLOSION.get();
+            return;
+        }
         if (!this.hasNoGravity()) {
             this.setMotion(this.getMotion().add(0.0D, -0.04D, 0.0D));
         }
@@ -92,14 +95,16 @@ public class ExplosiveEntity extends Entity {
     }
 
     protected void writeAdditional(CompoundNBT compound) {
-        compound.putShort("Fuse", (short)this.getFuse());
+        compound.putShort("fuse", (short)this.getFuse());
+        compound.putString("explosionType", explosion.getRegistryName().getPath());
     }
 
     /**
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
     protected void readAdditional(CompoundNBT compound) {
-        this.setFuse(compound.getShort("Fuse"));
+        this.setFuse(compound.getShort("fuse"));
+        this.setExplosion(SNRegistry.parseExplosion(compound.getString("explosionType")));
     }
 
     @Override
