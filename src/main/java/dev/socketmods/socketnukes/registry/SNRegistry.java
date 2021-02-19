@@ -63,11 +63,11 @@ public class SNRegistry {
      ***********************************************/
 
     // BLOCKS
-    public static final RegistryObject<Block> VANILLA_EXPLOSIVE = BLOCKS.register("explosive", () -> new TNTExplosive());
+    public static final RegistryObject<Block> GENERIC_EXPLOSIVE = BLOCKS.register("explosive", () -> new TNTExplosive());
 
     // ITEMS
     public static final RegistryObject<Item> EXPLODER_ITEM = ITEMS.register("exploder_item", () -> new ExploderItem(SocketItems.EXPLODER_PROPERTIES));
-    public static final RegistryObject<Item> VANILLA_EXPLOSIVE_ITEM = ITEMS.register("explosive", () -> new BlockItem(VANILLA_EXPLOSIVE.get(), new Item.Properties().group(ItemGroup.REDSTONE)));
+    public static final RegistryObject<Item> GENERIC_EXPLOSIVE_ITEM = ITEMS.register("explosive", () -> new BlockItem(GENERIC_EXPLOSIVE.get(), new Item.Properties().group(ItemGroup.REDSTONE)));
 
     // EXPLOSIONS
     public static final RegistryObject<VanillaExplosionType> VANILLA_EXPLOSION = EXPLOSIONS.register("vanilla", () ->
@@ -99,6 +99,11 @@ public class SNRegistry {
         ENTITYTYPES.register(modBus);
     }
 
+    /**
+     * Given a name (intended to be the path of the registry name), turn it into an ExtendedExplosionType.
+     * This is needed for serializing entities and capabilities.
+     * If ExplosionTypes were not singleton, this would not be possible.
+     */
     public static ExtendedExplosionType parseExplosion(String name) {
         return explosions.get(name);
     }

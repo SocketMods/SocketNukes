@@ -10,9 +10,16 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+/**
+ * A central location to store and attach capabilities.
+ *
+ * @author Citrine
+ */
 @Mod.EventBusSubscriber(modid = SocketNukes.MODID)
 public class Capabilities {
 
+    // Exploder Configuration is a string that represents the currently selected explosion in the
+    // Exploder Item.
     @CapabilityInject(IConfiguration.class)
     public static Capability<IConfiguration> EXPLODER_CONFIGURATION_CAPABILITY = null;
 

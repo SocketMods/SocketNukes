@@ -15,6 +15,14 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A wrapper for the ExtendedExplosions, intended to be used where an Explosion is hard coded as a requirement,
+ * for example the Forge events, and calculating resistances.
+ *
+ * It is what actually executes the ExtendedExplosionType#explode method, for every stage.
+ *
+ * @author Citrine
+ */
 public class DummyExplosion extends Explosion {
 
     private ExtendedExplosionType explosionType;
@@ -44,6 +52,8 @@ public class DummyExplosion extends Explosion {
         explosionType = type;
     }
 
+    // Execute the explosion extensibly.
+    // TODO: tick delay?
     public void runExplosion() {
         explosionType.prepareExplosion(world, position, source);
 

@@ -8,6 +8,14 @@ import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 
+/**
+ * The provider for the Explosion Configuration capability.
+ * Handles the logic for parsing this cap out of wherever it is needed, like NBT of a stored world.
+ *
+ * Exploder Configuration is a string that represents the currently selected explosion in the Exploder Item.
+ *
+ * @author Citrine
+ */
 public class ConfigProvider implements ICapabilitySerializable<CompoundNBT> {
 
     private final ConfigTemplate config = new ConfigTemplate();

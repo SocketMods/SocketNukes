@@ -42,6 +42,16 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.ForgeEventFactory;
 
+/**
+ * Tries to mimic TNT as much as possible.
+ * When triggered from an item, this seems to leave water in a broken state.
+ * When triggered from an entity, it seems to work fine.
+ * TODO: fix that.
+ *
+ * Otherwise, it serves as an example to the extensibility of the system, with a three-stage process.
+ *
+ * @author Curle, Citrine
+ */
 public class VanillaExplosionType extends ExtendedExplosionType {
     private ExplosionProperties properties;
 
@@ -100,7 +110,7 @@ public class VanillaExplosionType extends ExtendedExplosionType {
                                         rayAngle -= (optional.get() + 0.3F) * 0.3F;
                                     }
 
-                                    if (rayAngle > 0.0F/* && !immuneBlocks.contains(worldIn.getBlockState(blockpos).getBlock())*/) {
+                                    if (rayAngle > 0.0F) {
                                         set.add(blockpos);
                                     }
 
@@ -215,6 +225,7 @@ public class VanillaExplosionType extends ExtendedExplosionType {
                 return meta;
 
             case STAGE_SYNC:
+                // We have to manually tell the client that these blocks have broken, as onBlockExploded does not.
                 if(!worldIn.isRemote) {
                     ServerWorld sWorld = (ServerWorld) worldIn;
                     for (ServerPlayerEntity serverplayerentity : sWorld.getPlayers()) {

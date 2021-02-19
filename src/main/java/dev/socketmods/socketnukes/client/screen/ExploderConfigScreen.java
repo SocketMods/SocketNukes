@@ -15,6 +15,16 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.RegistryObject;
 
+/**
+ * When the Exploder Item is used, it brings up this screen.
+ *
+ * This screen shows a list of buttons - filled by the currently registered ExplosiveTypes, and allows you to select between them.
+ * Upon a selection being made, it updates the server to make it aware.
+ *
+ * This is an otherwise simple class.
+ *
+ * @author Citrine
+ */
 public class ExploderConfigScreen extends Screen {
 
     private static final int SCREEN_WIDTH = 160;

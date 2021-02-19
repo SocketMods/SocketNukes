@@ -21,6 +21,10 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 /**
+ *
+ * Tells the client that an explosion happens, and they need to update their blocks and entities.
+ * Contains the list of blocks to be deleted, the particle and sound to display, and the entities to move.
+ *
  * Packet layout:
  * int - list size
  * for every value in int:
@@ -34,14 +38,17 @@ import java.util.function.Supplier;
  * for every value in int:
  *  int - entity ID
  *  double, double, double - vector3d
+ *
+ * @author Citrine
  */
 public class ExtendedExplosionPacket {
 
-    private final List<BlockPos> affectedBlocks;
-    private final ParticleType<?> explosionParticle;
-    private final SoundEvent explosionSound;
-    private final Map<Integer, Vector3d> entityDisplacements;
+    protected final List<BlockPos> affectedBlocks;
+    protected final ParticleType<?> explosionParticle;
+    protected final SoundEvent explosionSound;
+    protected final Map<Integer, Vector3d> entityDisplacements;
 
+    // Deserialiser - construct this class from a packet, according to the above layout
     public ExtendedExplosionPacket(PacketBuffer buf) {
         affectedBlocks = new ArrayList<>();
         int listSize = buf.readInt();
@@ -57,6 +64,7 @@ public class ExtendedExplosionPacket {
         for (int i = 0; i < mapSize; i++) {
             int entityID = buf.readInt();
             Vector3d displacement = new Vector3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
+            entityDisplacements.put(entityID, displacement);
         }
     }
 
@@ -73,6 +81,7 @@ public class ExtendedExplosionPacket {
         }
     }
 
+    // Serialiser - turn this class into a packet, according to the above layout
     public void toBytes(PacketBuffer buf) {
         buf.writeInt(this.affectedBlocks.size());
         for (BlockPos pos: affectedBlocks) {
@@ -91,6 +100,8 @@ public class ExtendedExplosionPacket {
         }
     }
 
+    // Consumer - perform the intended actions once this packet is recieved.
+    // That being: Delete the blocks, move the entities, show the particles, play the sound.
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             ClientWorld world = Minecraft.getInstance().world;

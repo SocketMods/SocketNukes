@@ -10,6 +10,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
+/**
+ * Runs all the client-only events.
+ * Currently, only Entity Rendering.
+ *
+ * @author Citrine
+ */
 @Mod.EventBusSubscriber(modid = SocketNukes.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientSNEvents {
 

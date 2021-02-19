@@ -19,6 +19,14 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
+/**
+ * The Explosive Entity is what runs the actual logic for exploding things from a TNTExplosive.
+ * It waits, bouncing around slightly, before actually popping.
+ *
+ * This entity can be given any ExplosiveType you need, and it will run that logic via DummyExplosion.
+ *
+ * @author Citrine
+ */
 public class ExplosiveEntity extends Entity {
     private static final DataParameter<Integer> FUSE = EntityDataManager.createKey(ExplosiveEntity.class, DataSerializers.VARINT);
     @Nullable
@@ -44,14 +52,21 @@ public class ExplosiveEntity extends Entity {
         this.explosion = explosive;
     }
 
+    // Static factory method, used for registration.
     public static ExplosiveEntity create(EntityType<?> type, World worldin) {
         return new ExplosiveEntity(type, worldin);
     }
 
-    public void setExplosion(ExtendedExplosionType explosion) {
-        this.explosion = explosion;
-    }
-
+    /**
+     * Runs the actual logic for preparing to execute.
+     * It slowly ticks down, bouncing slightly, creating smoke as a visual indicator.
+     * Once the tick counter runs out, it explodes via the explode method.
+     *
+     * When this Entity is synchronized from the server, it arrives with no extra data.
+     * For this reason, when there is no metadata we fall back to a "do nothing" state.
+     * This only runs when sync fails, which should be only from a TNTExplosive being ignited.
+     * Nonetheless, this fix seems to work, and it seems to prevent nullpointers.
+     */
     @Override
     public void tick() {
         if(explosion == null) {
@@ -81,6 +96,10 @@ public class ExplosiveEntity extends Entity {
 
     }
 
+    /**
+     * Create the actual explosion, run it.
+     * This is where all the work for abstraction comes together.
+     */
     protected void explode() {
         DummyExplosion explosion = new DummyExplosion(this.world, placer,
             this.getPosX(), this.getPosY() - 1, this.getPosZ(),
@@ -99,12 +118,13 @@ public class ExplosiveEntity extends Entity {
         compound.putString("explosionType", explosion.getRegistryName().getPath());
     }
 
-    /**
-     * (abstract) Protected helper method to read subclass entity data from NBT.
-     */
     protected void readAdditional(CompoundNBT compound) {
         this.setFuse(compound.getShort("fuse"));
         this.setExplosion(SNRegistry.parseExplosion(compound.getString("explosionType")));
+    }
+
+    private void setExplosion(ExtendedExplosionType explosionType) {
+        this.explosion = explosionType;
     }
 
     @Override

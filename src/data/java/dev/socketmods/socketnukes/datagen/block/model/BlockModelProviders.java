@@ -2,9 +2,7 @@ package dev.socketmods.socketnukes.datagen.block.model;
 
 import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.registry.SNRegistry;
-import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.BlockModelProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
@@ -18,7 +16,7 @@ public class BlockModelProviders extends BlockModelProvider {
 
     @Override
     protected void registerModels() {
-        String vanillaExplosive = SNRegistry.VANILLA_EXPLOSIVE.get().getRegistryName().getPath();
+        String vanillaExplosive = SNRegistry.GENERIC_EXPLOSIVE.get().getRegistryName().getPath();
         explosiveModel = cubeBottomTop(vanillaExplosive, modLoc("blocks/" + vanillaExplosive + "_side"), modLoc("blocks/" + vanillaExplosive + "_bottom"), modLoc("blocks/" + vanillaExplosive + "_top"));
     }
 

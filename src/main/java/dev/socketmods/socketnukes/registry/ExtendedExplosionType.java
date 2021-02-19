@@ -27,6 +27,8 @@ import java.util.List;
  *  and addons, to ensure cross-functionality.
  *
  * The goal is that these shall be exposed to JSON files, for data-driven bombs.
+ *
+ * @author Curle
  */
 
 public class ExtendedExplosionType extends ForgeRegistryEntry<ExtendedExplosionType> {
@@ -105,7 +107,10 @@ public class ExtendedExplosionType extends ForgeRegistryEntry<ExtendedExplosionT
 
     }
 
-
+    /**
+     * Explosions that break blocks need logic for dropping blocks. Many multiple types of items that drop need to be merged into one.
+     * This handles all the surrounding logic, so that it need not be duplicated in every explosion.
+     */
     protected static void handleExplosionDrops(ObjectArrayList<Pair<ItemStack, BlockPos>> dropPositionArray, ItemStack stack, BlockPos pos) {
         int i = dropPositionArray.size();
 

@@ -15,7 +15,7 @@ public class EnUsLangProvider extends LanguageProvider {
     @Override
     protected void addTranslations() {
         add(SNRegistry.EXPLODER_ITEM.get(), "Exploderiser 9000");
-        add(SNRegistry.VANILLA_EXPLOSIVE_ITEM.get(), "Pop Filter");
+        add(SNRegistry.GENERIC_EXPLOSIVE_ITEM.get(), "Pop Filter");
         add(SNRegistry.EXPLOSIVE_ENTITY_TYPE.get(), "Pop Filter");
 
         add(SNRegistry.VANILLA_EXPLOSION.get(), "Vanilla");

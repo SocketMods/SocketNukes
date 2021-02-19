@@ -1,10 +1,8 @@
 package dev.socketmods.socketnukes.client.render;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.entity.ExplosiveEntity;
 import dev.socketmods.socketnukes.registry.SNRegistry;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -14,6 +12,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
 
+/**
+ * Renderer class for Explosive Entities.
+ * They are much like TNT, flashing white a few times before swelling and exploding.
+ * The only difference is the texture.
+ * Thus, this class is mostly identical to TNTRenderer.
+ * @author Citrine
+ */
 public class ExplosiveEntityRenderer extends EntityRenderer<ExplosiveEntity> {
     public ExplosiveEntityRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn);
@@ -35,7 +40,7 @@ public class ExplosiveEntityRenderer extends EntityRenderer<ExplosiveEntity> {
         matrixStackIn.rotate(Vector3f.YP.rotationDegrees(-90.0F));
         matrixStackIn.translate(-0.5D, -0.5D, 0.5D);
         matrixStackIn.rotate(Vector3f.YP.rotationDegrees(90.0F));
-        TNTMinecartRenderer.renderTntFlash(SNRegistry.VANILLA_EXPLOSIVE.get().getDefaultState(), matrixStackIn, bufferIn, packedLightIn, entityIn.getFuse() / 5 % 2 == 0);
+        TNTMinecartRenderer.renderTntFlash(SNRegistry.GENERIC_EXPLOSIVE.get().getDefaultState(), matrixStackIn, bufferIn, packedLightIn, entityIn.getFuse() / 5 % 2 == 0);
         matrixStackIn.pop();
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }

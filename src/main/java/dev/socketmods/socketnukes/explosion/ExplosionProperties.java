@@ -3,6 +3,12 @@ package dev.socketmods.socketnukes.explosion;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.util.SoundEvent;
 
+/**
+ * Stores all the needed metadata for explosions, for carrying around information like the sound, particle,
+ * whether it creates fire, etc etc.
+ *
+ * @author Citrine
+ */
 public class ExplosionProperties {
     private boolean makesParticles = false;
     private boolean causesFire = false;

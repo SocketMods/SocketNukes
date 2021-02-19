@@ -37,9 +37,16 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Creates a perfect cube explosion, removing everything except obsidian and bedrock.
+ * Serves as the last example explosion type, to demonstrate the extensibility of the system.
+ *
+ * @author Citrine
+ */
 public class CubicExplosionType extends ExtendedExplosionType {
     private ExplosionProperties properties;
 
+    // Stage constants - we gather the blocks to be broken in stage 1, and actually break them in stage 2.
     private static final int STAGE_PREPARE = 1;
     private static final int STAGE_BREAK = 2;
 
@@ -64,6 +71,7 @@ public class CubicExplosionType extends ExtendedExplosionType {
 
                 return meta;
             case STAGE_BREAK:
+                // Entity damage range is quite a bit bigger than the block breaking range.
                 float radiusx2 = radius * 2.0F;
                 int eastBound = MathHelper.floor(source.getX() - (double) radiusx2 - 1.0D);
                 int westBound = MathHelper.floor(source.getX() + (double) radiusx2 + 1.0D);
@@ -152,6 +160,7 @@ public class CubicExplosionType extends ExtendedExplosionType {
                     }
                 }
 
+                // We have to manually tell the client that these blocks have broken, as onBlockExploded does not.
                 if(!worldIn.isRemote) {
                     ServerWorld sWorld = (ServerWorld) worldIn;
                     for (ServerPlayerEntity serverplayerentity : sWorld.getPlayers()) {
