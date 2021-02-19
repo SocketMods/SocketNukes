@@ -2,6 +2,7 @@ package dev.socketmods.socketnukes.registry;
 
 
 import dev.socketmods.socketnukes.explosion.ExplosionProperties;
+import dev.socketmods.socketnukes.explosion.meta.ExplosionMetaPackage;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.DamageSource;
@@ -86,10 +87,9 @@ public class ExtendedExplosionType extends ForgeRegistryEntry<ExtendedExplosionT
      * We return a list of blockstates for compatibility with the vanilla explosion (for now), as it returns the list
      *  on the first pass, and uses it on the second.
      *
-     * TODO: split this out into ExplosionMetaPackage to make it reusable for every Explosion?
      */
-    public List<BlockPos> explode(World worldIn, BlockPos source, int stage, Entity placer, List<BlockPos> blocksFromLastState) {
-        return new ArrayList<>();
+    public ExplosionMetaPackage explode(World worldIn, BlockPos source, int stage, Entity placer, ExplosionMetaPackage meta) {
+        return new ExplosionMetaPackage();
     }
 
     /**

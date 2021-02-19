@@ -4,6 +4,7 @@ import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Pair;
 import dev.socketmods.socketnukes.explosion.DummyExplosion;
 import dev.socketmods.socketnukes.explosion.ExplosionProperties;
+import dev.socketmods.socketnukes.explosion.meta.ExplosionMetaPackage;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
  import net.minecraft.block.*;
@@ -60,9 +61,7 @@ public class VanillaExplosionType extends ExtendedExplosionType {
     }
 
     @Override
-    public List<BlockPos> explode(World worldIn, BlockPos sourceOld, int stage, Entity placer, List<BlockPos> blocksFromLastState) {
-        List<BlockPos> affectedBlocks = (blocksFromLastState.size() == 0) ? new ArrayList<>() : blocksFromLastState;
-        Map<Entity, Vector3d> entityDisplacements = new HashMap<>();
+    public ExplosionMetaPackage explode(World worldIn, BlockPos sourceOld, int stage, Entity placer, ExplosionMetaPackage meta) {
         BlockPos source = new BlockPos(sourceOld.getX(), sourceOld.getY() + 1, sourceOld.getZ());
 
         switch(stage) {
@@ -70,24 +69,25 @@ public class VanillaExplosionType extends ExtendedExplosionType {
                 // Damage entities, calculate blocks to be broken
                 Set<BlockPos> set = Sets.newHashSet();
                 Explosion vanillaExplosion = new DummyExplosion(worldIn, placer, source.getX(), source.getY(), source.getZ(), this);
-                for (int j = 0; j < 16; ++j) {
-                    for (int k = 0; k < 16; ++k) {
-                        for (int l = 0; l < 16; ++l) {
-                            if (j == 0 || j == 15 || k == 0 || k == 15 || l == 0 || l == 15) {
-                                double d0 = (float) j / 15.0F * 2.0F - 1.0F;
-                                double d1 = (float) k / 15.0F * 2.0F - 1.0F;
-                                double d2 = (float) l / 15.0F * 2.0F - 1.0F;
-                                double d3 = Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
-                                d0 = d0 / d3;
-                                d1 = d1 / d3;
-                                d2 = d2 / d3;
-                                float f = radius * (0.7F + worldIn.rand.nextFloat() * 0.6F);
-                                double d4 = source.getX();
-                                double d6 = source.getY();
-                                double d8 = source.getZ();
 
-                                for (; f > 0.0F; f -= 0.22500001F) {
-                                    BlockPos blockpos = new BlockPos(d4, d6, d8);
+                for (int xPos = 0; xPos < 16; ++xPos) {
+                    for (int yPos = 0; yPos < 16; ++yPos) {
+                        for (int zPos = 0; zPos < 16; ++zPos) {
+                            if (xPos == 0 || xPos == 15 || yPos == 0 || yPos == 15 || zPos == 0 || zPos == 15) {
+                                double xTemp = (float) xPos / 15.0F * 2.0F - 1.0F;
+                                double yTemp = (float) yPos / 15.0F * 2.0F - 1.0F;
+                                double zTemp = (float) zPos / 15.0F * 2.0F - 1.0F;
+                                double avgDist = Math.sqrt(xTemp * xTemp + yTemp * yTemp + zTemp * zTemp);
+                                xTemp = xTemp / avgDist;
+                                yTemp = yTemp / avgDist;
+                                zTemp = zTemp / avgDist;
+                                float rayAngle = radius * (0.7F + worldIn.rand.nextFloat() * 0.6F);
+                                double sourceX = source.getX();
+                                double sourceY = source.getY();
+                                double sourceZ = source.getZ();
+
+                                for (; rayAngle > 0.0F; rayAngle -= 0.22500001F) {
+                                    BlockPos blockpos = new BlockPos(sourceX, sourceY, sourceZ);
                                     BlockState blockstate = worldIn.getBlockState(blockpos);
                                     FluidState fluidstate = worldIn.getFluidState(blockpos);
 
@@ -95,23 +95,23 @@ public class VanillaExplosionType extends ExtendedExplosionType {
 
                                     Optional<Float> optional = dummyContext.getExplosionResistance(vanillaExplosion, worldIn, blockpos, blockstate, fluidstate);
                                     if (optional.isPresent()) {
-                                        f -= (optional.get() + 0.3F) * 0.3F;
+                                        rayAngle -= (optional.get() + 0.3F) * 0.3F;
                                     }
 
-                                    if (f > 0.0F/* && !immuneBlocks.contains(worldIn.getBlockState(blockpos).getBlock())*/) {
+                                    if (rayAngle > 0.0F/* && !immuneBlocks.contains(worldIn.getBlockState(blockpos).getBlock())*/) {
                                         set.add(blockpos);
                                     }
 
-                                    d4 += d0 * (double) 0.3F;
-                                    d6 += d1 * (double) 0.3F;
-                                    d8 += d2 * (double) 0.3F;
+                                    sourceX += xTemp * (double) 0.3F;
+                                    sourceY += yTemp * (double) 0.3F;
+                                    sourceZ += zTemp * (double) 0.3F;
                                 }
                             }
                         }
                     }
                 }
 
-                affectedBlocks.addAll(set);
+                meta.affectedBlocks.addAll(set);
                 float radiusx2 = radius * 2.0F;
                 int eastBound = MathHelper.floor(source.getX() - (double) radiusx2 - 1.0D);
                 int westBound = MathHelper.floor(source.getX() + (double) radiusx2 + 1.0D);
@@ -122,7 +122,7 @@ public class VanillaExplosionType extends ExtendedExplosionType {
 
                 List<Entity> list = worldIn.getEntitiesWithinAABBExcludingEntity(placer, new AxisAlignedBB(eastBound, lowerBound, southBound, westBound, upperBound, northBound));
 
-                vanillaExplosion = new DummyExplosion(worldIn, placer, source.getX(), source.getY(), source.getZ(), radiusx2, affectedBlocks);
+                vanillaExplosion = new DummyExplosion(worldIn, placer, source.getX(), source.getY(), source.getZ(), radiusx2, meta.affectedBlocks);
                 ForgeEventFactory.onExplosionDetonate(worldIn, vanillaExplosion, list, radiusx2);
                 Vector3d explosionPos = new Vector3d(source.getX(), source.getY(), source.getZ());
 
@@ -149,17 +149,17 @@ public class VanillaExplosionType extends ExtendedExplosionType {
                                 if (currentEntity instanceof PlayerEntity) {
                                     PlayerEntity playerentity = (PlayerEntity) currentEntity;
                                     if (!playerentity.isSpectator() && (!playerentity.isCreative() || !playerentity.abilities.isFlying)) {
-                                        entityDisplacements.put(playerentity, new Vector3d(currentEntityDistanceX * damageFalloff, currentEntityDistanceY * damageFalloff, currentEntityDistanceZ * damageFalloff));
+                                        meta.entityDisplacements.put(playerentity, new Vector3d(currentEntityDistanceX * damageFalloff, currentEntityDistanceY * damageFalloff, currentEntityDistanceZ * damageFalloff));
                                     }
                                 }
                             }
                         }
                     }
                 }
-                return affectedBlocks;
+                return meta;
             case STAGE_BLOCKS:
                 if (worldIn.isRemote) {
-                    worldIn.playSound(source.getX(), source.getY(), source.getZ(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (worldIn.rand.nextFloat() - worldIn.rand.nextFloat()) * 0.2F) * 0.7F, false);
+                    worldIn.playSound(source.getX(), source.getY(), source.getZ(), properties.getExplosionSound(), SoundCategory.BLOCKS, 4.0F, (1.0F + (worldIn.rand.nextFloat() - worldIn.rand.nextFloat()) * 0.2F) * 0.7F, false);
                 }
 
                 if (properties.doesMakeParticles()) {
@@ -168,15 +168,15 @@ public class VanillaExplosionType extends ExtendedExplosionType {
 
                 if (doBlocksDrop) {
                     ObjectArrayList<Pair<ItemStack, BlockPos>> objectarraylist = new ObjectArrayList<>();
-                    Collections.shuffle(affectedBlocks, worldIn.rand);
+                    Collections.shuffle(meta.affectedBlocks, worldIn.rand);
 
-                    for (BlockPos blockpos : affectedBlocks) {
+                    for (BlockPos blockpos : meta.affectedBlocks) {
                         BlockState blockstate = worldIn.getBlockState(blockpos);
                         if (!blockstate.isAir(worldIn, blockpos)) {
                             BlockPos blockpos1 = blockpos.toImmutable();
                             worldIn.getProfiler().startSection("explosion_blocks");
 
-                            Explosion vanillaExplosion2 = new DummyExplosion(worldIn, placer, source.getX(), source.getY(), source.getZ(), radius, affectedBlocks);
+                            Explosion vanillaExplosion2 = new DummyExplosion(worldIn, placer, source.getX(), source.getY(), source.getZ(), radius, meta.affectedBlocks);
 
                             if (blockstate.canDropFromExplosion(worldIn, blockpos, vanillaExplosion2) && worldIn instanceof ServerWorld) {
                                 TileEntity tileentity = blockstate.hasTileEntity() ? worldIn.getTileEntity(blockpos) : null;
@@ -190,8 +190,7 @@ public class VanillaExplosionType extends ExtendedExplosionType {
                                 });
                             }
                             if(!worldIn.isRemote)
-                                worldIn.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 1 + 2 + 8);
-                                //blockstate.onBlockExploded(worldIn, blockpos, vanillaExplosion2);
+                                blockstate.onBlockExploded(worldIn, blockpos, vanillaExplosion2);
                             worldIn.getProfiler().endSection();
                         }
                     }
@@ -203,7 +202,7 @@ public class VanillaExplosionType extends ExtendedExplosionType {
                 }
 
                 if (properties.causesFire()) {
-                    for (BlockPos blockpos2 : affectedBlocks) {
+                    for (BlockPos blockpos2 : meta.affectedBlocks) {
                         if (worldIn.rand.nextInt(3) == 0 && worldIn.getBlockState(blockpos2).isAir() && worldIn.getBlockState(blockpos2.down()).isOpaqueCube(worldIn, blockpos2.down())) {
                             if(!worldIn.isRemote)
                                 worldIn.setBlockState(blockpos2, AbstractFireBlock.getFireForPlacement(worldIn, blockpos2));
@@ -211,7 +210,7 @@ public class VanillaExplosionType extends ExtendedExplosionType {
                     }
                 }
 
-                return affectedBlocks;
+                return meta;
 
             case STAGE_SYNC:
                 if(!worldIn.isRemote) {
@@ -219,14 +218,14 @@ public class VanillaExplosionType extends ExtendedExplosionType {
                     for (ServerPlayerEntity serverplayerentity : sWorld.getPlayers()) {
                         if (serverplayerentity.getDistanceSq(source.getX(), source.getY(), source.getZ()) < 4096.0D) {
                             serverplayerentity.connection.sendPacket(new SExplosionPacket(source.getX(), source.getY(), source.getZ(),
-                                    this.radius, affectedBlocks, entityDisplacements.get(serverplayerentity)));
+                                    this.radius, meta.affectedBlocks, meta.entityDisplacements.get(serverplayerentity)));
                         }
                     }
                 }
 
             default:
                 // Handle unknown stage? maybe? perhaps?
-                return affectedBlocks;
+                return meta;
         }
     }
 

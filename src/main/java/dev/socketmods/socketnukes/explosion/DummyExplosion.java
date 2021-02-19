@@ -1,5 +1,6 @@
 package dev.socketmods.socketnukes.explosion;
 
+import dev.socketmods.socketnukes.explosion.meta.ExplosionMetaPackage;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import jdk.nashorn.internal.ir.Block;
 import net.minecraft.entity.Entity;
@@ -46,10 +47,10 @@ public class DummyExplosion extends Explosion {
     public void runExplosion() {
         explosionType.prepareExplosion(world, position, source);
 
-        List<BlockPos> affectedBlocks = new ArrayList<>();
+        ExplosionMetaPackage meta = new ExplosionMetaPackage();
 
         for (int stage = 0; stage < explosionType.getExplosionStages(); stage++) {
-            affectedBlocks = explosionType.explode(world, position, stage + 1, source, affectedBlocks);
+            meta = explosionType.explode(world, position, stage + 1, source, meta);
         }
 
     }
