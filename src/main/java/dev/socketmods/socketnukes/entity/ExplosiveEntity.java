@@ -12,7 +12,6 @@ import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.network.play.server.SSpawnObjectPacket;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -49,8 +48,13 @@ public class ExplosiveEntity extends Entity {
         return new ExplosiveEntity(type, worldin);
     }
 
+    public void setExplosion(ExtendedExplosionType explosion) {
+        this.explosion = explosion;
+    }
+
     @Override
     public void tick() {
+
         if (!this.hasNoGravity()) {
             this.setMotion(this.getMotion().add(0.0D, -0.04D, 0.0D));
         }
@@ -64,9 +68,7 @@ public class ExplosiveEntity extends Entity {
         --this.fuse;
         if (this.fuse <= 0) {
             this.remove();
-            if (!this.world.isRemote) {
-                this.explode();
-            }
+            this.explode();
         } else {
             this.func_233566_aG_();
             if (this.world.isRemote) {
