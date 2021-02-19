@@ -6,9 +6,15 @@ import dev.socketmods.socketnukes.explosion.DummyExplosion;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 
@@ -32,9 +38,7 @@ public class ExploderItem extends Item {
             return super.onItemUse(context);
 
         // If we're on the client and we're sneaking, open the configuration menu.
-        if(context.getWorld().isRemote && context.getPlayer().isCrouching()) {
-            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().displayGuiScreen(new ExploderConfigScreen()));
-        } else {
+        if(!context.getPlayer().isCrouching()) {
             // If we're just right clicking a block, trigger an immediate explosion with the configured type.
             context.getItem().getCapability(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY).ifPresent(cap -> {
                 ExtendedExplosionType explosion = SNRegistry.parseExplosion(cap.getConfig());
@@ -49,4 +53,11 @@ public class ExploderItem extends Item {
         return super.onItemUse(context);
     }
 
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        if(playerIn.isCrouching())
+            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().displayGuiScreen(new ExploderConfigScreen()));
+
+        return ActionResult.resultPass(playerIn.getHeldItem(handIn));
+    }
 }
