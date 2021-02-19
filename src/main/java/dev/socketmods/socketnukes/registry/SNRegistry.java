@@ -5,6 +5,7 @@ import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.block.explosive.TNTExplosive;
 import dev.socketmods.socketnukes.entity.ExplosiveEntity;
 import dev.socketmods.socketnukes.explosion.ExplosionProperties;
+import dev.socketmods.socketnukes.explosion.types.CubicExplosionType;
 import dev.socketmods.socketnukes.explosion.types.NullExplosionType;
 import dev.socketmods.socketnukes.explosion.types.VanillaExplosionType;
 import dev.socketmods.socketnukes.item.SocketItems;
@@ -75,6 +76,10 @@ public class SNRegistry {
 
     public static final RegistryObject<ExtendedExplosionType> NULL_EXPLOSION = EXPLOSIONS.register("null", () ->
             new NullExplosionType()
+    );
+
+    public static final RegistryObject<CubicExplosionType> CUBIC_EXPLOSION = EXPLOSIONS.register("cubic", () ->
+            new CubicExplosionType(new ExplosionProperties(true, false, ParticleTypes.CLOUD, SoundEvents.BLOCK_DISPENSER_FAIL))
     );
 
     // ENTITY TYPE

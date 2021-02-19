@@ -1,6 +1,5 @@
 package dev.socketmods.socketnukes.explosion.types;
 
-import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Pair;
 import dev.socketmods.socketnukes.explosion.DummyExplosion;
 import dev.socketmods.socketnukes.explosion.ExplosionProperties;
@@ -9,111 +8,60 @@ import dev.socketmods.socketnukes.networking.Network;
 import dev.socketmods.socketnukes.networking.packet.ExtendedExplosionPacket;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
- import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.ProtectionEnchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.item.TNTEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.LavaFluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootContext;
 import net.minecraft.loot.LootParameters;
 import net.minecraft.network.play.server.SExplosionPacket;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.world.ExplosionContext;
-import net.minecraft.world.World;
-
-import java.util.*;
-
 import net.minecraft.world.Explosion;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.ForgeEventFactory;
 
-public class VanillaExplosionType extends ExtendedExplosionType {
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+public class CubicExplosionType extends ExtendedExplosionType {
     private ExplosionProperties properties;
 
-    private static final int STAGE_DAMAGE = 1;
-    private static final int STAGE_BLOCKS = 2;
-    private static final int STAGE_SYNC = 3;
+    private static final int STAGE_PREPARE = 1;
+    private static final int STAGE_BREAK = 2;
 
-    public VanillaExplosionType(ExplosionProperties properties) {
-        super(4, Arrays.asList(Blocks.BEDROCK, Blocks.OBSIDIAN, Blocks.CRYING_OBSIDIAN),
-                3, DamageSource.GENERIC, false);
-
-        this.properties = properties;
-
+    public CubicExplosionType(ExplosionProperties props) {
+        super(4, Arrays.asList(Blocks.OBSIDIAN, Blocks.BEDROCK), 2, DamageSource.GENERIC, false);
+        this.properties = props;
     }
 
     @Override
-    public boolean prepareExplosion(World worldIn, BlockPos source, Entity placer) {
-        return true;
-    }
-
-    @Override
-    public ExplosionMetaPackage explode(World worldIn, BlockPos sourceOld, int stage, Entity placer, ExplosionMetaPackage meta) {
-        BlockPos source = new BlockPos(sourceOld.getX(), sourceOld.getY() + 1, sourceOld.getZ());
-
+    public ExplosionMetaPackage explode(World worldIn, BlockPos source, int stage, Entity placer, ExplosionMetaPackage meta) {
         switch(stage) {
-            case STAGE_DAMAGE:
-                // Damage entities, calculate blocks to be broken
-                Set<BlockPos> set = Sets.newHashSet();
-                Explosion vanillaExplosion = new DummyExplosion(worldIn, placer, source.getX(), source.getY(), source.getZ(), this);
-
-                for (int xPos = 0; xPos < 16; ++xPos) {
-                    for (int yPos = 0; yPos < 16; ++yPos) {
-                        for (int zPos = 0; zPos < 16; ++zPos) {
-                            if (xPos == 0 || xPos == 15 || yPos == 0 || yPos == 15 || zPos == 0 || zPos == 15) {
-                                double xTemp = (float) xPos / 15.0F * 2.0F - 1.0F;
-                                double yTemp = (float) yPos / 15.0F * 2.0F - 1.0F;
-                                double zTemp = (float) zPos / 15.0F * 2.0F - 1.0F;
-                                double avgDist = Math.sqrt(xTemp * xTemp + yTemp * yTemp + zTemp * zTemp);
-                                xTemp = xTemp / avgDist;
-                                yTemp = yTemp / avgDist;
-                                zTemp = zTemp / avgDist;
-                                float rayAngle = radius * (0.7F + worldIn.rand.nextFloat() * 0.6F);
-                                double sourceX = source.getX();
-                                double sourceY = source.getY();
-                                double sourceZ = source.getZ();
-
-                                for (; rayAngle > 0.0F; rayAngle -= 0.22500001F) {
-                                    BlockPos blockpos = new BlockPos(sourceX, sourceY, sourceZ);
-                                    BlockState blockstate = worldIn.getBlockState(blockpos);
-                                    FluidState fluidstate = worldIn.getFluidState(blockpos);
-
-                                    ExplosionContext dummyContext = new ExplosionContext();
-
-                                    Optional<Float> optional = dummyContext.getExplosionResistance(vanillaExplosion, worldIn, blockpos, blockstate, fluidstate);
-                                    if (optional.isPresent()) {
-                                        rayAngle -= (optional.get() + 0.3F) * 0.3F;
-                                    }
-
-                                    if (rayAngle > 0.0F/* && !immuneBlocks.contains(worldIn.getBlockState(blockpos).getBlock())*/) {
-                                        set.add(blockpos);
-                                    }
-
-                                    sourceX += xTemp * (double) 0.3F;
-                                    sourceY += yTemp * (double) 0.3F;
-                                    sourceZ += zTemp * (double) 0.3F;
-                                }
-                            }
+            case STAGE_PREPARE:
+                for (int xPos = source.getX() - radius; xPos < source.getX() + radius; xPos++) {
+                    for (int yPos = source.getY() - radius; yPos < source.getY() + radius; yPos++) {
+                        for (int zPos = source.getZ() - radius; zPos < source.getZ() + radius; zPos++) {
+                            meta.affectedBlocks.add(new BlockPos(xPos, yPos, zPos));
                         }
                     }
                 }
 
-                meta.affectedBlocks.addAll(set);
+                return meta;
+            case STAGE_BREAK:
                 float radiusx2 = radius * 2.0F;
                 int eastBound = MathHelper.floor(source.getX() - (double) radiusx2 - 1.0D);
                 int westBound = MathHelper.floor(source.getX() + (double) radiusx2 + 1.0D);
@@ -124,7 +72,7 @@ public class VanillaExplosionType extends ExtendedExplosionType {
 
                 List<Entity> list = worldIn.getEntitiesWithinAABBExcludingEntity(placer, new AxisAlignedBB(eastBound, lowerBound, southBound, westBound, upperBound, northBound));
 
-                vanillaExplosion = new DummyExplosion(worldIn, placer, source.getX(), source.getY(), source.getZ(), radiusx2, meta.affectedBlocks);
+                DummyExplosion vanillaExplosion = new DummyExplosion(worldIn, placer, source.getX(), source.getY(), source.getZ(), radiusx2, meta.affectedBlocks);
                 ForgeEventFactory.onExplosionDetonate(worldIn, vanillaExplosion, list, radiusx2);
                 Vector3d explosionPos = new Vector3d(source.getX(), source.getY(), source.getZ());
 
@@ -158,8 +106,7 @@ public class VanillaExplosionType extends ExtendedExplosionType {
                         }
                     }
                 }
-                return meta;
-            case STAGE_BLOCKS:
+
                 if (worldIn.isRemote) {
                     worldIn.playSound(source.getX(), source.getY(), source.getZ(), properties.getExplosionSound(), SoundCategory.BLOCKS, 4.0F, (1.0F + (worldIn.rand.nextFloat() - worldIn.rand.nextFloat()) * 0.2F) * 0.7F, false);
                 }
@@ -203,18 +150,6 @@ public class VanillaExplosionType extends ExtendedExplosionType {
                     }
                 }
 
-                if (properties.causesFire()) {
-                    for (BlockPos blockpos2 : meta.affectedBlocks) {
-                        if (worldIn.rand.nextInt(3) == 0 && worldIn.getBlockState(blockpos2).isAir() && worldIn.getBlockState(blockpos2.down()).isOpaqueCube(worldIn, blockpos2.down())) {
-                            if(!worldIn.isRemote)
-                                worldIn.setBlockState(blockpos2, AbstractFireBlock.getFireForPlacement(worldIn, blockpos2));
-                        }
-                    }
-                }
-
-                return meta;
-
-            case STAGE_SYNC:
                 if(!worldIn.isRemote) {
                     ServerWorld sWorld = (ServerWorld) worldIn;
                     for (ServerPlayerEntity serverplayerentity : sWorld.getPlayers()) {
@@ -224,10 +159,9 @@ public class VanillaExplosionType extends ExtendedExplosionType {
                     }
                 }
 
+                return meta;
             default:
-                // Handle unknown stage? maybe? perhaps?
                 return meta;
         }
     }
-
 }

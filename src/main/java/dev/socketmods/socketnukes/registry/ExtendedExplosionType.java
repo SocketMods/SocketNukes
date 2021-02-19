@@ -1,10 +1,14 @@
 package dev.socketmods.socketnukes.registry;
 
 
+import com.mojang.datafixers.util.Pair;
 import dev.socketmods.socketnukes.explosion.ExplosionProperties;
 import dev.socketmods.socketnukes.explosion.meta.ExplosionMetaPackage;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -101,5 +105,23 @@ public class ExtendedExplosionType extends ForgeRegistryEntry<ExtendedExplosionT
 
     }
 
+
+    protected static void handleExplosionDrops(ObjectArrayList<Pair<ItemStack, BlockPos>> dropPositionArray, ItemStack stack, BlockPos pos) {
+        int i = dropPositionArray.size();
+
+        for(int j = 0; j < i; ++j) {
+            Pair<ItemStack, BlockPos> pair = dropPositionArray.get(j);
+            ItemStack itemstack = pair.getFirst();
+            if (ItemEntity.canMergeStacks(itemstack, stack)) {
+                ItemStack itemstack1 = ItemEntity.mergeStacks(itemstack, stack, 16);
+                dropPositionArray.set(j, Pair.of(itemstack1, pair.getSecond()));
+                if (stack.isEmpty()) {
+                    return;
+                }
+            }
+        }
+
+        dropPositionArray.add(Pair.of(stack, pos));
+    }
 
 }
