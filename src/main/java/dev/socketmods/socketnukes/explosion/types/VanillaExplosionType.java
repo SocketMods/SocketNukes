@@ -49,6 +49,7 @@ public class VanillaExplosionType extends ExtendedExplosionType {
                 3, DamageSource.GENERIC, false);
 
         this.properties = properties;
+
     }
 
     @Override
@@ -66,6 +67,7 @@ public class VanillaExplosionType extends ExtendedExplosionType {
             case STAGE_DAMAGE:
                 // Damage entities, calculate blocks to be broken
                 Set<BlockPos> set = Sets.newHashSet();
+                Explosion vanillaExplosion = new DummyExplosion(worldIn, placer, source.getX(), source.getY(), source.getZ(), this);
                 for (int j = 0; j < 16; ++j) {
                     for (int k = 0; k < 16; ++k) {
                         for (int l = 0; l < 16; ++l) {
@@ -88,7 +90,6 @@ public class VanillaExplosionType extends ExtendedExplosionType {
                                     FluidState fluidstate = worldIn.getFluidState(blockpos);
 
                                     ExplosionContext dummyContext = new ExplosionContext();
-                                    Explosion vanillaExplosion = new DummyExplosion(worldIn, placer, d4, d6, d8, this);
 
                                     Optional<Float> optional = dummyContext.getExplosionResistance(vanillaExplosion, worldIn, blockpos, blockstate, fluidstate);
                                     if (optional.isPresent()) {
@@ -119,7 +120,7 @@ public class VanillaExplosionType extends ExtendedExplosionType {
 
                 List<Entity> list = worldIn.getEntitiesWithinAABBExcludingEntity(placer, new AxisAlignedBB(eastBound, lowerBound, southBound, westBound, upperBound, northBound));
 
-                Explosion vanillaExplosion = new DummyExplosion(worldIn, placer, source.getX(), source.getY(), source.getZ(), radiusx2, affectedBlocks);
+                vanillaExplosion = new DummyExplosion(worldIn, placer, source.getX(), source.getY(), source.getZ(), radiusx2, affectedBlocks);
                 ForgeEventFactory.onExplosionDetonate(worldIn, vanillaExplosion, list, radiusx2);
                 Vector3d explosionPos = new Vector3d(source.getX(), source.getY(), source.getZ());
 
@@ -186,21 +187,24 @@ public class VanillaExplosionType extends ExtendedExplosionType {
                                     handleExplosionDrops(objectarraylist, stack, blockpos1);
                                 });
                             }
-
-                            blockstate.onBlockExploded(worldIn, blockpos, vanillaExplosion2);
+                            if(!worldIn.isRemote)
+                                worldIn.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 1 + 2 + 8);
+                                //blockstate.onBlockExploded(worldIn, blockpos, vanillaExplosion2);
                             worldIn.getProfiler().endSection();
                         }
                     }
 
                     for (Pair<ItemStack, BlockPos> pair : objectarraylist) {
-                        Block.spawnAsEntity(worldIn, pair.getSecond(), pair.getFirst());
+                        if(!worldIn.isRemote)
+                            Block.spawnAsEntity(worldIn, pair.getSecond(), pair.getFirst());
                     }
                 }
 
                 if (properties.causesFire()) {
                     for (BlockPos blockpos2 : affectedBlocks) {
                         if (worldIn.rand.nextInt(3) == 0 && worldIn.getBlockState(blockpos2).isAir() && worldIn.getBlockState(blockpos2.down()).isOpaqueCube(worldIn, blockpos2.down())) {
-                            worldIn.setBlockState(blockpos2, AbstractFireBlock.getFireForPlacement(worldIn, blockpos2));
+                            if(!worldIn.isRemote)
+                                worldIn.setBlockState(blockpos2, AbstractFireBlock.getFireForPlacement(worldIn, blockpos2));
                         }
                     }
                 }
