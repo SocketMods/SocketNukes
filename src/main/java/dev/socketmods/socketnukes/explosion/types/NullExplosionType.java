@@ -15,5 +15,6 @@ public class NullExplosionType extends ExtendedExplosionType {
 
     public NullExplosionType() {
         super(0, new ArrayList<>(), 0, DamageSource.GENERIC, false);
+        this.setFuseTime(10);
     }
 }

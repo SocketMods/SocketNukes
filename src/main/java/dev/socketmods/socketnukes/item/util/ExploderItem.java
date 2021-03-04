@@ -2,6 +2,7 @@ package dev.socketmods.socketnukes.item.util;
 
 import dev.socketmods.socketnukes.capability.Capabilities;
 import dev.socketmods.socketnukes.client.screen.ExploderConfigScreen;
+import dev.socketmods.socketnukes.entity.ExplosiveEntity;
 import dev.socketmods.socketnukes.explosion.DummyExplosion;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import dev.socketmods.socketnukes.registry.SNRegistry;
@@ -43,11 +44,9 @@ public class ExploderItem extends Item {
             context.getItem().getCapability(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY).ifPresent(cap -> {
                 ExtendedExplosionType explosion = SNRegistry.EXPLOSION_TYPE_REGISTRY.get().getValue(cap.getConfig());
 
-                DummyExplosion dummy = new DummyExplosion(context.getWorld(), context.getPlayer(),
-                        context.getPos().getX(), context.getPos().getY(), context.getPos().getZ(),
-                        explosion);
-
-                dummy.runExplosion();
+                ExplosiveEntity explosiveEntity = new ExplosiveEntity(context.getWorld(), context.getPos(), explosion, context.getPlayer());
+                explosiveEntity.setFuse(0);
+                context.getWorld().addEntity(explosiveEntity);
             });
         }
         return super.onItemUse(context);

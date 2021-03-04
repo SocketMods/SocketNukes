@@ -53,6 +53,7 @@ public class CubicExplosionType extends ExtendedExplosionType {
     public CubicExplosionType(ExplosionProperties props) {
         super(4, Arrays.asList(Blocks.OBSIDIAN, Blocks.BEDROCK), 2, DamageSource.GENERIC, false);
         this.properties = props;
+        this.setFuseTime(80);
     }
 
     @Override

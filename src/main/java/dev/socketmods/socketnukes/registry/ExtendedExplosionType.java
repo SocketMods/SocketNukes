@@ -69,12 +69,17 @@ public class ExtendedExplosionType extends ForgeRegistryEntry<ExtendedExplosionT
     public void setProperties(ExplosionProperties properties) { this.properties = properties; }
     public ExplosionProperties getProperties() { return properties; }
 
+    protected int fuseTime;
+    public void setFuseTime(int newFuseTime) { this.fuseTime = newFuseTime; }
+    public int getFuseTime() { return fuseTime; }
+
     public ExtendedExplosionType(int blastRadius, List<Block> immuneBlocks, int stages, DamageSource damage, boolean annihilateMode) {
         this.immuneBlocks = immuneBlocks;
         this.radius = blastRadius;
         this.damageSource = damage;
         this.doBlocksDrop = !annihilateMode;
         this.explosionStages = stages;
+        this.fuseTime = 80;
     }
 
     /**

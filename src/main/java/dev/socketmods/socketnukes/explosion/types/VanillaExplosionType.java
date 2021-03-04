@@ -62,9 +62,8 @@ public class VanillaExplosionType extends ExtendedExplosionType {
     public VanillaExplosionType(ExplosionProperties properties) {
         super(4, Arrays.asList(Blocks.BEDROCK, Blocks.OBSIDIAN, Blocks.CRYING_OBSIDIAN),
                 3, DamageSource.GENERIC, false);
-
         this.properties = properties;
-
+        this.setFuseTime(80);
     }
 
     @Override

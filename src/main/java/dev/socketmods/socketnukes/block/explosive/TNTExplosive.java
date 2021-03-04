@@ -101,12 +101,30 @@ public class TNTExplosive extends Block {
      * @param pos the position to spawn the entity at
      * @param entityIn the igniter of this block
      * @param explosion the explosion to invoke when the entity pops
+     * @param chainExplosion whether this explosion was triggered by another nearby
      */
-    private static void explode(World worldIn, BlockPos pos, @Nullable LivingEntity entityIn, ExtendedExplosionType explosion) {
+    private static void explode(World worldIn, BlockPos pos, @Nullable LivingEntity entityIn, ExtendedExplosionType explosion, boolean chainExplosion) {
         ExplosiveEntity explosiveEntity = new ExplosiveEntity(worldIn, pos, explosion, entityIn);
         worldIn.addEntity(explosiveEntity);
+
+        if(chainExplosion)
+            explosiveEntity.setFuse((short)(worldIn.rand.nextInt(explosion.getFuseTime() / 4) + explosion.getFuseTime() / 8));
+        else
+            explosiveEntity.setFuse(explosion.getFuseTime());
+
         worldIn.playSound(null, explosiveEntity.getPosX(), explosiveEntity.getPosY(), explosiveEntity.getPosZ(),
                 SoundEvents.ENTITY_TNT_PRIMED, SoundCategory.BLOCKS, 1.0F, 1.0F);
+    }
+
+    /**
+     * An overload for the above, with default flags set.
+     * @param worldin the world to trigger the explosion in
+     * @param pos the position the explosion should happen in
+     * @param entity the entity that triggered the explosion
+     * @param type the explosion to trigger
+     */
+    private static void explode(World worldin, BlockPos pos, @Nullable LivingEntity entity, ExtendedExplosionType type) {
+        explode(worldin, pos, entity, type, false);
     }
 
     /**
@@ -120,7 +138,7 @@ public class TNTExplosive extends Block {
      */
     @Override
     public void onExplosionDestroy(World worldIn, BlockPos pos, Explosion explosionIn) {
-        explode(worldIn, pos, explosionIn.getExplosivePlacedBy(), SNRegistry.VANILLA_EXPLOSION.get());
+        explode(worldIn, pos, explosionIn.getExplosivePlacedBy(), SNRegistry.VANILLA_EXPLOSION.get(), true);
     }
 
     /**
