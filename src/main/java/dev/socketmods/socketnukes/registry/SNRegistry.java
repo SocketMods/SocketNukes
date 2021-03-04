@@ -31,8 +31,6 @@ import java.util.function.Supplier;
 
 public class SNRegistry {
 
-    private static HashMap<String, ExtendedExplosionType> explosions = new HashMap<>();
-
     /***********************************************
      *         Deferred Register Instances         *
      ***********************************************/
@@ -52,10 +50,9 @@ public class SNRegistry {
      **********************************************/
 
     public static Supplier<IForgeRegistry<ExtendedExplosionType>> EXPLOSION_TYPE_REGISTRY = EXPLOSIONS.makeRegistry("explosion_types", () ->
-            new RegistryBuilder<ExtendedExplosionType>().setMaxID(Integer.MAX_VALUE - 1).onAdd((owner, stage, id, obj, old) -> {
-                SocketNukes.LOGGER.info("ExplosionType Added: " + obj.getRegistryName().toString() + " ");
-                explosions.put(obj.getRegistryName().getPath(), obj);
-            })
+            new RegistryBuilder<ExtendedExplosionType>().setMaxID(Integer.MAX_VALUE - 1).onAdd((owner, stage, id, obj, old) ->
+                SocketNukes.LOGGER.info("ExplosionType Added: " + obj.getRegistryName().toString() + " ")
+            )
     );
 
     /***********************************************
@@ -63,7 +60,7 @@ public class SNRegistry {
      ***********************************************/
 
     // BLOCKS
-    public static final RegistryObject<Block> GENERIC_EXPLOSIVE = BLOCKS.register("explosive", () -> new TNTExplosive());
+    public static final RegistryObject<Block> GENERIC_EXPLOSIVE = BLOCKS.register("explosive", TNTExplosive::new);
 
     // ITEMS
     public static final RegistryObject<Item> EXPLODER_ITEM = ITEMS.register("exploder_item", () -> new ExploderItem(SocketItems.EXPLODER_PROPERTIES));
@@ -74,9 +71,7 @@ public class SNRegistry {
             new VanillaExplosionType(new ExplosionProperties(true, false, ParticleTypes.EXPLOSION_EMITTER, SoundEvents.ENTITY_GENERIC_EXPLODE))
     );
 
-    public static final RegistryObject<ExtendedExplosionType> NULL_EXPLOSION = EXPLOSIONS.register("null", () ->
-            new NullExplosionType()
-    );
+    public static final RegistryObject<ExtendedExplosionType> NULL_EXPLOSION = EXPLOSIONS.register("null", NullExplosionType::new);
 
     public static final RegistryObject<CubicExplosionType> CUBIC_EXPLOSION = EXPLOSIONS.register("cubic", () ->
             new CubicExplosionType(new ExplosionProperties(true, false, ParticleTypes.CLOUD, SoundEvents.BLOCK_DISPENSER_FAIL))
@@ -87,8 +82,6 @@ public class SNRegistry {
         new EntityType<>(ExplosiveEntity::create, EntityClassification.MISC, true, true, false, false, ImmutableSet.of(), EntitySize.fixed(1f, 1f), 200, 1)
     );
 
-
-
     public static void initialize() {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
         ITEMS.register(modBus);
@@ -97,14 +90,5 @@ public class SNRegistry {
         CONTAINERTYPES.register(modBus);
         EXPLOSIONS.register(modBus);
         ENTITYTYPES.register(modBus);
-    }
-
-    /**
-     * Given a name (intended to be the path of the registry name), turn it into an ExtendedExplosionType.
-     * This is needed for serializing entities and capabilities.
-     * If ExplosionTypes were not singleton, this would not be possible.
-     */
-    public static ExtendedExplosionType parseExplosion(String name) {
-        return explosions.get(name);
     }
 }

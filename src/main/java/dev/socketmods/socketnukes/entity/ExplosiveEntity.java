@@ -13,6 +13,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -43,7 +44,7 @@ public class ExplosiveEntity extends Entity {
         this(SNRegistry.EXPLOSIVE_ENTITY_TYPE.get(), worldIn);
         this.setPosition(position.getX(), position.getY(), position.getZ());
         double d0 = worldIn.rand.nextDouble() * (double)((float)Math.PI * 2F);
-        this.setMotion(-Math.sin(d0) * 0.02D, (double)0.2F, -Math.cos(d0) * 0.02D);
+        this.setMotion(-Math.sin(d0) * 0.02D, 0.2F, -Math.cos(d0) * 0.02D);
         this.setFuse(80);
         this.prevPosX = position.getX();
         this.prevPosY = position.getY();
@@ -115,12 +116,13 @@ public class ExplosiveEntity extends Entity {
 
     protected void writeAdditional(CompoundNBT compound) {
         compound.putShort("fuse", (short)this.getFuse());
-        compound.putString("explosionType", explosion.getRegistryName().getPath());
+        compound.putString("explosionType", explosion.getRegistryName().toString());
     }
 
     protected void readAdditional(CompoundNBT compound) {
         this.setFuse(compound.getShort("fuse"));
-        this.setExplosion(SNRegistry.parseExplosion(compound.getString("explosionType")));
+        String resLoc = compound.getString("explosionType");
+        this.setExplosion(SNRegistry.EXPLOSION_TYPE_REGISTRY.get().getValue(new ResourceLocation(resLoc)));
     }
 
     private void setExplosion(ExtendedExplosionType explosionType) {

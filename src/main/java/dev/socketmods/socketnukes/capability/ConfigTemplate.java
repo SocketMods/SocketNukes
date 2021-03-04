@@ -1,5 +1,8 @@
 package dev.socketmods.socketnukes.capability;
 
+import dev.socketmods.socketnukes.SocketNukes;
+import net.minecraft.util.ResourceLocation;
+
 /**
  * A template for the getter/setter for the Exploder Configuration.
  *
@@ -10,13 +13,13 @@ package dev.socketmods.socketnukes.capability;
 public class ConfigTemplate implements IConfiguration {
 
     // For safety, the configuration defaults to Null, which does nothing but resolves properly.
-    private String config = "null";
+    private ResourceLocation config = new ResourceLocation(SocketNukes.MODID, "null");
 
     /**
      * @return the current config value.
      */
     @Override
-    public String getConfig() {
+    public ResourceLocation getConfig() {
         return config;
     }
 
@@ -25,7 +28,7 @@ public class ConfigTemplate implements IConfiguration {
      * @param config the new config value
      */
     @Override
-    public void setConfig(String config) {
+    public void setConfig(ResourceLocation config) {
         this.config = config;
     }
 }

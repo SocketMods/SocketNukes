@@ -10,11 +10,11 @@ import net.minecraft.util.SoundEvent;
  * @author Citrine
  */
 public class ExplosionProperties {
-    private boolean makesParticles = false;
-    private boolean causesFire = false;
-    private IParticleData particleToEmit;
+    private final boolean makesParticles;
+    private final boolean causesFire;
+    private final IParticleData particleToEmit;
 
-    private SoundEvent explosionSound;
+    private final SoundEvent explosionSound;
 
     public ExplosionProperties(boolean particles, boolean fire, IParticleData particle, SoundEvent sound) {
         this.makesParticles = particles;

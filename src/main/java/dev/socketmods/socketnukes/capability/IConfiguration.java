@@ -1,7 +1,9 @@
 package dev.socketmods.socketnukes.capability;
 
-public interface IConfiguration {
-    void setConfig(String resLoc);
+import net.minecraft.util.ResourceLocation;
 
-    String getConfig();
+public interface IConfiguration {
+    void setConfig(ResourceLocation resLoc);
+
+    ResourceLocation getConfig();
 }

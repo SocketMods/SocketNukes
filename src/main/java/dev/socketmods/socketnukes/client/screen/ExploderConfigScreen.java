@@ -30,7 +30,7 @@ public class ExploderConfigScreen extends Screen {
     private static final int SCREEN_WIDTH = 160;
     private static final int SCREEN_HEIGHT = 120;
 
-    private ResourceLocation bg_texture = new ResourceLocation(SocketNukes.MODID, "textures/gui/exploder_config.png");
+    private static final ResourceLocation bg_texture = new ResourceLocation(SocketNukes.MODID, "textures/gui/exploder_config.png");
 
     public ExploderConfigScreen() {
         super(new TranslationTextComponent("socketnukes.title.exploderconfig"));
@@ -44,8 +44,8 @@ public class ExploderConfigScreen extends Screen {
 
         for(RegistryObject<ExtendedExplosionType> explosion : SNRegistry.EXPLOSIONS.getEntries()) {
             addButton(new Button(middleX + 10, topY - rollingOffset, 160, 20,
-                    new TranslationTextComponent("socketnukes.explosions." + explosion.get().getRegistryName().getPath()),
-                    button -> config(explosion.get().getRegistryName().getPath())));
+                    new TranslationTextComponent(explosion.get().getRegistryName().getNamespace() + ".explosions." + explosion.get().getRegistryName().getPath()),
+                    button -> config(explosion.get().getRegistryName())));
             rollingOffset += 30;
         }
     }
@@ -53,16 +53,14 @@ public class ExploderConfigScreen extends Screen {
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.minecraft.getTextureManager().bindTexture(bg_texture);
-        int middleX = (this.width - SCREEN_WIDTH) / 2;
-        int middleY = (this.height - SCREEN_HEIGHT) / 2;
         super.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
-    private void config(String registryName) {
+    private void config(ResourceLocation registryName) {
         minecraft.player.getHeldItemMainhand().getCapability(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY).ifPresent(cap ->
                 cap.setConfig(registryName)
         );
-        Network.sendToServer(new ExploderConfigChangedPacket(registryName, minecraft.player.getEntityId()));
+        Network.sendToServer(new ExploderConfigChangedPacket(registryName));
     }
 
     public static void open() {

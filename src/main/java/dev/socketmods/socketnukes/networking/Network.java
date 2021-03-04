@@ -18,6 +18,8 @@ import static dev.socketmods.socketnukes.SocketNukes.MODID;
 public class Network {
     private static final String networkVer = "1";
 
+    private static int PACKETID = 0;
+
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
             new ResourceLocation(MODID, "explosions"),
             () -> networkVer,
@@ -27,12 +29,12 @@ public class Network {
 
     // Register valid packets, called from SocketNukes, the main class
     public static void setup() {
-        CHANNEL.messageBuilder(ExtendedExplosionPacket.class, 0, NetworkDirection.PLAY_TO_CLIENT)
+        CHANNEL.messageBuilder(ExtendedExplosionPacket.class, PACKETID++, NetworkDirection.PLAY_TO_CLIENT)
                 .encoder(ExtendedExplosionPacket::toBytes)
                 .decoder(ExtendedExplosionPacket::new)
                 .consumer(ExtendedExplosionPacket::handle)
                 .add();
-        CHANNEL.messageBuilder(ExploderConfigChangedPacket.class, 1, NetworkDirection.PLAY_TO_SERVER)
+        CHANNEL.messageBuilder(ExploderConfigChangedPacket.class, PACKETID++, NetworkDirection.PLAY_TO_SERVER)
                 .encoder(ExploderConfigChangedPacket::toBytes)
                 .decoder(ExploderConfigChangedPacket::new)
                 .consumer(ExploderConfigChangedPacket::handle)

@@ -44,7 +44,7 @@ import java.util.List;
  * @author Citrine
  */
 public class CubicExplosionType extends ExtendedExplosionType {
-    private ExplosionProperties properties;
+    private final ExplosionProperties properties;
 
     // Stage constants - we gather the blocks to be broken in stage 1, and actually break them in stage 2.
     private static final int STAGE_PREPARE = 1;

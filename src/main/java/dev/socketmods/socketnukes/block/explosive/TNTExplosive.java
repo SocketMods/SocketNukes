@@ -72,7 +72,6 @@ public class TNTExplosive extends Block {
                 catchFire(state, worldIn, pos, null, null);
                 worldIn.removeBlock(pos, false);
             }
-
         }
     }
 
@@ -124,7 +123,6 @@ public class TNTExplosive extends Block {
         explode(worldIn, pos, explosionIn.getExplosivePlacedBy(), SNRegistry.VANILLA_EXPLOSION.get());
     }
 
-
     /**
      * Called when this block is used by a player holding an item.
      * TNT is ignited when it is used with Flint and Steel, or a Fire Charge. So too do we.
@@ -148,7 +146,7 @@ public class TNTExplosive extends Block {
             // that is configured..
             itemstack.getCapability(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY).ifPresent(cap ->
                     // create an explosive to mimic it.
-                    explode(worldIn, pos, player, SNRegistry.parseExplosion(cap.getConfig()))
+                    explode(worldIn, pos, player, SNRegistry.EXPLOSION_TYPE_REGISTRY.get().getValue(cap.getConfig()))
             );
             // delete the block because the entity was created
             worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 11);
@@ -169,7 +167,6 @@ public class TNTExplosive extends Block {
                     itemstack.shrink(1);
                 }
             }
-
             return ActionResultType.func_233537_a_(worldIn.isRemote);
         }
     }

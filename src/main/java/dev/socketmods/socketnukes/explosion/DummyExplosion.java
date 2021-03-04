@@ -33,8 +33,6 @@ public class DummyExplosion extends Explosion {
 
     protected float radius;
 
-    protected List<BlockPos> affectedPositions;
-
     public DummyExplosion(World worldIn, @Nullable Entity entityIn, double x, double y, double z, float size, List<BlockPos> affectedPositions) {
         super(worldIn, entityIn, x, y, z, size, affectedPositions);
         this.world = worldIn;
@@ -55,7 +53,7 @@ public class DummyExplosion extends Explosion {
     // Execute the explosion extensibly.
     // TODO: tick delay?
     public void runExplosion() {
-        explosionType.prepareExplosion(world, position, source);
+        if(!explosionType.prepareExplosion(world, position, source)) return;
 
         ExplosionMetaPackage meta = new ExplosionMetaPackage();
 

@@ -3,6 +3,7 @@ package dev.socketmods.socketnukes.networking.packet;
 import dev.socketmods.socketnukes.capability.Capabilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -19,25 +20,20 @@ import java.util.function.Supplier;
  * @author Citrine
  */
 public class ExploderConfigChangedPacket {
-
-    private int playerID;
-    private String config;
+    private final ResourceLocation config;
 
     // Deserialiser - write this class into a buffer
     public ExploderConfigChangedPacket(PacketBuffer buf) {
-        config = buf.readString();
-        playerID = buf.readInt();
+        config = buf.readResourceLocation();
     }
 
-    public ExploderConfigChangedPacket(String config, int player) {
+    public ExploderConfigChangedPacket(ResourceLocation config) {
         this.config = config;
-        this.playerID = player;
     }
 
     // Serializer - read this class out of a buffer
     public void toBytes(PacketBuffer buf) {
-        buf.writeString(config);
-        buf.writeInt(playerID);
+        buf.writeResourceLocation(config);
     }
 
     // Consumer - actually perform the intended task.
@@ -46,9 +42,6 @@ public class ExploderConfigChangedPacket {
             ctx.get().getSender().getHeldItemMainhand().getCapability(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY).ifPresent(cap ->
                     cap.setConfig(config));
         });
-
         return true;
     }
-
-
 }

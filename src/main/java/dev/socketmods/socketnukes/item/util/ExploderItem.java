@@ -41,7 +41,7 @@ public class ExploderItem extends Item {
         if(!context.getPlayer().isCrouching()) {
             // If we're just right clicking a block, trigger an immediate explosion with the configured type.
             context.getItem().getCapability(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY).ifPresent(cap -> {
-                ExtendedExplosionType explosion = SNRegistry.parseExplosion(cap.getConfig());
+                ExtendedExplosionType explosion = SNRegistry.EXPLOSION_TYPE_REGISTRY.get().getValue(cap.getConfig());
 
                 DummyExplosion dummy = new DummyExplosion(context.getWorld(), context.getPlayer(),
                         context.getPos().getX(), context.getPos().getY(), context.getPos().getZ(),

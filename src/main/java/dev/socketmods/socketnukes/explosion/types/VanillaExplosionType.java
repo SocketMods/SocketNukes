@@ -53,7 +53,7 @@ import net.minecraftforge.event.ForgeEventFactory;
  * @author Curle, Citrine
  */
 public class VanillaExplosionType extends ExtendedExplosionType {
-    private ExplosionProperties properties;
+    private final ExplosionProperties properties;
 
     private static final int STAGE_DAMAGE = 1;
     private static final int STAGE_BLOCKS = 2;
