@@ -10,7 +10,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.TNTEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -25,6 +24,7 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 /**
  * The explosive block used for testing.
@@ -164,7 +164,7 @@ public class TNTExplosive extends Block {
             // that is configured..
             itemstack.getCapability(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY).ifPresent(cap ->
                     // create an explosive to mimic it.
-                    explode(worldIn, pos, player, SNRegistry.EXPLOSION_TYPE_REGISTRY.get().getValue(cap.getConfig()))
+                    explode(worldIn, pos, player, Objects.requireNonNull(SNRegistry.EXPLOSION_TYPE_REGISTRY.get().getValue(cap.getConfig())))
             );
             // delete the block because the entity was created
             worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 11);
@@ -178,9 +178,7 @@ public class TNTExplosive extends Block {
             worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 11);
             if (!player.isCreative()) {
                 if (item == Items.FLINT_AND_STEEL) {
-                    itemstack.damageItem(1, player, (player1) -> {
-                        player1.sendBreakAnimation(handIn);
-                    });
+                    itemstack.damageItem(1, player, (player1) -> player1.sendBreakAnimation(handIn));
                 } else {
                     itemstack.shrink(1);
                 }

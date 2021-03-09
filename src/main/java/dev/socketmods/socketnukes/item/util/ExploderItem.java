@@ -3,11 +3,9 @@ package dev.socketmods.socketnukes.item.util;
 import dev.socketmods.socketnukes.capability.Capabilities;
 import dev.socketmods.socketnukes.client.screen.ExploderConfigScreen;
 import dev.socketmods.socketnukes.entity.ExplosiveEntity;
-import dev.socketmods.socketnukes.explosion.DummyExplosion;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -44,6 +42,7 @@ public class ExploderItem extends Item {
             context.getItem().getCapability(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY).ifPresent(cap -> {
                 ExtendedExplosionType explosion = SNRegistry.EXPLOSION_TYPE_REGISTRY.get().getValue(cap.getConfig());
 
+                assert explosion != null;
                 ExplosiveEntity explosiveEntity = new ExplosiveEntity(context.getWorld(), context.getPos(), explosion, context.getPlayer());
                 explosiveEntity.setFuse(0);
                 context.getWorld().addEntity(explosiveEntity);
