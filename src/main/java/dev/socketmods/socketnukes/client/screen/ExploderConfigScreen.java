@@ -13,6 +13,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.RegistryObject;
 
+import java.util.Objects;
+
 /**
  * When the Exploder Item is used, it brings up this screen.
  *
@@ -42,19 +44,22 @@ public class ExploderConfigScreen extends Screen {
 
         for(RegistryObject<ExtendedExplosionType> explosion : SNRegistry.EXPLOSIONS.getEntries()) {
             addButton(new Button(middleX + 10, topY - rollingOffset, 160, 20,
-                    new TranslationTextComponent(explosion.get().getRegistryName().getNamespace() + ".explosions." + explosion.get().getRegistryName().getPath()),
-                    button -> config(explosion.get().getRegistryName())));
+                    new TranslationTextComponent(Objects.requireNonNull(explosion.get().getRegistryName()).getNamespace() + ".explosions." + explosion.get().getRegistryName().getPath()),
+                    button -> config(Objects.requireNonNull(explosion.get().getRegistryName()))));
             rollingOffset += 30;
         }
     }
 
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        assert this.minecraft != null;
         this.minecraft.getTextureManager().bindTexture(bg_texture);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
     private void config(ResourceLocation registryName) {
+        assert minecraft != null;
+        assert minecraft.player != null;
         minecraft.player.getHeldItemMainhand().getCapability(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY).ifPresent(cap ->
                 cap.setConfig(registryName)
         );

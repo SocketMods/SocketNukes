@@ -43,6 +43,7 @@ public class ExploderItem extends Item {
             context.getItem().getCapability(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY).ifPresent(cap -> {
                 ExtendedExplosionType explosion = SNRegistry.EXPLOSION_TYPE_REGISTRY.get().getValue(cap.getConfig());
 
+                assert explosion != null;
                 ExplosiveEntity explosiveEntity = new ExplosiveEntity(context.getWorld(), context.getPos(), explosion, context.getPlayer());
                 explosiveEntity.setFuse(0);
                 context.getWorld().addEntity(explosiveEntity);

@@ -144,9 +144,7 @@ public class CubicExplosionType extends ExtendedExplosionType {
                                     lootcontext$builder.withParameter(LootParameters.EXPLOSION_RADIUS, (float) radius);
                                 }
 
-                                blockstate.getDrops(lootcontext$builder).forEach((stack) -> {
-                                    handleExplosionDrops(objectarraylist, stack, blockpos1);
-                                });
+                                blockstate.getDrops(lootcontext$builder).forEach((stack) -> handleExplosionDrops(objectarraylist, stack, blockpos1));
                             }
                             if(!worldIn.isRemote)
                                 blockstate.onBlockExploded(worldIn, blockpos, vanillaExplosion2);
