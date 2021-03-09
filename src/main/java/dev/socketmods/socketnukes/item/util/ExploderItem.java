@@ -1,13 +1,12 @@
 package dev.socketmods.socketnukes.item.util;
 
 import dev.socketmods.socketnukes.capability.Capabilities;
+import dev.socketmods.socketnukes.client.ClientThingDoer;
 import dev.socketmods.socketnukes.client.screen.ExploderConfigScreen;
 import dev.socketmods.socketnukes.entity.ExplosiveEntity;
-import dev.socketmods.socketnukes.explosion.DummyExplosion;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -55,7 +54,7 @@ public class ExploderItem extends Item {
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         if(playerIn.isCrouching())
-            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().displayGuiScreen(new ExploderConfigScreen()));
+            ClientThingDoer.openConfigScreen();
 
         return ActionResult.resultPass(playerIn.getHeldItem(handIn));
     }

@@ -1,7 +1,6 @@
 package dev.socketmods.socketnukes.networking.packet;
 
 import dev.socketmods.socketnukes.capability.Capabilities;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
