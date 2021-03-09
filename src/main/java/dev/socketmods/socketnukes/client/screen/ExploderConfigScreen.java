@@ -62,8 +62,4 @@ public class ExploderConfigScreen extends Screen {
         );
         Network.sendToServer(new ExploderConfigChangedPacket(registryName));
     }
-
-    public static void open() {
-        Minecraft.getInstance().displayGuiScreen(new ExploderConfigScreen());
-    }
 }

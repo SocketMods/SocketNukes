@@ -21,9 +21,12 @@ public class EnUsLangProvider extends LanguageProvider {
         add(SNRegistry.VANILLA_EXPLOSION.get(), "Vanilla");
         add(SNRegistry.CUBIC_EXPLOSION.get(), "Cubic");
         add(SNRegistry.NULL_EXPLOSION.get(), "Null");
+
+        // hardcode the Exploder screen title - it isn't used, but it shuts up metrics
+        add("socketnukes.title.exploderconfig", "Exploderiser Configuration");
     }
 
     private void add(ExtendedExplosionType type, String name) {
-        add(SocketNukes.MODID + ".explosions." + type.getRegistryName().getPath(), name);
+        add(type.getRegistryName().getNamespace() + ".explosions." + type.getRegistryName().getPath(), name);
     }
 }

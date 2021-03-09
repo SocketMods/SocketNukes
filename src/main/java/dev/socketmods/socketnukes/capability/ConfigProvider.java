@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
  * The provider for the Explosion Configuration capability.
  * Handles the logic for parsing this cap out of wherever it is needed, like NBT of a stored world.
  *
- * Exploder Configuration is a string that represents the currently selected explosion in the Exploder Item.
+ * Exploder Configuration is a ResourceLocation that represents the currently selected explosion in the Exploder Item.
  *
  * @author Citrine
  */

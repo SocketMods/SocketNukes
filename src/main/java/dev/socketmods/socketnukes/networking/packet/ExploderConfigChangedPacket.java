@@ -14,7 +14,7 @@ import java.util.function.Supplier;
  * particles of the configured explosion.
  *
  * Packet Layout:
- *  String - the name of the explosion type
+ *  ResourceLocation - the name of the explosion type
  *  int - the ID of the player that configured their item
  *
  * @author Citrine

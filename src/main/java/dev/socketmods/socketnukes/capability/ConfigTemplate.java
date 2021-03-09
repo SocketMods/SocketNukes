@@ -6,7 +6,7 @@ import net.minecraft.util.ResourceLocation;
 /**
  * A template for the getter/setter for the Exploder Configuration.
  *
- * Exploder Configuration is a string that represents the currently selected explosion in the Exploder Item.
+ * Exploder Configuration is a ResourceLocation that represents the currently selected explosion in the Exploder Item.
  *
  * @author Citrine
  */

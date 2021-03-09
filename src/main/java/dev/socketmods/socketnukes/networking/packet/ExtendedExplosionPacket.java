@@ -100,7 +100,7 @@ public class ExtendedExplosionPacket {
         }
     }
 
-    // Consumer - perform the intended actions once this packet is recieved.
+    // Consumer - perform the intended actions once this packet is received.
     // That being: Delete the blocks, move the entities, show the particles, play the sound.
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
@@ -110,7 +110,8 @@ public class ExtendedExplosionPacket {
                 world.setBlockState(pos, Blocks.AIR.getDefaultState());
             }
             for(Map.Entry<Integer, Vector3d> entry : this.entityDisplacements.entrySet()) {
-                world.getEntityByID(entry.getKey()).setMotion(entry.getValue());
+                if(world.getEntityByID(entry.getKey()) != null)
+                    world.getEntityByID(entry.getKey()).setMotion(entry.getValue());
             }
 
             world.addParticle((IParticleData) explosionParticle, source.getX(), source.getY(), source.getZ(), 0, 0, 0);

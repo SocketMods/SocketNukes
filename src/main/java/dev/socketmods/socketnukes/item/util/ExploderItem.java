@@ -39,7 +39,7 @@ public class ExploderItem extends Item {
             return super.onItemUse(context);
 
         // If we're on the client and we're sneaking, open the configuration menu.
-        if(!context.getPlayer().isCrouching()) {
+        if(!(context.getPlayer() == null) && !context.getPlayer().isCrouching()) {
             // If we're just right clicking a block, trigger an immediate explosion with the configured type.
             context.getItem().getCapability(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY).ifPresent(cap -> {
                 ExtendedExplosionType explosion = SNRegistry.EXPLOSION_TYPE_REGISTRY.get().getValue(cap.getConfig());

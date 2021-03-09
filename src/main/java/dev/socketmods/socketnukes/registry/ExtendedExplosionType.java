@@ -95,8 +95,11 @@ public class ExtendedExplosionType extends ForgeRegistryEntry<ExtendedExplosionT
 
     /**
      * If prepareExplosion returned true, execute the stages of explosion.
-     * We return a list of blockstates for compatibility with the vanilla explosion (for now), as it returns the list
-     *  on the first pass, and uses it on the second.
+     *
+     * We return a package of metadata that the explosion can carry around between stages.
+     * The package is mutable, and it is intended to be changed by each progressive stage.
+     *
+     * It allows the stages to be executed independently, but using data from all prior.
      *
      */
     public ExplosionMetaPackage explode(World worldIn, BlockPos source, int stage, Entity placer, ExplosionMetaPackage meta) {
