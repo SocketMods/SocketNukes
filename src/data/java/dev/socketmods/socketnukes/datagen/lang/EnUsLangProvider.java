@@ -1,6 +1,7 @@
 package dev.socketmods.socketnukes.datagen.lang;
 
 import dev.socketmods.socketnukes.SocketNukes;
+import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.LanguageProvider;
@@ -14,6 +15,18 @@ public class EnUsLangProvider extends LanguageProvider {
     @Override
     protected void addTranslations() {
         add(SNRegistry.EXPLODER_ITEM.get(), "Exploderiser 9000");
+        add(SNRegistry.GENERIC_EXPLOSIVE_ITEM.get(), "Pop Filter");
+        add(SNRegistry.EXPLOSIVE_ENTITY_TYPE.get(), "Pop Filter");
 
+        add(SNRegistry.VANILLA_EXPLOSION.get(), "Vanilla");
+        add(SNRegistry.CUBIC_EXPLOSION.get(), "Cubic");
+        add(SNRegistry.NULL_EXPLOSION.get(), "Null");
+
+        // hardcode the Exploder screen title - it isn't used, but it shuts up metrics
+        add("socketnukes.title.exploderconfig", "Exploderiser Configuration");
+    }
+
+    private void add(ExtendedExplosionType type, String name) {
+        add(type.getRegistryName().getNamespace() + ".explosions." + type.getRegistryName().getPath(), name);
     }
 }

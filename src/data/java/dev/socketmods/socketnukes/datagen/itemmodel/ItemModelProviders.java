@@ -3,7 +3,6 @@ package dev.socketmods.socketnukes.datagen.itemmodel;
 import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
@@ -22,5 +21,9 @@ public class ItemModelProviders extends ItemModelProvider {
                 mcLoc("item/generated"),                // "parent": ###
                 "layer0",                            // ###: TEXTURE
                 modLoc("items/" + exploderResource));   // LAYER: ###
+
+        String vanillaExplosive = SNRegistry.GENERIC_EXPLOSIVE.get().getRegistryName().getPath();
+        cubeBottomTop(vanillaExplosive, modLoc("blocks/" + vanillaExplosive + "_side"), modLoc("blocks/" + vanillaExplosive + "_bottom"), modLoc("blocks/" + vanillaExplosive + "_top"));
+
     }
 }

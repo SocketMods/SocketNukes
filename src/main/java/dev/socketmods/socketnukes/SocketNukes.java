@@ -1,5 +1,6 @@
 package dev.socketmods.socketnukes;
 
+import dev.socketmods.socketnukes.networking.Network;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraftforge.fml.common.Mod;
 import org.apache.logging.log4j.LogManager;
@@ -11,8 +12,9 @@ public class SocketNukes {
     public static final String MODID = "socketnukes";
 
     public SocketNukes() {
-
         SNRegistry.initialize();
+        Network.setup();
 
     }
+
 }
