@@ -44,7 +44,7 @@ public class ExploderConfigScreen extends Screen {
 
         for(RegistryObject<ExtendedExplosionType> explosion : SNRegistry.EXPLOSIONS.getEntries()) {
             addButton(new Button(middleX + 10, topY - rollingOffset, 160, 20,
-                    new TranslationTextComponent(Objects.requireNonNull(explosion.get().getRegistryName()).getNamespace() + ".explosions." + explosion.get().getRegistryName().getPath()),
+                    new TranslationTextComponent(Objects.requireNonNull(explosion.get().getTranslationText().getKey())),
                     button -> config(Objects.requireNonNull(explosion.get().getRegistryName()))));
             rollingOffset += 30;
         }

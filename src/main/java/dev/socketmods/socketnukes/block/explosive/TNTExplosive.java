@@ -2,8 +2,10 @@ package dev.socketmods.socketnukes.block.explosive;
 
 import dev.socketmods.socketnukes.capability.Capabilities;
 import dev.socketmods.socketnukes.entity.ExplosiveEntity;
+import dev.socketmods.socketnukes.item.block.ExplosiveBlockItem;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import dev.socketmods.socketnukes.registry.SNRegistry;
+import dev.socketmods.socketnukes.tileentity.ExplosiveTileEntity;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -14,13 +16,12 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.Explosion;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -43,6 +44,29 @@ public class TNTExplosive extends Block {
     }
 
     /**
+     * Sets the short-lived tile entity data when this block is placed by the BlockEntity.
+     * This is just a hacky way of persisting the data inside the block.
+     * This should use WorldSavedData or something.
+     * @param worldIn The world where the block was placed
+     * @param pos The position the block was placed at
+     * @param state The new blockstate of this block.
+     * @param placer The entity that placed the block
+     * @param stack The stack the entity was holding when it was placed.
+     */
+    @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+
+        stack.getCapability(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY).ifPresent(capability -> {
+            if(stack.getItem() == SNRegistry.GENERIC_EXPLOSIVE_ITEM.get()
+                    && worldIn.getTileEntity(pos) != null && worldIn.getTileEntity(pos) instanceof ExplosiveTileEntity) {
+
+                ((ExplosiveTileEntity) worldIn.getTileEntity(pos)).setConfiguration(capability.getConfig());
+            }
+        });
+    }
+
+    /**
      * Surrounding logic for the explosion.
      * Called when this block catches fire, or when it is ignited with flint and steel.
      * @param state the blockstate of the target (this block)
@@ -53,7 +77,13 @@ public class TNTExplosive extends Block {
      */
     @Override
     public void catchFire(BlockState state, World world, BlockPos pos, @Nullable net.minecraft.util.Direction face, @Nullable LivingEntity igniter) {
-        explode(world, pos, igniter, SNRegistry.VANILLA_EXPLOSION.get());
+        if(world.getTileEntity(pos) != null && world.getTileEntity(pos) instanceof ExplosiveTileEntity) {
+            ResourceLocation config = ((ExplosiveTileEntity)world.getTileEntity(pos)).getConfiguration();
+            ExtendedExplosionType explosion = SNRegistry.EXPLOSION_TYPE_REGISTRY.get().getValue(config);
+            explode(world, pos, igniter, explosion);
+        } else {
+            explode(world, pos, igniter, SNRegistry.VANILLA_EXPLOSION.get());
+        }
     }
 
     /**
@@ -185,5 +215,16 @@ public class TNTExplosive extends Block {
             }
             return ActionResultType.func_233537_a_(worldIn.isRemote);
         }
+    }
+
+    @Override
+    public boolean hasTileEntity(BlockState state) {
+        return true;
+    }
+
+    @Nullable
+    @Override
+    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+        return new ExplosiveTileEntity();
     }
 }

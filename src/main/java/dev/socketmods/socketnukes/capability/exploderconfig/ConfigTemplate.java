@@ -1,4 +1,4 @@
-package dev.socketmods.socketnukes.capability;
+package dev.socketmods.socketnukes.capability.exploderconfig;
 
 import dev.socketmods.socketnukes.SocketNukes;
 import net.minecraft.util.ResourceLocation;
