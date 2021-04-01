@@ -11,6 +11,11 @@ import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
 
+/**
+ * Render the bolbmas hat on Bolbs called Curle.
+ *
+ * @author Citrine
+ */
 public class BolbHatLayer <T extends BolbEntity> extends LayerRenderer<T, BolbModel<T>> {
     public BolbHatLayer(IEntityRenderer<T, BolbModel<T>> p_i50923_1_) {
         super(p_i50923_1_);
