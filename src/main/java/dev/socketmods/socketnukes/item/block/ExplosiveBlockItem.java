@@ -16,6 +16,8 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.RegistryObject;
 
+import javax.annotation.Resource;
+
 /**
  * Multiple use block item.
  * Stores and ignites different explosions depending on what was crafted, or chosen.
@@ -33,7 +35,7 @@ public class ExplosiveBlockItem extends BlockItem {
         if(group == SocketItems.SOCKET_GROUP)
             for(RegistryObject<ExtendedExplosionType> explosionType : SNRegistry.EXPLOSIONS.getEntries()) {
                 ItemStack newItem = new ItemStack(this);
-                newItem.getCapability(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY).ifPresent(cap -> cap.setConfig(explosionType.get().getRegistryName()));
+                newItem.getOrCreateChildTag(SocketNukes.MODID).putString("explosion", explosionType.get().getRegistryName().toString());
                 items.add(newItem);
             }
     }
@@ -44,8 +46,7 @@ public class ExplosiveBlockItem extends BlockItem {
      */
     @Override
     public ITextComponent getDisplayName(ItemStack stack) {
-        IConfiguration config = stack.getCapability(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY).orElse(null);
-        ResourceLocation stackConfigLoc = config == null ? new ResourceLocation(SocketNukes.MODID, "null") : config.getConfig();
+        ResourceLocation stackConfigLoc = new ResourceLocation(stack.getOrCreateChildTag(SocketNukes.MODID).getString("explosion"));
         ITextComponent stackConfigComponent = SNRegistry.EXPLOSION_TYPE_REGISTRY.get().getValue(stackConfigLoc).getTranslationText();
         return new TranslationTextComponent(this.getTranslationKey(stack)).append(new StringTextComponent(" - ")).append(stackConfigComponent);
     }

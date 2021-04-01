@@ -1,0 +1,31 @@
+{
+  "type": "crafting_shaped",
+  "group": "socketnukes_explosives",
+
+  "pattern": [
+    "GSG",
+    "STS",
+    "GSG"
+  ],
+
+  "key": {
+    "G": {
+      "item": "minecraft:gunpowder"
+    },
+    "S": {
+      "item": "minecraft:sand"
+    },
+    "T": {
+      "item": "minecraft:tnt"
+    }
+  },
+
+  "result": {
+    "item": "socketnukes:explosive",
+    "nbt": {
+      "socketnukes": {
+        "explosion": "socketnukes:vanilla"
+      }
+    }
+  }
+}

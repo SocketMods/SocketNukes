@@ -1,5 +1,6 @@
 package dev.socketmods.socketnukes.block.explosive;
 
+import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.capability.Capabilities;
 import dev.socketmods.socketnukes.entity.ExplosiveEntity;
 import dev.socketmods.socketnukes.item.block.ExplosiveBlockItem;
@@ -25,6 +26,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import javax.annotation.Resource;
 import java.util.Objects;
 
 /**
@@ -57,13 +59,11 @@ public class TNTExplosive extends Block {
     public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
 
-        stack.getCapability(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY).ifPresent(capability -> {
-            if(stack.getItem() == SNRegistry.GENERIC_EXPLOSIVE_ITEM.get()
-                    && worldIn.getTileEntity(pos) != null && worldIn.getTileEntity(pos) instanceof ExplosiveTileEntity) {
-
-                ((ExplosiveTileEntity) worldIn.getTileEntity(pos)).setConfiguration(capability.getConfig());
-            }
-        });
+        if(stack.getItem() == SNRegistry.GENERIC_EXPLOSIVE_ITEM.get()
+                && worldIn.getTileEntity(pos) != null && worldIn.getTileEntity(pos) instanceof ExplosiveTileEntity) {
+            ResourceLocation config = new ResourceLocation(stack.getOrCreateChildTag(SocketNukes.MODID).getString("explosion"));
+            ((ExplosiveTileEntity) Objects.requireNonNull(worldIn.getTileEntity(pos))).setConfiguration(config);
+        }
     }
 
     /**
