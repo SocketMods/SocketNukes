@@ -11,6 +11,7 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
@@ -134,6 +135,10 @@ public class ExtendedExplosionType extends ForgeRegistryEntry<ExtendedExplosionT
         }
 
         dropPositionArray.add(Pair.of(stack, pos));
+    }
+
+    public TranslationTextComponent getTranslationText() {
+        return new TranslationTextComponent(this.getRegistryName().getNamespace() + ".explosions." + this.getRegistryName().getPath());
     }
 
 }

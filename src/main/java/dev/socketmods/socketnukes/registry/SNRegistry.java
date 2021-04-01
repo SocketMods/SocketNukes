@@ -11,7 +11,9 @@ import dev.socketmods.socketnukes.explosion.types.CubicExplosionType;
 import dev.socketmods.socketnukes.explosion.types.NullExplosionType;
 import dev.socketmods.socketnukes.explosion.types.VanillaExplosionType;
 import dev.socketmods.socketnukes.item.SocketItems;
+import dev.socketmods.socketnukes.item.block.ExplosiveBlockItem;
 import dev.socketmods.socketnukes.item.util.ExploderItem;
+import dev.socketmods.socketnukes.tileentity.ExplosiveTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySize;
@@ -70,7 +72,7 @@ public class SNRegistry {
 
     // ITEMS
     public static final RegistryObject<Item> EXPLODER_ITEM = ITEMS.register("exploder_item", () -> new ExploderItem(SocketItems.EXPLODER_PROPERTIES));
-    public static final RegistryObject<Item> GENERIC_EXPLOSIVE_ITEM = ITEMS.register("explosive", () -> new BlockItem(GENERIC_EXPLOSIVE.get(), new Item.Properties().group(ItemGroup.REDSTONE)));
+    public static final RegistryObject<Item> GENERIC_EXPLOSIVE_ITEM = ITEMS.register("explosive", ExplosiveBlockItem::new);
 
     // EXPLOSIONS
     public static final RegistryObject<VanillaExplosionType> VANILLA_EXPLOSION = EXPLOSIONS.register("vanilla", () ->
@@ -94,6 +96,12 @@ public class SNRegistry {
 
     public static final RegistryObject<EntityType<BolbEntity>> EXPLOSIVE_BOLB_TYPE = ENTITYTYPES.register("bolb", () ->
             new EntityType<>(BolbEntity::new, EntityClassification.MISC, true, true, false, false, ImmutableSet.of(), EntitySize.flexible(2.04F, 2.04F), 10, 1)
+    );
+
+    // TILE ENTITY TYPE
+
+    public static final RegistryObject<TileEntityType<ExplosiveTileEntity>> EXPLOSIVE_TE = TETYPES.register("explosive", () ->
+            TileEntityType.Builder.create(ExplosiveTileEntity::new, GENERIC_EXPLOSIVE.get()).build(null)
     );
 
     public static void initialize() {
