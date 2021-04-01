@@ -1,0 +1,28 @@
+{
+  "type": "crafting_shaped",
+  "group": "socketnukes_explosives",
+
+  "pattern": [
+    " L ",
+    "LTL",
+    " L "
+  ],
+
+  "key": {
+    "L": {
+      "item": "minecraft:blue_dye"
+    },
+    "T": {
+      "item": "minecraft:tnt"
+    }
+  },
+
+  "result": {
+    "item": "socketnukes:explosive",
+    "nbt": {
+      "socketnukes": {
+        "explosion": "socketnukes:null"
+      }
+    }
+  }
+}

@@ -27,7 +27,7 @@ public class Capabilities {
 
     @SubscribeEvent
     public static void attachCapabilities(AttachCapabilitiesEvent<ItemStack> e) {
-        if(e.getObject().getItem() == SNRegistry.EXPLODER_ITEM.get() || e.getObject().getItem() == SNRegistry.GENERIC_EXPLOSIVE_ITEM.get()) {
+        if(e.getObject().getItem() == SNRegistry.EXPLODER_ITEM.get()) {
             ConfigProvider provider = new ConfigProvider();
             e.addCapability(new ResourceLocation(SocketNukes.MODID, "config"), provider);
             e.addListener(provider::invalidate);
