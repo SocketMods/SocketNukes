@@ -1,6 +1,7 @@
 package dev.socketmods.socketnukes.client.render.layer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import dev.socketmods.socketnukes.SocketNukes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -14,6 +15,11 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
 
+/**
+ * Render the bolbmas hat on players deemed worthy.
+ *
+ * @author Citrine
+ */
 public class PlayerHatLayer extends LayerRenderer<AbstractClientPlayerEntity, PlayerModel<AbstractClientPlayerEntity>> {
     public static IBakedModel HAT_MODEL = null;
 
@@ -22,7 +28,7 @@ public class PlayerHatLayer extends LayerRenderer<AbstractClientPlayerEntity, Pl
     }
 
     public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, AbstractClientPlayerEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        if ("Dev".equals(entitylivingbaseIn.getName().getString()) && !entitylivingbaseIn.isInvisible()) {
+        if (SocketNukes.BOLBERS.contains(entitylivingbaseIn.getUUID(Minecraft.getInstance().getSession().getProfile())) && !entitylivingbaseIn.isInvisible()) {
             matrixStackIn.push();
             if (!entitylivingbaseIn.inventory.armorInventory.get(3).isEmpty())
                 matrixStackIn.translate(0, -0.02f, 0);
