@@ -52,7 +52,7 @@ public class ExploderConfigScreen extends Screen {
 
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        // Do to the way the Screen / Gui System is designed we can safely assume that `minecraft` is non null here
+        // Due to the way the Screen / Gui System is designed we can safely assume that `minecraft` is non null here
         assert this.minecraft != null;
 
         this.minecraft.getTextureManager().bindTexture(BACKGROUND);
