@@ -1,5 +1,7 @@
 package dev.socketmods.socketnukes.client.screen;
 
+import java.util.Objects;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.capability.Capabilities;
@@ -28,7 +30,7 @@ public class ExploderConfigScreen extends Screen {
     private static final int SCREEN_WIDTH = 160;
     private static final int SCREEN_HEIGHT = 120;
 
-    private static final ResourceLocation bg_texture = new ResourceLocation(SocketNukes.MODID, "textures/gui/exploder_config.png");
+    private static final ResourceLocation BACKGROUND = new ResourceLocation(SocketNukes.MODID, "textures/gui/exploder_config.png");
 
     public ExploderConfigScreen() {
         super(new TranslationTextComponent("socketnukes.title.exploderconfig"));
@@ -42,19 +44,28 @@ public class ExploderConfigScreen extends Screen {
 
         for(RegistryObject<ExtendedExplosionType> explosion : SNRegistry.EXPLOSIONS.getEntries()) {
             addButton(new Button(middleX + 10, topY - rollingOffset, 160, 20,
-                    new TranslationTextComponent(explosion.get().getRegistryName().getNamespace() + ".explosions." + explosion.get().getRegistryName().getPath()),
-                    button -> config(explosion.get().getRegistryName())));
+                    new TranslationTextComponent(Objects.requireNonNull(explosion.get().getTranslationText().getKey())),
+                    button -> config(Objects.requireNonNull(explosion.get().getRegistryName()))));
             rollingOffset += 30;
         }
     }
 
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        this.minecraft.getTextureManager().bindTexture(bg_texture);
+        // Due to the way the Screen / Gui System is designed we can safely assume that `minecraft` is non null here
+        assert this.minecraft != null;
+
+        this.minecraft.getTextureManager().bindTexture(BACKGROUND);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
     private void config(ResourceLocation registryName) {
+        // Due to the way the Screen / Gui System is designed we can safely assume that `minecraft` is non null here
+        // The player is another story, we can assume in all normal cases it would be, the only time this can possible fail is
+        // if this screen gets opened without a world.
+        assert minecraft != null;
+        assert minecraft.player != null;
+
         minecraft.player.getHeldItemMainhand().getCapability(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY).ifPresent(cap ->
                 cap.setConfig(registryName)
         );

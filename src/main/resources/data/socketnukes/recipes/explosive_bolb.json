@@ -1,0 +1,31 @@
+{
+  "type": "crafting_shaped",
+  "group": "socketnukes_explosives",
+
+  "pattern": [
+    "RSR",
+    "STS",
+    "RSR"
+  ],
+
+  "key": {
+    "R": {
+      "item": "minecraft:red_dye"
+    },
+    "S": {
+      "item": "minecraft:slime_ball"
+    },
+    "T": {
+      "item": "minecraft:tnt"
+    }
+  },
+
+  "result": {
+    "item": "socketnukes:explosive",
+    "nbt": {
+      "socketnukes": {
+        "explosion": "socketnukes:bolb"
+      }
+    }
+  }
+}

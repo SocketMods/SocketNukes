@@ -1,13 +1,19 @@
 package dev.socketmods.socketnukes.client;
 
+import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.client.screen.ExploderConfigScreen;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.ModelLoader;
 
 public class ClientThingDoer {
 
-    public static void openConfigScreen() {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().displayGuiScreen(new ExploderConfigScreen()));
+    public static void registerSpecialModels() {
+        ModelLoader.addSpecialModel(new ResourceLocation(SocketNukes.MODID, "block/hat"));
     }
+
+    public static void openConfigScreen() {
+        Minecraft.getInstance().displayGuiScreen(new ExploderConfigScreen());
+    }
+
 }

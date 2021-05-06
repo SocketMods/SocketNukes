@@ -1,5 +1,6 @@
-package dev.socketmods.socketnukes.capability;
+package dev.socketmods.socketnukes.capability.exploderconfig;
 
+import dev.socketmods.socketnukes.capability.Capabilities;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;

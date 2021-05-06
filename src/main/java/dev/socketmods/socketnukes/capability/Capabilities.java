@@ -1,6 +1,8 @@
 package dev.socketmods.socketnukes.capability;
 
 import dev.socketmods.socketnukes.SocketNukes;
+import dev.socketmods.socketnukes.capability.exploderconfig.ConfigProvider;
+import dev.socketmods.socketnukes.capability.exploderconfig.IConfiguration;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
