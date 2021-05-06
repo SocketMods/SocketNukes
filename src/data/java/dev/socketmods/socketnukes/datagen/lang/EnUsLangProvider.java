@@ -29,7 +29,7 @@ public class EnUsLangProvider extends LanguageProvider {
         add(SNRegistry.NULL_EXPLOSION.get(), "Null");
         add(SNRegistry.BOLB_EXPLOSION.get(), "Bolb");
 
-        add(SocketItems.SOCKET_GROUP, "SocketNukes - Explosives");
+        add(SocketItems.SOCKETNUKES_GROUP, "SocketNukes - Explosives");
 
         // hardcode the Exploder screen title - it isn't used, but it shuts up metrics
         add("socketnukes.title.exploderconfig", "Exploderiser Configuration");

@@ -32,7 +32,7 @@ public class ExplosiveBlockItem extends BlockItem {
 
     @Override
     public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-        if(group == SocketItems.SOCKET_GROUP)
+        if(group == SocketItems.SOCKETNUKES_GROUP)
             for(RegistryObject<ExtendedExplosionType> explosionType : SNRegistry.EXPLOSIONS.getEntries()) {
                 ItemStack newItem = new ItemStack(this);
                 CompoundNBT tag = newItem.getOrCreateChildTag(SocketNukes.MODID);

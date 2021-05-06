@@ -15,6 +15,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.util.math.vector.Vector3f;
+import net.minecraftforge.client.model.data.EmptyModelData;
 
 /**
  * Render the bolbmas hat on players deemed worthy.
@@ -47,7 +48,7 @@ public class PlayerHatLayer extends LayerRenderer<AbstractClientPlayerEntity, Pl
 
         Minecraft minecraft = Minecraft.getInstance();
         minecraft.getTextureManager().bindTexture(PlayerContainer.LOCATION_BLOCKS_TEXTURE);
-        minecraft.getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightnessColor(stack.getLast(), buffer.getBuffer(RenderType.getCutout()), null, HAT_MODEL, 1f, 1f, 1f, packedLight, OverlayTexture.NO_OVERLAY);
+        minecraft.getBlockRendererDispatcher().getBlockModelRenderer().renderModel(stack.getLast(), buffer.getBuffer(RenderType.getCutout()), null, HAT_MODEL, 1f, 1f, 1f, packedLight, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
         stack.pop();
     }
 

@@ -98,6 +98,8 @@ public class SNRegistry {
 
     // TILE ENTITY TYPE
 
+    // We can't sanely provide non null data-fixers for a TileEntityType
+    @SuppressWarnings("ConstantConditions")
     public static final RegistryObject<TileEntityType<ExplosiveTileEntity>> EXPLOSIVE_TE = TETYPES.register("explosive", () ->
             TileEntityType.Builder.create(ExplosiveTileEntity::new, GENERIC_EXPLOSIVE.get()).build(null)
     );

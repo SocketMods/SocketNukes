@@ -30,7 +30,7 @@ public class ExploderConfigScreen extends Screen {
     private static final int SCREEN_WIDTH = 160;
     private static final int SCREEN_HEIGHT = 120;
 
-    private static final ResourceLocation bg_texture = new ResourceLocation(SocketNukes.MODID, "textures/gui/exploder_config.png");
+    private static final ResourceLocation BACKGROUND = new ResourceLocation(SocketNukes.MODID, "textures/gui/exploder_config.png");
 
     public ExploderConfigScreen() {
         super(new TranslationTextComponent("socketnukes.title.exploderconfig"));
@@ -53,7 +53,7 @@ public class ExploderConfigScreen extends Screen {
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         assert this.minecraft != null;
-        this.minecraft.getTextureManager().bindTexture(bg_texture);
+        this.minecraft.getTextureManager().bindTexture(BACKGROUND);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 

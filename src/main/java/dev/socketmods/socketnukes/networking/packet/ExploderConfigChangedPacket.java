@@ -1,12 +1,12 @@
 package dev.socketmods.socketnukes.networking.packet;
 
+import java.util.Objects;
+import java.util.function.Supplier;
+
 import dev.socketmods.socketnukes.capability.Capabilities;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
-
-import java.util.Objects;
-import java.util.function.Supplier;
 
 /**
  * Tells the server that the configuration on a player's Exploder Item has changed.
@@ -22,7 +22,7 @@ import java.util.function.Supplier;
 public class ExploderConfigChangedPacket {
     private final ResourceLocation config;
 
-    // Deserialiser - write this class into a buffer
+    // Deserializer - write this class into a buffer
     public ExploderConfigChangedPacket(PacketBuffer buf) {
         config = buf.readResourceLocation();
     }

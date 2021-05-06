@@ -1,5 +1,7 @@
 package dev.socketmods.socketnukes.registry;
 
+import java.util.List;
+import java.util.Objects;
 
 import com.mojang.datafixers.util.Pair;
 import dev.socketmods.socketnukes.explosion.ExplosionProperties;
@@ -14,8 +16,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistryEntry;
-
-import java.util.List;
 
 /**
  * Extended-capability Explosion
@@ -138,7 +138,7 @@ public class ExtendedExplosionType extends ForgeRegistryEntry<ExtendedExplosionT
     }
 
     public TranslationTextComponent getTranslationText() {
-        return new TranslationTextComponent(this.getRegistryName().getNamespace() + ".explosions." + this.getRegistryName().getPath());
+        return new TranslationTextComponent(Objects.requireNonNull(this.getRegistryName()).getNamespace() + ".explosions." + this.getRegistryName().getPath());
     }
 
 }

@@ -5,7 +5,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
 public class ExplosiveTileEntity extends TileEntity {
-    public ResourceLocation configuration;
+    private ResourceLocation configuration;
 
     public ExplosiveTileEntity() {
         super(SNRegistry.EXPLOSIVE_TE.get());
@@ -13,7 +13,7 @@ public class ExplosiveTileEntity extends TileEntity {
     }
 
 
-    public  ResourceLocation getConfiguration() {
+    public ResourceLocation getConfiguration() {
         return configuration;
     }
 
