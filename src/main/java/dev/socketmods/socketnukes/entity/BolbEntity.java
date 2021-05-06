@@ -1,5 +1,8 @@
 package dev.socketmods.socketnukes.entity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import dev.socketmods.socketnukes.client.render.bolb.BolbEntityRenderer;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.Attribute;
@@ -13,12 +16,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class BolbEntity extends SlimeEntity {
-    public BolbEntity(EntityType<? extends SlimeEntity> type, World worldIn) {
-        super(type, worldIn);
+
+    public BolbEntity(EntityType<? extends SlimeEntity> type, World world) {
+        super(type, world);
     }
 
     public static AttributeModifierMap setupAttributes() {
@@ -40,9 +41,13 @@ public class BolbEntity extends SlimeEntity {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
+    @Override
     public void setSlimeSize(int size, boolean resetHealth) {
+        // Overridden to raise the visibility
         super.setSlimeSize(size, resetHealth);
     }
 
-    public ResourceLocation getEntityTexture() { return BolbEntityRenderer.getEntityTextureLocation(this); }
+    public ResourceLocation getEntityTexture() {
+        return BolbEntityRenderer.getEntityTextureLocation(this);
+    }
 }

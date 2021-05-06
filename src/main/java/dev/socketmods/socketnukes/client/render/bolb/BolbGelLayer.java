@@ -13,17 +13,18 @@ import net.minecraft.entity.LivingEntity;
 public class BolbGelLayer<T extends LivingEntity> extends LayerRenderer<T, BolbModel<T>> {
     private final EntityModel<T> bolbModel = new BolbModel<>(0);
 
-    public BolbGelLayer(IEntityRenderer<T, BolbModel<T>> p_i50923_1_) {
-        super(p_i50923_1_);
+    public BolbGelLayer(IEntityRenderer<T, BolbModel<T>> entityRenderer) {
+        super(entityRenderer);
     }
 
-    public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        if (!entitylivingbaseIn.isInvisible()) {
+    @Override
+    public void render(MatrixStack stack, IRenderTypeBuffer buffers, int packedLight, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+        if (!entity.isInvisible()) {
             this.getEntityModel().copyModelAttributesTo(this.bolbModel);
-            this.bolbModel.setLivingAnimations(entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks);
-            this.bolbModel.setRotationAngles(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-            IVertexBuilder ivertexbuilder = bufferIn.getBuffer(RenderType.getEntityTranslucent(this.getEntityTexture(entitylivingbaseIn)));
-            this.bolbModel.render(matrixStackIn, ivertexbuilder, packedLightIn, LivingRenderer.getPackedOverlay(entitylivingbaseIn, 0.0F), 1.0F, 1.0F, 1.0F, 1.0F);
+            this.bolbModel.setLivingAnimations(entity, limbSwing, limbSwingAmount, partialTicks);
+            this.bolbModel.setRotationAngles(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+            IVertexBuilder builder = buffers.getBuffer(RenderType.getEntityTranslucent(this.getEntityTexture(entity)));
+            this.bolbModel.render(stack, builder, packedLight, LivingRenderer.getPackedOverlay(entity, 0.0F), 1.0F, 1.0F, 1.0F, 1.0F);
         }
     }
 }

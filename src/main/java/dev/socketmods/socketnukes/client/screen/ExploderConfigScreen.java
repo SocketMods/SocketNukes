@@ -1,5 +1,7 @@
 package dev.socketmods.socketnukes.client.screen;
 
+import java.util.Objects;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.capability.Capabilities;
@@ -12,8 +14,6 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.RegistryObject;
-
-import java.util.Objects;
 
 /**
  * When the Exploder Item is used, it brings up this screen.

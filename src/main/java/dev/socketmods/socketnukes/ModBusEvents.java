@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.Mod;
 public class ModBusEvents {
 
     @SubscribeEvent
-    public static void attribs(EntityAttributeCreationEvent e) {
-        e.put(SNRegistry.EXPLOSIVE_BOLB_TYPE.get(), BolbEntity.setupAttributes());
+    public static void setupAttributes(EntityAttributeCreationEvent event) {
+        event.put(SNRegistry.EXPLOSIVE_BOLB_TYPE.get(), BolbEntity.setupAttributes());
     }
 }

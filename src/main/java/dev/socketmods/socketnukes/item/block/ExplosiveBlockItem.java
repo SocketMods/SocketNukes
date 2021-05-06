@@ -1,22 +1,22 @@
 package dev.socketmods.socketnukes.item.block;
 
+import java.util.Objects;
+
 import dev.socketmods.socketnukes.SocketNukes;
-import dev.socketmods.socketnukes.capability.Capabilities;
-import dev.socketmods.socketnukes.capability.exploderconfig.IConfiguration;
 import dev.socketmods.socketnukes.item.SocketItems;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.RegistryObject;
-
-import javax.annotation.Resource;
 
 /**
  * Multiple use block item.
@@ -26,8 +26,8 @@ import javax.annotation.Resource;
  */
 public class ExplosiveBlockItem extends BlockItem {
 
-    public ExplosiveBlockItem() {
-        super(SNRegistry.GENERIC_EXPLOSIVE.get(), SocketItems.EXPLOSIVE_PROPERTIES);
+    public ExplosiveBlockItem(Item.Properties properties) {
+        super(SNRegistry.GENERIC_EXPLOSIVE.get(), properties);
     }
 
     @Override
@@ -35,7 +35,8 @@ public class ExplosiveBlockItem extends BlockItem {
         if(group == SocketItems.SOCKET_GROUP)
             for(RegistryObject<ExtendedExplosionType> explosionType : SNRegistry.EXPLOSIONS.getEntries()) {
                 ItemStack newItem = new ItemStack(this);
-                newItem.getOrCreateChildTag(SocketNukes.MODID).putString("explosion", explosionType.get().getRegistryName().toString());
+                CompoundNBT tag = newItem.getOrCreateChildTag(SocketNukes.MODID);
+                tag.putString("explosion", Objects.requireNonNull(explosionType.get().getRegistryName()).toString());
                 items.add(newItem);
             }
     }
@@ -47,7 +48,7 @@ public class ExplosiveBlockItem extends BlockItem {
     @Override
     public ITextComponent getDisplayName(ItemStack stack) {
         ResourceLocation stackConfigLoc = new ResourceLocation(stack.getOrCreateChildTag(SocketNukes.MODID).getString("explosion"));
-        ITextComponent stackConfigComponent = SNRegistry.EXPLOSION_TYPE_REGISTRY.get().getValue(stackConfigLoc).getTranslationText();
+        ITextComponent stackConfigComponent = Objects.requireNonNull(SNRegistry.EXPLOSION_TYPE_REGISTRY.get().getValue(stackConfigLoc)).getTranslationText();
         return new TranslationTextComponent(this.getTranslationKey(stack)).append(new StringTextComponent(" - ")).append(stackConfigComponent);
     }
 }

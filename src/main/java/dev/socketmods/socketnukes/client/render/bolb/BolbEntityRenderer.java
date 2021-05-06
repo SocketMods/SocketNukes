@@ -12,34 +12,40 @@ import net.minecraft.util.math.MathHelper;
 public class BolbEntityRenderer extends MobRenderer<BolbEntity, BolbModel<BolbEntity>> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(SocketNukes.MODID, "textures/entity/bolb.png");
 
-    public BolbEntityRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new BolbModel<>(16), 0.25F);
+    public BolbEntityRenderer(EntityRendererManager renderManager) {
+        super(renderManager, new BolbModel<>(16), 0.25F);
         this.addLayer(new BolbGelLayer<>(this));
         this.addLayer(new BolbHatLayer<>(this));
     }
 
-    public void render(BolbEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
-        this.shadowSize = 0.25F * (float)entityIn.getSlimeSize();
-        super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
+    @Override
+    public void render(BolbEntity bolb, float entityYaw, float partialTicks, MatrixStack stack, IRenderTypeBuffer buffers, int packedLight) {
+        this.shadowSize = 0.25F * (float)bolb.getSlimeSize();
+        super.render(bolb, entityYaw, partialTicks, stack, buffers, packedLight);
     }
 
-    protected void preRenderCallback(BolbEntity entitylivingbaseIn, MatrixStack matrixStackIn, float partialTickTime) {
-        matrixStackIn.scale(0.999F, 0.999F, 0.999F);
-        matrixStackIn.translate(0.0D, 0.001F, 0.0D);
-        float f1 = (float)entitylivingbaseIn.getSlimeSize();
-        float f2 = MathHelper.lerp(partialTickTime, entitylivingbaseIn.prevSquishFactor, entitylivingbaseIn.squishFactor) / (f1 * 0.5F + 1.0F);
-        float f3 = 1.0F / (f2 + 1.0F);
-        matrixStackIn.scale(f3 * f1, 1.0F / f3 * f1, f3 * f1);
+    @Override
+    protected void preRenderCallback(BolbEntity bolb, MatrixStack stack, float partialTickTime) {
+        // The following code is heavily based on Vanilla's SlimeRenderer
+        stack.scale(0.999F, 0.999F, 0.999F);
+        stack.translate(0.0D, 0.001F, 0.0D);
+
+        float size   = bolb.getSlimeSize();
+        float squish = MathHelper.lerp(partialTickTime, bolb.prevSquishFactor, bolb.squishFactor) / (size * 0.5F + 1.0F);
+        float squeeze = 1.0F / (squish + 1.0F);
+
+        stack.scale(squeeze * size, 1.0F / squeeze * size, squeeze * size);
     }
 
     /**
      * Returns the location of an entity's texture.
      */
-    public ResourceLocation getEntityTexture(BolbEntity entity) {
-        return TEXTURE;
+    @Override
+    public ResourceLocation getEntityTexture(BolbEntity bolb) {
+        return getEntityTextureLocation(bolb);
     }
 
-    public static ResourceLocation getEntityTextureLocation(BolbEntity entity) {
+    public static ResourceLocation getEntityTextureLocation(BolbEntity bolb) {
         return TEXTURE;
     }
 }
