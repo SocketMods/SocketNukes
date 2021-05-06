@@ -52,14 +52,20 @@ public class ExploderConfigScreen extends Screen {
 
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        // Do to the way the Screen / Gui System is designed we can safely assume that `minecraft` is non null here
         assert this.minecraft != null;
+
         this.minecraft.getTextureManager().bindTexture(BACKGROUND);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
     private void config(ResourceLocation registryName) {
+        // Do to the way the Screen / Gui System is designed we can safely assume that `minecraft` is non null here
+        // The player is another story, we can assume in all normal cases it would be, the only time this can possible fail is
+        // if this screen gets opened without a world.
         assert minecraft != null;
         assert minecraft.player != null;
+
         minecraft.player.getHeldItemMainhand().getCapability(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY).ifPresent(cap ->
                 cap.setConfig(registryName)
         );
