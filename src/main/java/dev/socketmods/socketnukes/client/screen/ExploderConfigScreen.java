@@ -60,7 +60,7 @@ public class ExploderConfigScreen extends Screen {
     }
 
     private void config(ResourceLocation registryName) {
-        // Do to the way the Screen / Gui System is designed we can safely assume that `minecraft` is non null here
+        // Due to the way the Screen / Gui System is designed we can safely assume that `minecraft` is non null here
         // The player is another story, we can assume in all normal cases it would be, the only time this can possible fail is
         // if this screen gets opened without a world.
         assert minecraft != null;
