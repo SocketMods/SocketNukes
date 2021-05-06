@@ -3,18 +3,18 @@ package dev.socketmods.socketnukes.client.render.bolb;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import dev.socketmods.socketnukes.entity.BolbEntity;
 import net.minecraft.client.renderer.entity.model.SegmentedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.entity.Entity;
 
-public class BolbModel<T extends Entity> extends SegmentedModel<T> {
-    private final ModelRenderer slimeBodies;
-    private final ModelRenderer slimeRightEye;
-    private final ModelRenderer slimeLeftEye;
-    private final ModelRenderer slimeMouth;
-    private final ModelRenderer slimeHat1;
-    private final ModelRenderer slimeHat2;
-    private final ModelRenderer slimeHatBase;
+public class BolbModel extends SegmentedModel<BolbEntity> {
+    protected final ModelRenderer slimeBodies;
+    protected final ModelRenderer slimeRightEye;
+    protected final ModelRenderer slimeLeftEye;
+    protected final ModelRenderer slimeMouth;
+    protected final ModelRenderer slimeHat1;
+    protected final ModelRenderer slimeHat2;
+    protected final ModelRenderer slimeHatBase;
 
     public BolbModel(int slimeBodyTexOffY) {
         this.textureHeight = 64;
@@ -64,7 +64,7 @@ public class BolbModel<T extends Entity> extends SegmentedModel<T> {
     }
 
     @Override
-    public void setRotationAngles(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) { }
+    public void setRotationAngles(BolbEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) { }
 
     public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
         modelRenderer.rotateAngleX = x;

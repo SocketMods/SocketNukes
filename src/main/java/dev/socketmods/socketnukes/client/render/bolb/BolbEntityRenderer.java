@@ -9,13 +9,13 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
-public class BolbEntityRenderer extends MobRenderer<BolbEntity, BolbModel<BolbEntity>> {
+public class BolbEntityRenderer extends MobRenderer<BolbEntity, BolbModel> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(SocketNukes.MODID, "textures/entity/bolb.png");
 
     public BolbEntityRenderer(EntityRendererManager renderManager) {
-        super(renderManager, new BolbModel<>(16), 0.25F);
-        this.addLayer(new BolbGelLayer<>(this));
-        this.addLayer(new BolbHatLayer<>(this));
+        super(renderManager, new BolbModel(16), 0.25F);
+        this.addLayer(new BolbGelLayer(this));
+        this.addLayer(new BolbHatLayer(this));
     }
 
     @Override

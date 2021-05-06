@@ -18,16 +18,16 @@ import net.minecraft.util.math.vector.Vector3f;
  *
  * @author Citrine
  */
-public class BolbHatLayer <T extends BolbEntity> extends LayerRenderer<T, BolbModel<T>> {
+public class BolbHatLayer extends LayerRenderer<BolbEntity, BolbModel> {
 
     private static final String CURLE = "Curle";
 
-    public BolbHatLayer(IEntityRenderer<T, BolbModel<T>> renderManager) {
+    public BolbHatLayer(IEntityRenderer<BolbEntity, BolbModel> renderManager) {
         super(renderManager);
     }
 
     @Override
-    public void render(MatrixStack stack, IRenderTypeBuffer buffers, int packedLight, T bolb, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void render(MatrixStack stack, IRenderTypeBuffer buffers, int packedLight, BolbEntity bolb, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if (isCurle(bolb) && !bolb.isInvisible()) {
             IVertexBuilder builder = buffers.getBuffer(RenderType.getEntitySolid(bolb.getEntityTexture()));
 
@@ -50,7 +50,7 @@ public class BolbHatLayer <T extends BolbEntity> extends LayerRenderer<T, BolbMo
         }
     }
 
-    private boolean isCurle(T bolb) {
+    public static boolean isCurle(BolbEntity bolb) {
         return Objects.equals(bolb.getName().getString(), CURLE);
     }
 }
