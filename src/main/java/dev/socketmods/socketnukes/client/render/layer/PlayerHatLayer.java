@@ -1,7 +1,7 @@
 package dev.socketmods.socketnukes.client.render.layer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import dev.socketmods.socketnukes.SocketNukes;
+import dev.socketmods.socketnukes.utils.Bolbs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.util.math.vector.Vector3f;
@@ -33,11 +32,11 @@ public class PlayerHatLayer extends LayerRenderer<AbstractClientPlayerEntity, Pl
     public void render(MatrixStack stack, IRenderTypeBuffer buffer, int packedLight, AbstractClientPlayerEntity player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if (HAT_MODEL == null) return;
         if (player.isInvisible()) return;
-        if (!hasHat(player)) return;
+        if (!Bolbs.hasHat(player)) return;
 
         stack.push();
 
-        if (!player.hasItemInSlot(EquipmentSlotType.HEAD)) stack.translate(0, -0.02f, 0);
+        if (player.hasItemInSlot(EquipmentSlotType.HEAD)) stack.translate(0, -0.02f, 0);
         if (player.isCrouching()) stack.translate(0, 0.27f, 0);
 
         stack.rotate(Vector3f.YP.rotationDegrees(90));
@@ -52,7 +51,4 @@ public class PlayerHatLayer extends LayerRenderer<AbstractClientPlayerEntity, Pl
         stack.pop();
     }
 
-    private boolean hasHat(PlayerEntity player) {
-        return SocketNukes.BOLBERS.contains(PlayerEntity.getUUID(player.getGameProfile()).toString());
-    }
 }
