@@ -32,6 +32,7 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 
@@ -114,15 +115,19 @@ public class SNRegistry {
         ENTITYTYPES.register(modBus);
     }
 
+    public static ExtendedExplosionType getExplosionType(String name) {
+        return Objects.requireNonNull(EXPLOSION_TYPE_REGISTRY.get().getValue(new ResourceLocation(name)));
+    }
+
     public static ExtendedExplosionType getExplosionType(ResourceLocation name) {
         return Objects.requireNonNull(EXPLOSION_TYPE_REGISTRY.get().getValue(name));
     }
 
-    public static ResourceLocation getName(ExtendedExplosionType type) {
+    public static <T extends ForgeRegistryEntry<T>> ResourceLocation getName(T type) {
         return Objects.requireNonNull(type.getRegistryName());
     }
 
-    public static ResourceLocation getName(Supplier<ExtendedExplosionType> supplier) {
+    public static <T extends ForgeRegistryEntry<T>> ResourceLocation getName(Supplier<T> supplier) {
         return getName(supplier.get());
     }
 }

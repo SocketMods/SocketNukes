@@ -1,5 +1,9 @@
 package dev.socketmods.socketnukes.tileentity;
 
+import java.util.Objects;
+import java.util.Set;
+import javax.annotation.Nullable;
+
 import dev.socketmods.socketnukes.recipes.CommonRecipe;
 import dev.socketmods.socketnukes.recipes.ICommonRecipe;
 import net.minecraft.block.AbstractFurnaceBlock;
@@ -20,9 +24,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
-
-import javax.annotation.Nullable;
-import java.util.Set;
 
 public abstract class MachineTileEntity<T extends IRecipe<?>> extends RecipeTileEntity<T> implements ITickableTileEntity, INamedContainerProvider {
 
@@ -96,6 +97,8 @@ public abstract class MachineTileEntity<T extends IRecipe<?>> extends RecipeTile
     }
 
     public boolean setIsBurning() {
+        Objects.requireNonNull(this.world);
+
         if (!itemHandler.getStackInSlot(getFuelSlot()).isEmpty()) {
             isBurning = true;
             if (handleBurning(itemHandler.getStackInSlot(getFuelSlot()))) {
@@ -114,6 +117,7 @@ public abstract class MachineTileEntity<T extends IRecipe<?>> extends RecipeTile
     @Nullable
     public T getRecipe(ItemStack stack) {
         if (stack == ItemStack.EMPTY) return null;
+        Objects.requireNonNull(this.world);
 
         Set<IRecipe<?>> recipes = findRecipeByType(type, this.world);
         RecipeWrapper wrapper = new RecipeWrapper(itemHandler);
@@ -124,6 +128,7 @@ public abstract class MachineTileEntity<T extends IRecipe<?>> extends RecipeTile
     @Nullable
     public T getRecipeFromOutput(ItemStack result) {
         if (result == ItemStack.EMPTY) return null;
+        Objects.requireNonNull(this.world);
 
         Set<IRecipe<?>> recipes = findRecipeByType(type, this.world);
 
@@ -204,6 +209,7 @@ public abstract class MachineTileEntity<T extends IRecipe<?>> extends RecipeTile
             --this.burnTime;
         }
 
+        Objects.requireNonNull(this.world);
         if (!world.isRemote) {
             ItemStack fuel = itemHandler.getStackInSlot(getFuelSlot());
             if (isBurning() || !fuel.isEmpty()) {
@@ -215,7 +221,7 @@ public abstract class MachineTileEntity<T extends IRecipe<?>> extends RecipeTile
                 if (!this.isBurning()) {
                     isDirty = handleBurning(fuel);
                 }
-                if (this.isBurning() && this.canSmelt(recipe)) {
+                if (this.isBurning() && this.canSmelt(recipe) && recipe != null) {
                     ++cookingTime;
                     if (cookingTime == cookingTimeTotal) {
                         cookingTime = 0;

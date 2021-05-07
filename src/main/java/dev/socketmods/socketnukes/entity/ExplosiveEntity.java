@@ -1,5 +1,7 @@
 package dev.socketmods.socketnukes.entity;
 
+import javax.annotation.Nullable;
+
 import dev.socketmods.socketnukes.explosion.DummyExplosion;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import dev.socketmods.socketnukes.registry.SNRegistry;
@@ -13,12 +15,9 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
-
-import javax.annotation.Nullable;
 
 /**
  * The Explosive Entity is what runs the actual logic for exploding things from a TNTExplosive.
@@ -114,15 +113,17 @@ public class ExplosiveEntity extends Entity {
         this.dataManager.register(FUSE, 80);
     }
 
+    @Override
     protected void writeAdditional(CompoundNBT compound) {
         compound.putShort("fuse", (short)this.getFuse());
-        compound.putString("explosionType", explosion.getRegistryName().toString());
+        compound.putString("explosionType", SNRegistry.getName(explosion).toString());
     }
 
+    @Override
     protected void readAdditional(CompoundNBT compound) {
         this.setFuse(compound.getShort("fuse"));
         String resLoc = compound.getString("explosionType");
-        this.setExplosion(SNRegistry.EXPLOSION_TYPE_REGISTRY.get().getValue(new ResourceLocation(resLoc)));
+        this.setExplosion(SNRegistry.getExplosionType(resLoc));
     }
 
     private void setExplosion(ExtendedExplosionType explosionType) {
@@ -138,6 +139,7 @@ public class ExplosiveEntity extends Entity {
         this.dataManager.set(FUSE, fuseIn);
         this.fuse = fuseIn;
     }
+
     public int getFuse() {
         return this.fuse;
     }

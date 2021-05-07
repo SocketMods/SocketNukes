@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.TNTMinecartRenderer;
-import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
@@ -25,6 +25,7 @@ public class ExplosiveEntityRenderer extends EntityRenderer<ExplosiveEntity> {
         this.shadowSize = 0.5F;
     }
 
+    @Override
     public void render(ExplosiveEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
         matrixStackIn.push();
         matrixStackIn.translate(0.0D, 0.5D, 0.0D);
@@ -50,7 +51,7 @@ public class ExplosiveEntityRenderer extends EntityRenderer<ExplosiveEntity> {
      */
     @Override
     public ResourceLocation getEntityTexture(ExplosiveEntity entity) {
-        return AtlasTexture.LOCATION_BLOCKS_TEXTURE;
+        return PlayerContainer.LOCATION_BLOCKS_TEXTURE;
     }
 
 }
