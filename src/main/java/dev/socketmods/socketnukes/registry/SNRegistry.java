@@ -57,7 +57,7 @@ public class SNRegistry {
 
     public static Supplier<IForgeRegistry<ExtendedExplosionType>> EXPLOSION_TYPE_REGISTRY = EXPLOSIONS.makeRegistry("explosion_types", () ->
             new RegistryBuilder<ExtendedExplosionType>().setMaxID(Integer.MAX_VALUE - 1).onAdd((owner, stage, id, obj, old) ->
-                SocketNukes.LOGGER.info("ExplosionType Added: " + Objects.requireNonNull(obj.getRegistryName()).toString() + " ")
+                SocketNukes.LOGGER.info("ExplosionType Added: " + getName(obj).toString() + " ")
             ).setDefaultKey(new ResourceLocation(SocketNukes.MODID, "null"))
     );
 
@@ -112,5 +112,17 @@ public class SNRegistry {
         CONTAINERTYPES.register(modBus);
         EXPLOSIONS.register(modBus);
         ENTITYTYPES.register(modBus);
+    }
+
+    public static ExtendedExplosionType getExplosionType(ResourceLocation name) {
+        return Objects.requireNonNull(EXPLOSION_TYPE_REGISTRY.get().getValue(name));
+    }
+
+    public static ResourceLocation getName(ExtendedExplosionType type) {
+        return Objects.requireNonNull(type.getRegistryName());
+    }
+
+    public static ResourceLocation getName(Supplier<ExtendedExplosionType> supplier) {
+        return getName(supplier.get());
     }
 }

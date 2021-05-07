@@ -1,6 +1,5 @@
 package dev.socketmods.socketnukes.block.explosive;
 
-import java.util.Objects;
 import javax.annotation.Nullable;
 
 import dev.socketmods.socketnukes.SocketNukes;
@@ -85,9 +84,9 @@ public class TNTExplosive extends Block {
         TileEntity tileEntity = world.getTileEntity(pos);
         if(tileEntity instanceof ExplosiveTileEntity) {
             ExplosiveTileEntity explosive = (ExplosiveTileEntity) tileEntity;
-
             ResourceLocation config = explosive.getConfiguration();
-            ExtendedExplosionType explosion = Objects.requireNonNull(SNRegistry.EXPLOSION_TYPE_REGISTRY.get().getValue(config));
+            ExtendedExplosionType explosion = SNRegistry.getExplosionType(config);
+
             explode(world, pos, igniter, explosion);
         } else {
             explode(world, pos, igniter, SNRegistry.VANILLA_EXPLOSION.get());
@@ -202,7 +201,7 @@ public class TNTExplosive extends Block {
             // that is configured..
             itemstack.getCapability(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY).ifPresent(cap ->
                     // create an explosive to mimic it.
-                    explode(worldIn, pos, player, Objects.requireNonNull(SNRegistry.EXPLOSION_TYPE_REGISTRY.get().getValue(cap.getConfig())))
+                    explode(worldIn, pos, player, SNRegistry.getExplosionType(cap.getConfig()))
             );
             // delete the block because the entity was created
             worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 11);

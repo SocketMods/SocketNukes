@@ -1,7 +1,5 @@
 package dev.socketmods.socketnukes.client.screen;
 
-import java.util.Objects;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.capability.Capabilities;
@@ -44,8 +42,8 @@ public class ExploderConfigScreen extends Screen {
 
         for(RegistryObject<ExtendedExplosionType> explosion : SNRegistry.EXPLOSIONS.getEntries()) {
             addButton(new Button(middleX + 10, topY - rollingOffset, 160, 20,
-                    new TranslationTextComponent(Objects.requireNonNull(explosion.get().getTranslationText().getKey())),
-                    button -> config(Objects.requireNonNull(explosion.get().getRegistryName()))));
+                    new TranslationTextComponent(explosion.get().getTranslationText().getKey()),
+                    button -> config(SNRegistry.getName(explosion))));
             rollingOffset += 30;
         }
     }

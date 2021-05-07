@@ -40,6 +40,6 @@ public class EnUsLangProvider extends LanguageProvider {
     }
 
     private void add(ExtendedExplosionType type, String name) {
-        add(Objects.requireNonNull(type.getRegistryName()).getNamespace() + ".explosions." + type.getRegistryName().getPath(), name);
+        add(SNRegistry.getName(type).getNamespace() + ".explosions." + SNRegistry.getName(type).getPath(), name);
     }
 }

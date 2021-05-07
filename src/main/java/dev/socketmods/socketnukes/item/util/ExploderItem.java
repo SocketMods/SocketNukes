@@ -1,7 +1,5 @@
 package dev.socketmods.socketnukes.item.util;
 
-import java.util.Objects;
-
 import dev.socketmods.socketnukes.capability.Capabilities;
 import dev.socketmods.socketnukes.client.ClientThingDoer;
 import dev.socketmods.socketnukes.entity.ExplosiveEntity;
@@ -39,7 +37,7 @@ public class ExploderItem extends Item {
         if(!(context.getPlayer() == null) && !context.getPlayer().isCrouching()) {
             // If we're just right clicking a block, trigger an immediate explosion with the configured type.
             context.getItem().getCapability(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY).ifPresent(cap -> {
-                ExtendedExplosionType explosion = Objects.requireNonNull(SNRegistry.EXPLOSION_TYPE_REGISTRY.get().getValue(cap.getConfig()));
+                ExtendedExplosionType explosion = SNRegistry.getExplosionType(cap.getConfig());
 
                 ExplosiveEntity explosiveEntity = new ExplosiveEntity(context.getWorld(), context.getPos(), explosion, context.getPlayer());
                 explosiveEntity.setFuse(0);
