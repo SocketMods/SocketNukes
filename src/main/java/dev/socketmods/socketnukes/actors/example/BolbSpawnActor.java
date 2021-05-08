@@ -21,11 +21,7 @@ public class BolbSpawnActor extends FixedBlockPosActor {
     private int timer;
 
     public BolbSpawnActor(BlockPos position, int count, int triggers, int cooldown) {
-        super(position);
-        this.count = count;
-        this.cooldown = cooldown;
-        this.triggers = triggers;
-        this.timer = cooldown;
+        this(position, count, triggers, cooldown, cooldown);
     }
 
     public BolbSpawnActor(BlockPos position, int count, int triggers, int cooldown, int timer) {
