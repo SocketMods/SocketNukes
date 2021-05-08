@@ -28,7 +28,7 @@ public class ClientSNEvents {
     public static void clientSetup(FMLClientSetupEvent event) {
         // Register the Entity Renderers
         RenderingRegistry.registerEntityRenderingHandler(SNRegistry.EXPLOSIVE_ENTITY_TYPE.get(), ExplosiveEntityRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(SNRegistry.EXPLOSIVE_BOLB_TYPE.get(), BolbEntityRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SNRegistry.BOLB_ENTITY_TYPE.get(), BolbEntityRenderer::new);
 
         // Add the Player Hat Layer for the two skin types.
         // We need to do this for both default and slim

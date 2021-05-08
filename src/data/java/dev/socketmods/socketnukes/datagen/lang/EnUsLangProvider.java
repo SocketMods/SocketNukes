@@ -22,7 +22,7 @@ public class EnUsLangProvider extends LanguageProvider {
         add(SNRegistry.GENERIC_EXPLOSIVE_ITEM.get(), "Pop Filter");
 
         add(SNRegistry.EXPLOSIVE_ENTITY_TYPE.get(), "Pop Filter");
-        add(SNRegistry.EXPLOSIVE_BOLB_TYPE.get(), "Bolb");
+        add(SNRegistry.BOLB_ENTITY_TYPE.get(), "Bolb");
 
         add(SNRegistry.VANILLA_EXPLOSION.get(), "Vanilla");
         add(SNRegistry.CUBIC_EXPLOSION.get(), "Cubic");

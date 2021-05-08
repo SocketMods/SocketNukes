@@ -11,6 +11,6 @@ public class ModBusEvents {
 
     @SubscribeEvent
     public static void setupAttributes(EntityAttributeCreationEvent event) {
-        event.put(SNRegistry.EXPLOSIVE_BOLB_TYPE.get(), BolbEntity.setupAttributes());
+        event.put(SNRegistry.BOLB_ENTITY_TYPE.get(), BolbEntity.setupAttributes());
     }
 }

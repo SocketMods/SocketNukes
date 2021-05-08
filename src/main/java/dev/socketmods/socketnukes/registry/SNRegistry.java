@@ -93,7 +93,7 @@ public class SNRegistry {
         new EntityType<>(ExplosiveEntity::create, EntityClassification.MISC, true, true, false, false, ImmutableSet.of(), EntitySize.fixed(1f, 1f), 200, 1)
     );
 
-    public static final RegistryObject<EntityType<BolbEntity>> EXPLOSIVE_BOLB_TYPE = ENTITYTYPES.register("bolb", () ->
+    public static final RegistryObject<EntityType<BolbEntity>> BOLB_ENTITY_TYPE = ENTITYTYPES.register("bolb", () ->
             new EntityType<>(BolbEntity::new, EntityClassification.MISC, true, true, false, false, ImmutableSet.of(), EntitySize.flexible(2.04F, 2.04F), 10, 1)
     );
 
