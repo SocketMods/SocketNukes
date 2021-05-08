@@ -1,0 +1,7 @@
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+package dev.socketmods.socketnukes.actors.dummy;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+
+import mcp.MethodsReturnNonnullByDefault;

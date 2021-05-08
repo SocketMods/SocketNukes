@@ -1,15 +1,15 @@
 package dev.socketmods.socketnukes.explosion;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.Nullable;
+
 import dev.socketmods.socketnukes.explosion.meta.ExplosionMetaPackage;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A wrapper for the ExtendedExplosions, intended to be used where an Explosion is hard coded as a requirement,
@@ -51,12 +51,10 @@ public class DummyExplosion extends Explosion {
     public void runExplosion() {
         if(!explosionType.prepareExplosion(world, position, source)) return;
 
-        ExplosionMetaPackage meta = new ExplosionMetaPackage();
-
+        ExplosionMetaPackage meta = explosionType.createInitialMetaPackage(world, position, source);
         for (int stage = 0; stage < explosionType.getExplosionStages(); stage++) {
             meta = explosionType.explode(world, position, stage + 1, source, meta);
         }
-
     }
 
     @Override

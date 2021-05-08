@@ -5,12 +5,15 @@ import java.util.function.Supplier;
 
 import com.google.common.collect.ImmutableSet;
 import dev.socketmods.socketnukes.SocketNukes;
+import dev.socketmods.socketnukes.actors.Role;
+import dev.socketmods.socketnukes.actors.dummy.DummyRole;
 import dev.socketmods.socketnukes.block.explosive.TNTExplosive;
 import dev.socketmods.socketnukes.entity.BolbEntity;
 import dev.socketmods.socketnukes.entity.ExplosiveEntity;
 import dev.socketmods.socketnukes.explosion.ExplosionProperties;
 import dev.socketmods.socketnukes.explosion.types.BolbExplosionType;
 import dev.socketmods.socketnukes.explosion.types.CubicExplosionType;
+import dev.socketmods.socketnukes.explosion.types.MultiStageBolbExplosionType;
 import dev.socketmods.socketnukes.explosion.types.NullExplosionType;
 import dev.socketmods.socketnukes.explosion.types.VanillaExplosionType;
 import dev.socketmods.socketnukes.item.SocketItems;
@@ -52,6 +55,8 @@ public class SNRegistry {
 
     public static final DeferredRegister<ExtendedExplosionType> EXPLOSIONS = DeferredRegister.create(ExtendedExplosionType.class, SocketNukes.MODID);
 
+    public static final DeferredRegister<Role<?>> ROLES = DeferredRegister.create(Role.TYPE, SocketNukes.MODID);
+
     /***********************************************
      *            SocketNukes Registries           *
      **********************************************/
@@ -60,6 +65,12 @@ public class SNRegistry {
             new RegistryBuilder<ExtendedExplosionType>().setMaxID(Integer.MAX_VALUE - 1).onAdd((owner, stage, id, obj, old) ->
                 SocketNukes.LOGGER.info("ExplosionType Added: " + getName(obj).toString() + " ")
             ).setDefaultKey(new ResourceLocation(SocketNukes.MODID, "null"))
+    );
+
+    public static Supplier<IForgeRegistry<Role<?>>> ROLE_REGISTRY = ROLES.makeRegistry("roles", () ->
+        new RegistryBuilder<Role<?>>().setMaxID(Integer.MAX_VALUE - 1).onAdd((owner, stage, id, obj, old) ->
+            SocketNukes.LOGGER.info("Role Added: " + getName(obj).toString() + " ")
+        ).setDefaultKey(new ResourceLocation(SocketNukes.MODID, "dummy"))
     );
 
     /***********************************************
@@ -88,6 +99,14 @@ public class SNRegistry {
             new BolbExplosionType(new ExplosionProperties(true, false, ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, SoundEvents.BLOCK_ANVIL_LAND))
     );
 
+    public static final RegistryObject<MultiStageBolbExplosionType> BOLB_EXPLOSION_DELAY = EXPLOSIONS.register("bolb_delay", () ->
+        new MultiStageBolbExplosionType(new ExplosionProperties(true, false, ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, SoundEvents.BLOCK_ANVIL_LAND))
+    );
+
+    // ROLES
+    public static final RegistryObject<Role<?>> DUMMY_ROLE = ROLES.register("dummy", DummyRole::new);
+    public static final RegistryObject<Role<?>> BOLB_SPAWN_ROLE = ROLES.register("bolb_spawner", DummyRole::new);
+
     // ENTITY TYPE
     public static final RegistryObject<EntityType<ExplosiveEntity>> EXPLOSIVE_ENTITY_TYPE = ENTITYTYPES.register("explosive", () ->
         new EntityType<>(ExplosiveEntity::create, EntityClassification.MISC, true, true, false, false, ImmutableSet.of(), EntitySize.fixed(1f, 1f), 200, 1)
@@ -113,6 +132,15 @@ public class SNRegistry {
         CONTAINERTYPES.register(modBus);
         EXPLOSIONS.register(modBus);
         ENTITYTYPES.register(modBus);
+        ROLES.register(modBus);
+    }
+
+    public static Role<?> getRole(String name) {
+        return Objects.requireNonNull(ROLE_REGISTRY.get().getValue(new ResourceLocation(name)));
+    }
+
+    public static Role<?> getRole(ResourceLocation name) {
+        return Objects.requireNonNull(ROLE_REGISTRY.get().getValue(name));
     }
 
     public static ExtendedExplosionType getExplosionType(String name) {

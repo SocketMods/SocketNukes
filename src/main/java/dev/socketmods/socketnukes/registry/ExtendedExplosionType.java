@@ -107,10 +107,16 @@ public class ExtendedExplosionType extends ForgeRegistryEntry<ExtendedExplosionT
     }
 
     /**
+     * Creates the initial meta package that is then passed into explode.
+     */
+    public ExplosionMetaPackage createInitialMetaPackage(World world, BlockPos position, Entity source) {
+        return new ExplosionMetaPackage();
+    }
+
+    /**
      * Some explosions may be neutered - Red Matter via Black Hole.
      * This allows the explosion to handle these interactions.
      */
-
     public void stopExploding() {
 
     }
