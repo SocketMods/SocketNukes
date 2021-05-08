@@ -3,6 +3,7 @@ package dev.socketmods.socketnukes.client;
 import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.client.screen.ExploderConfigScreen;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 
@@ -13,7 +14,8 @@ public class ClientThingDoer {
     }
 
     public static void openConfigScreen() {
-        Minecraft.getInstance().displayGuiScreen(new ExploderConfigScreen());
+        if (Screen.hasShiftDown())
+            Minecraft.getInstance().displayGuiScreen(new ExploderConfigScreen());
     }
 
 }
