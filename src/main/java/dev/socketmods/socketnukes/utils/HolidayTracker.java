@@ -1,6 +1,8 @@
 package dev.socketmods.socketnukes.utils;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 
 public class HolidayTracker {
 
@@ -20,7 +22,7 @@ public class HolidayTracker {
      * @return true if the date is between to March 31 - April 2
      */
     private static boolean isAprilFools() {
-        LocalDate now = LocalDate.now();
+        LocalDate now = now();
 
         LocalDate march30 = now.withMonth(MARCH).withDayOfMonth(30);
         LocalDate april3 = now.withMonth(APRIL).withDayOfMonth(3);
@@ -32,12 +34,20 @@ public class HolidayTracker {
      * @return true if the date is between to December 23 - January 2
      */
     private static boolean isChristmas() {
-        LocalDate now = LocalDate.now();
+        LocalDate now = now();
 
         LocalDate december23 = now.withMonth(DECEMBER).withDayOfMonth(23);
         LocalDate january3 = now.withMonth(JANUARY).withDayOfMonth(3);
 
         return now.isAfter(december23) || now.isBefore(january3);
+    }
+
+    private static LocalDate now() {
+        try {
+            return LocalDate.now();
+        } catch (Exception ignored) {
+            return LocalDate.now(ZoneId.from(ZoneOffset.UTC));
+        }
     }
 
     //------------------------------------------------------------------------------------------------------------------
