@@ -1,5 +1,12 @@
 package dev.socketmods.socketnukes.networking.packet;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
+
+import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.world.ClientWorld;
@@ -13,12 +20,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
 
 /**
  *
@@ -88,8 +89,8 @@ public class ExtendedExplosionPacket {
             buf.writeBlockPos(pos);
         }
 
-        buf.writeResourceLocation(this.explosionParticle.getRegistryName());
-        buf.writeResourceLocation(this.explosionSound.getRegistryName());
+        buf.writeResourceLocation(SNRegistry.getName(this.explosionParticle));
+        buf.writeResourceLocation(SNRegistry.getName(this.explosionSound));
 
         buf.writeInt(this.entityDisplacements.size());
         for(Map.Entry<Integer, Vector3d> entry : this.entityDisplacements.entrySet()) {
@@ -105,13 +106,17 @@ public class ExtendedExplosionPacket {
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             ClientWorld world = Minecraft.getInstance().world;
+            if (world == null) return;
+
             BlockPos source = affectedBlocks.get(0);
             for(BlockPos pos : affectedBlocks)  {
                 world.setBlockState(pos, Blocks.AIR.getDefaultState());
             }
+
             for(Map.Entry<Integer, Vector3d> entry : this.entityDisplacements.entrySet()) {
-                if(world.getEntityByID(entry.getKey()) != null)
-                    world.getEntityByID(entry.getKey()).setMotion(entry.getValue());
+                Entity entity = world.getEntityByID(entry.getKey());
+                if(entity != null)
+                    entity.setMotion(entry.getValue());
             }
 
             world.addParticle((IParticleData) explosionParticle, source.getX(), source.getY(), source.getZ(), 0, 0, 0);

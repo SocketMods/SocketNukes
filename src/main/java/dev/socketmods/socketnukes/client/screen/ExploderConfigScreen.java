@@ -1,19 +1,18 @@
 package dev.socketmods.socketnukes.client.screen;
 
-import java.util.Objects;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.capability.Capabilities;
+import dev.socketmods.socketnukes.capability.exploderconfig.IConfiguration;
+import dev.socketmods.socketnukes.client.screen.widget.ExplosionList;
 import dev.socketmods.socketnukes.networking.Network;
 import dev.socketmods.socketnukes.networking.packet.ExploderConfigChangedPacket;
-import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.fml.RegistryObject;
 
 /**
  * When the Exploder Item is used, it brings up this screen.
@@ -27,10 +26,15 @@ import net.minecraftforge.fml.RegistryObject;
  */
 public class ExploderConfigScreen extends Screen {
 
-    private static final int SCREEN_WIDTH = 160;
-    private static final int SCREEN_HEIGHT = 120;
+    private static final int SCREEN_WIDTH = 176;
+    private static final int SCREEN_HEIGHT = 166;
 
     private static final ResourceLocation BACKGROUND = new ResourceLocation(SocketNukes.MODID, "textures/gui/exploder_config.png");
+
+    private int guiLeft;
+    private int guiTop;
+
+    private ExplosionList list;
 
     public ExploderConfigScreen() {
         super(new TranslationTextComponent("socketnukes.title.exploderconfig"));
@@ -38,25 +42,56 @@ public class ExploderConfigScreen extends Screen {
 
     @Override
     protected void init() {
-        int middleX = (this.width - SCREEN_WIDTH) / 2;
-        int topY = SCREEN_HEIGHT - 20;
-        int rollingOffset = 0;
+        // Due to the way the Screen / Gui System is designed we can safely assume that `minecraft` is non null here
+        // The player is another story, we can assume in all normal cases it would be, the only time this can possible fail is
+        // if this screen gets opened without a world.
+        assert minecraft != null;
+        assert minecraft.player != null;
 
-        for(RegistryObject<ExtendedExplosionType> explosion : SNRegistry.EXPLOSIONS.getEntries()) {
-            addButton(new Button(middleX + 10, topY - rollingOffset, 160, 20,
-                    new TranslationTextComponent(Objects.requireNonNull(explosion.get().getTranslationText().getKey())),
-                    button -> config(Objects.requireNonNull(explosion.get().getRegistryName()))));
-            rollingOffset += 30;
-        }
+        this.guiLeft = (this.width - SCREEN_WIDTH) / 2;
+        this.guiTop = (this.height - SCREEN_HEIGHT) / 2;
+
+        ItemStack heldItem = minecraft.player.getHeldItemMainhand();
+        ResourceLocation selected = heldItem.getCapability(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY).map(IConfiguration::getConfig).orElse(null);
+
+        int width = SCREEN_WIDTH - 10 - 5;
+        int height = SCREEN_HEIGHT - 10;
+
+        list = new ExplosionList(this, width, height, guiTop + 5, guiTop + height, selected);
+        list.setLeftPos(guiLeft + 5);
+        children.add(list);
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         // Due to the way the Screen / Gui System is designed we can safely assume that `minecraft` is non null here
-        assert this.minecraft != null;
+        assert minecraft != null;
 
-        this.minecraft.getTextureManager().bindTexture(BACKGROUND);
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
+        drawCenteredString(stack, this.font, this.title, this.width / 2, 20, 0xFFFFFF);
+
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        minecraft.getTextureManager().bindTexture(BACKGROUND);
+        blit(stack, guiLeft, guiTop, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+        minecraft.getTextureManager().bindTexture(Screen.BACKGROUND_LOCATION);
+
+        double scale = minecraft.getMainWindow().getGuiScaleFactor();
+        int posY   = guiTop + 5;
+        int height = SCREEN_HEIGHT - 10;
+        RenderSystem.enableScissor((int) (guiLeft * scale), (int) (posY * scale), (int) (SCREEN_WIDTH * scale), (int) (height * scale));
+        list.render(stack, mouseX, mouseY, partialTicks);
+        RenderSystem.disableScissor();
+
+        super.render(stack, mouseX, mouseY, partialTicks);
+    }
+
+    @Override
+    public void closeScreen() {
+        ExplosionList.ExplosionListEntry entry = list.getSelected();
+        if (entry != null)
+            config(SNRegistry.getName(entry.getType()));
+
+        super.closeScreen();
     }
 
     private void config(ResourceLocation registryName) {

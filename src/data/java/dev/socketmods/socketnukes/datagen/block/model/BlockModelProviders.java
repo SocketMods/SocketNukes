@@ -16,7 +16,7 @@ public class BlockModelProviders extends BlockModelProvider {
 
     @Override
     protected void registerModels() {
-        String vanillaExplosive = SNRegistry.GENERIC_EXPLOSIVE.get().getRegistryName().getPath();
+        String vanillaExplosive = SNRegistry.getName(SNRegistry.GENERIC_EXPLOSIVE).getPath();
         explosiveModel = cubeBottomTop(vanillaExplosive, modLoc("blocks/" + vanillaExplosive + "_side"), modLoc("blocks/" + vanillaExplosive + "_bottom"), modLoc("blocks/" + vanillaExplosive + "_top"));
     }
 

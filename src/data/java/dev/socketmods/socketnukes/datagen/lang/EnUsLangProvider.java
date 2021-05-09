@@ -22,7 +22,7 @@ public class EnUsLangProvider extends LanguageProvider {
         add(SNRegistry.GENERIC_EXPLOSIVE_ITEM.get(), "Pop Filter");
 
         add(SNRegistry.EXPLOSIVE_ENTITY_TYPE.get(), "Pop Filter");
-        add(SNRegistry.EXPLOSIVE_BOLB_TYPE.get(), "Bolb");
+        add(SNRegistry.BOLB_ENTITY_TYPE.get(), "Bolb");
 
         add(SNRegistry.VANILLA_EXPLOSION.get(), "Vanilla");
         add(SNRegistry.CUBIC_EXPLOSION.get(), "Cubic");
@@ -31,7 +31,6 @@ public class EnUsLangProvider extends LanguageProvider {
 
         add(SocketItems.SOCKETNUKES_GROUP, "SocketNukes - Explosives");
 
-        // hardcode the Exploder screen title - it isn't used, but it shuts up metrics
         add("socketnukes.title.exploderconfig", "Exploderiser Configuration");
     }
 
@@ -40,6 +39,6 @@ public class EnUsLangProvider extends LanguageProvider {
     }
 
     private void add(ExtendedExplosionType type, String name) {
-        add(Objects.requireNonNull(type.getRegistryName()).getNamespace() + ".explosions." + type.getRegistryName().getPath(), name);
+        add(SNRegistry.getName(type).getNamespace() + ".explosions." + SNRegistry.getName(type).getPath(), name);
     }
 }

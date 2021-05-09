@@ -33,6 +33,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.registries.RegistryBuilder;
 
 public class SNRegistry {
@@ -57,7 +58,7 @@ public class SNRegistry {
 
     public static Supplier<IForgeRegistry<ExtendedExplosionType>> EXPLOSION_TYPE_REGISTRY = EXPLOSIONS.makeRegistry("explosion_types", () ->
             new RegistryBuilder<ExtendedExplosionType>().setMaxID(Integer.MAX_VALUE - 1).onAdd((owner, stage, id, obj, old) ->
-                SocketNukes.LOGGER.info("ExplosionType Added: " + Objects.requireNonNull(obj.getRegistryName()).toString() + " ")
+                SocketNukes.LOGGER.info("ExplosionType Added: " + getName(obj).toString() + " ")
             ).setDefaultKey(new ResourceLocation(SocketNukes.MODID, "null"))
     );
 
@@ -92,7 +93,7 @@ public class SNRegistry {
         new EntityType<>(ExplosiveEntity::create, EntityClassification.MISC, true, true, false, false, ImmutableSet.of(), EntitySize.fixed(1f, 1f), 200, 1)
     );
 
-    public static final RegistryObject<EntityType<BolbEntity>> EXPLOSIVE_BOLB_TYPE = ENTITYTYPES.register("bolb", () ->
+    public static final RegistryObject<EntityType<BolbEntity>> BOLB_ENTITY_TYPE = ENTITYTYPES.register("bolb", () ->
             new EntityType<>(BolbEntity::new, EntityClassification.MISC, true, true, false, false, ImmutableSet.of(), EntitySize.flexible(2.04F, 2.04F), 10, 1)
     );
 
@@ -112,5 +113,21 @@ public class SNRegistry {
         CONTAINERTYPES.register(modBus);
         EXPLOSIONS.register(modBus);
         ENTITYTYPES.register(modBus);
+    }
+
+    public static ExtendedExplosionType getExplosionType(String name) {
+        return Objects.requireNonNull(EXPLOSION_TYPE_REGISTRY.get().getValue(new ResourceLocation(name)));
+    }
+
+    public static ExtendedExplosionType getExplosionType(ResourceLocation name) {
+        return Objects.requireNonNull(EXPLOSION_TYPE_REGISTRY.get().getValue(name));
+    }
+
+    public static <T extends IForgeRegistryEntry<T>> ResourceLocation getName(T type) {
+        return Objects.requireNonNull(type.getRegistryName());
+    }
+
+    public static <T extends IForgeRegistryEntry<T>> ResourceLocation getName(Supplier<T> supplier) {
+        return getName(supplier.get());
     }
 }

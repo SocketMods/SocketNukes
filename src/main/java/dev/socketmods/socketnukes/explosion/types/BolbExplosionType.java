@@ -1,8 +1,6 @@
 package dev.socketmods.socketnukes.explosion.types;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import dev.socketmods.socketnukes.entity.BolbEntity;
 import dev.socketmods.socketnukes.explosion.ExplosionProperties;
@@ -13,7 +11,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 /**
@@ -40,23 +37,17 @@ public class BolbExplosionType extends ExtendedExplosionType {
     @Override
     public ExplosionMetaPackage explode(World worldIn, BlockPos source, int stage, Entity placer, ExplosionMetaPackage meta) {
         if (stage == STAGE_POP) {
-            List<Vector3d> velocities = new ArrayList<>();
 
-            // Generate n random velocities for them to appear at.
-            // Every velocity here corresponds to the i-th entity to be spawned
+            // Spawn the entities, set the velocity, add to the world
             for (int i = 0; i < BOLB_FACTOR; i++) {
                 double x = worldIn.rand.nextDouble() * 10;
                 double y = worldIn.rand.nextDouble() * 10;
                 double z = worldIn.rand.nextDouble() * 10;
-                velocities.add(new Vector3d(x, y, z));
-            }
 
-            // Spawn the entities, set the velocity, add to the world
-            for (int i = 0; i < BOLB_FACTOR; i++) {
-                BolbEntity e = new BolbEntity(SNRegistry.EXPLOSIVE_BOLB_TYPE.get(), worldIn);
-                e.setVelocity(velocities.get(i).x, velocities.get(i).y, velocities.get(i).z);
+                BolbEntity e = new BolbEntity(SNRegistry.BOLB_ENTITY_TYPE.get(), worldIn);
+                e.setVelocity(x, y, z);
                 e.setPosition(source.getX(), source.getY(), source.getZ());
-                e.setSlimeSize(worldIn.rand.nextInt(BOLB_MAX_SIZE), true);
+                e.setSlimeSize(worldIn.rand.nextInt(BOLB_MAX_SIZE) + 1, true);
                 e.velocityChanged = true;
                 worldIn.addEntity(e);
             }

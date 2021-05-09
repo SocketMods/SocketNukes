@@ -1,13 +1,14 @@
 package dev.socketmods.socketnukes.capability.exploderconfig;
 
+import java.util.Objects;
+import javax.annotation.Nullable;
+
 import dev.socketmods.socketnukes.capability.Capabilities;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
-
-import javax.annotation.Nonnull;
 
 /**
  * The provider for the Explosion Configuration capability.
@@ -26,9 +27,8 @@ public class ConfigProvider implements ICapabilitySerializable<CompoundNBT> {
         configOptional.invalidate();
     }
 
-    @Nonnull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, Direction dir) {
+    public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction dir) {
         if(cap == Capabilities.EXPLODER_CONFIGURATION_CAPABILITY) {
             return configOptional.cast();
         }
@@ -40,7 +40,7 @@ public class ConfigProvider implements ICapabilitySerializable<CompoundNBT> {
         if(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY == null) {
             return new CompoundNBT();
         } else {
-            return (CompoundNBT) Capabilities.EXPLODER_CONFIGURATION_CAPABILITY.writeNBT(config, null);
+            return (CompoundNBT) Objects.requireNonNull(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY.writeNBT(config, null));
         }
     }
 
