@@ -20,7 +20,7 @@ public class RecipeProviders extends RecipeProvider {
         new BombRecipe(consumer);
     }
 
-    // expose the protected internal methods so i can use tem in external classes
+    // expose the protected internal methods so we can use them in external classes
     public static ICriterionInstance hasItem(Item item) {
         return RecipeProvider.hasItem(item);
     }

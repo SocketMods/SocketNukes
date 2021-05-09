@@ -74,6 +74,6 @@ public class BombRecipe extends SocketRecipeProvider {
 
         recipe.addCriterion("has_tnt", RecipeProviders.hasItem(Items.TNT))
                 .setNBT(forExplosion(type.get()))
-                .build(consumer, SNRegistry.getName(type.get()) +"_explosive");
+                .build(consumer, SNRegistry.getName(type) +"_explosive");
     }
 }
