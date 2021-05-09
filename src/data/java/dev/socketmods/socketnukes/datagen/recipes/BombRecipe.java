@@ -32,6 +32,11 @@ public class BombRecipe extends SocketRecipeProvider {
         createRecipe(SNRegistry.VANILLA_EXPLOSION, Items.TNT, Items.SAND, Items.GUNPOWDER);
     }
 
+    /**
+     * create the NBT Values for the Recipe
+     * @param type the Explosion Type that should be set
+     * @return the NBT Value that is set for the recipe
+     */
     public static CompoundNBT forExplosion(ExtendedExplosionType type) {
         CompoundNBT data = new CompoundNBT();
         data.putString("explosion", SNRegistry.getName(type).toString());
@@ -42,6 +47,13 @@ public class BombRecipe extends SocketRecipeProvider {
         return nbt;
     }
 
+    /**
+     * generates a Recipe for an Explosion Type
+     * @param type The Explosion Type the Recipe should be created for
+     * @param mid The Item in the middle of the grid
+     * @param midOuter The items adjacent to the center
+     * @param corners the 4 corners if this is {@link Items#AIR} the corners are empty
+     */
     private void createRecipe(Supplier<? extends ExtendedExplosionType> type, IItemProvider mid,
                               IItemProvider midOuter, IItemProvider corners){
         ShapedRecipeWithNBTBuilder recipe = ShapedRecipeWithNBTBuilder.shapedRecipe(SNRegistry.GENERIC_EXPLOSIVE_ITEM.get());
