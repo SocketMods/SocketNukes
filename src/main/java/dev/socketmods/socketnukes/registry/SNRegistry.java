@@ -16,6 +16,7 @@ import dev.socketmods.socketnukes.explosion.types.VanillaExplosionType;
 import dev.socketmods.socketnukes.item.SocketItems;
 import dev.socketmods.socketnukes.item.block.ExplosiveBlockItem;
 import dev.socketmods.socketnukes.item.util.ExploderItem;
+import dev.socketmods.socketnukes.item.util.RangefinderItem;
 import dev.socketmods.socketnukes.tileentity.ExplosiveTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityClassification;
@@ -23,6 +24,7 @@ import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
@@ -72,6 +74,7 @@ public class SNRegistry {
     // ITEMS
     public static final RegistryObject<Item> EXPLODER_ITEM = ITEMS.register("exploder_item", () -> new ExploderItem(SocketItems.EXPLODER_PROPERTIES));
     public static final RegistryObject<Item> GENERIC_EXPLOSIVE_ITEM = ITEMS.register("explosive", () -> new ExplosiveBlockItem(SocketItems.EXPLOSIVE_PROPERTIES));
+    public static final RegistryObject<RangefinderItem> RANGEFINDER_ITEM = ITEMS.register("rangefinder", () -> new RangefinderItem(new Item.Properties().group(ItemGroup.TOOLS))); // TODO: tab?
 
     // EXPLOSIONS
     public static final RegistryObject<VanillaExplosionType> VANILLA_EXPLOSION = EXPLOSIONS.register("vanilla", () ->

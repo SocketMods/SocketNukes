@@ -31,6 +31,10 @@ public class EnUsLangProvider extends LanguageProvider {
 
         add(SocketItems.SOCKETNUKES_GROUP, "SocketNukes - Explosives");
 
+        add("chat.socketmods.not_enough_energy", "Not enough energy");
+        add("chat.socketmods.found.miss", "Nothing in range");
+        add("chat.socketmods.found.block", "Detected block at %s");
+
         add("socketnukes.title.exploderconfig", "Exploderiser Configuration");
     }
 
