@@ -47,6 +47,6 @@ public class ExplosiveBlockItem extends BlockItem {
     public ITextComponent getDisplayName(ItemStack stack) {
         ResourceLocation stackConfigLoc = new ResourceLocation(stack.getOrCreateChildTag(SocketNukes.MODID).getString("explosion"));
         ITextComponent stackConfigComponent = SNRegistry.getExplosionType(stackConfigLoc).getTranslationText();
-        return new TranslationTextComponent(this.getTranslationKey(stack)).append(new StringTextComponent(" - ")).append(stackConfigComponent);
+        return new TranslationTextComponent(this.getTranslationKey(stack)).appendSibling(new StringTextComponent(" - ")).appendSibling(stackConfigComponent);
     }
 }

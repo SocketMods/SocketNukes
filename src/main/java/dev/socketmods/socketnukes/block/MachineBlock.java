@@ -27,6 +27,8 @@ import net.minecraftforge.items.IItemHandler;
 import javax.annotation.Nullable;
 import java.util.Random;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public abstract class MachineBlock extends CommonMachineBlock {
 
     public MachineBlock(Properties properties) {
@@ -52,7 +54,7 @@ public abstract class MachineBlock extends CommonMachineBlock {
     @SuppressWarnings("deprecation")
     @Override
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (!state.isIn(newState.getBlock())) {
+        if (!state.matchesBlock(newState.getBlock())) {
             TileEntity te = worldIn.getTileEntity(pos);
             if (te instanceof CommonTileEntity) {
                 LazyOptional<IItemHandler> inventory = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
