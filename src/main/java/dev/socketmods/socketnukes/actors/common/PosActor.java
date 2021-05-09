@@ -4,11 +4,11 @@ import dev.socketmods.socketnukes.actors.Actor;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.vector.Vector3d;
 
-public abstract class FixedPosActor extends Actor {
+public abstract class PosActor extends Actor {
 
     protected Vector3d position;
 
-    public FixedPosActor(Vector3d position) {
+    public PosActor(Vector3d position) {
         this.position = position;
     }
 

@@ -5,11 +5,11 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.BlockPos;
 
-public abstract class FixedBlockPosActor extends Actor {
+public abstract class BlockPosActor extends Actor {
 
     protected BlockPos position;
 
-    public FixedBlockPosActor(BlockPos position) {
+    public BlockPosActor(BlockPos position) {
         this.position = position;
     }
 

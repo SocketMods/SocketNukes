@@ -10,6 +10,14 @@ public abstract class Actor {
      */
     public abstract boolean tick(ServerWorld world);
 
+    public void onCreation(ServerWorld world) {
+
+    }
+
+    public void onRemoval(ServerWorld world) {
+
+    }
+
     /**
      * @return the Actors Role this is used to deserialize the Actor later
      */

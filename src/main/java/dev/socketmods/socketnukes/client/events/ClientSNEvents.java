@@ -2,6 +2,7 @@ package dev.socketmods.socketnukes.client.events;
 
 import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.client.render.ExplosiveEntityRenderer;
+import dev.socketmods.socketnukes.client.render.VisualEntityRenderer;
 import dev.socketmods.socketnukes.client.render.bolb.BolbEntityRenderer;
 import dev.socketmods.socketnukes.client.render.layer.PlayerHatLayer;
 import dev.socketmods.socketnukes.registry.SNRegistry;
@@ -29,6 +30,7 @@ public class ClientSNEvents {
         // Register the Entity Renderers
         RenderingRegistry.registerEntityRenderingHandler(SNRegistry.EXPLOSIVE_ENTITY_TYPE.get(), ExplosiveEntityRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(SNRegistry.BOLB_ENTITY_TYPE.get(), BolbEntityRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SNRegistry.VISUAL_TYPE.get(), VisualEntityRenderer::new);
 
         // Add the Player Hat Layer for the two skin types.
         // We need to do this for both default and slim

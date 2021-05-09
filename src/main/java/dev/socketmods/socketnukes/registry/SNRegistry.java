@@ -7,10 +7,14 @@ import com.google.common.collect.ImmutableSet;
 import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.actors.Role;
 import dev.socketmods.socketnukes.actors.dummy.DummyRole;
+import dev.socketmods.socketnukes.actors.example.BolbSpawnRole;
+import dev.socketmods.socketnukes.actors.example.VisualRole;
 import dev.socketmods.socketnukes.block.explosive.TNTExplosive;
 import dev.socketmods.socketnukes.entity.BolbEntity;
 import dev.socketmods.socketnukes.entity.ExplosiveEntity;
+import dev.socketmods.socketnukes.entity.VisualActorEntity;
 import dev.socketmods.socketnukes.explosion.ExplosionProperties;
+import dev.socketmods.socketnukes.explosion.types.ActorSpawnerTestExplosionType;
 import dev.socketmods.socketnukes.explosion.types.BolbExplosionType;
 import dev.socketmods.socketnukes.explosion.types.CubicExplosionType;
 import dev.socketmods.socketnukes.explosion.types.MultiStageBolbExplosionType;
@@ -103,9 +107,14 @@ public class SNRegistry {
         new MultiStageBolbExplosionType(new ExplosionProperties(true, false, ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, SoundEvents.BLOCK_ANVIL_LAND))
     );
 
+    public static final RegistryObject<ActorSpawnerTestExplosionType> ACTOR_SPAWNER_TEST_EXPLOSION = EXPLOSIONS.register("actor_test_spawner", () ->
+        new ActorSpawnerTestExplosionType(new ExplosionProperties(true, false, ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, SoundEvents.BLOCK_ANVIL_LAND))
+    );
+
     // ROLES
     public static final RegistryObject<Role<?>> DUMMY_ROLE = ROLES.register("dummy", DummyRole::new);
-    public static final RegistryObject<Role<?>> BOLB_SPAWN_ROLE = ROLES.register("bolb_spawner", DummyRole::new);
+    public static final RegistryObject<Role<?>> BOLB_SPAWN_ROLE = ROLES.register("bolb_spawner", BolbSpawnRole::new);
+    public static final RegistryObject<Role<?>> VISUAL_ROLE = ROLES.register("visual_test", VisualRole::new);
 
     // ENTITY TYPE
     public static final RegistryObject<EntityType<ExplosiveEntity>> EXPLOSIVE_ENTITY_TYPE = ENTITYTYPES.register("explosive", () ->
@@ -114,6 +123,10 @@ public class SNRegistry {
 
     public static final RegistryObject<EntityType<BolbEntity>> BOLB_ENTITY_TYPE = ENTITYTYPES.register("bolb", () ->
             new EntityType<>(BolbEntity::new, EntityClassification.MISC, true, true, false, false, ImmutableSet.of(), EntitySize.flexible(2.04F, 2.04F), 10, 1)
+    );
+
+    public static final RegistryObject<EntityType<VisualActorEntity>> VISUAL_TYPE = ENTITYTYPES.register("visual_test", () ->
+        new EntityType<>(VisualActorEntity::new, EntityClassification.MISC, true, true, false, false, ImmutableSet.of(), EntitySize.fixed(1f, 1f), 200, 1)
     );
 
     // TILE ENTITY TYPE

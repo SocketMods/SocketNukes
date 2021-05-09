@@ -29,6 +29,7 @@ public class EnUsLangProvider extends LanguageProvider {
         add(SNRegistry.NULL_EXPLOSION.get(), "Null");
         add(SNRegistry.BOLB_EXPLOSION.get(), "Bolb");
         add(SNRegistry.BOLB_EXPLOSION_DELAY.get(), "Bolb Spawner");
+        add(SNRegistry.ACTOR_SPAWNER_TEST_EXPLOSION.get(), "Actor Entity Test");
 
         add(SocketItems.SOCKETNUKES_GROUP, "SocketNukes - Explosives");
 

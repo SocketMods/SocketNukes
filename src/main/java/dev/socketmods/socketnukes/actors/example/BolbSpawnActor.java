@@ -1,7 +1,7 @@
 package dev.socketmods.socketnukes.actors.example;
 
 import dev.socketmods.socketnukes.actors.Role;
-import dev.socketmods.socketnukes.actors.common.FixedBlockPosActor;
+import dev.socketmods.socketnukes.actors.common.BlockPosActor;
 import dev.socketmods.socketnukes.entity.BolbEntity;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.nbt.CompoundNBT;
@@ -11,7 +11,7 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
 
-public class BolbSpawnActor extends FixedBlockPosActor {
+public class BolbSpawnActor extends BlockPosActor {
 
     private static final int BOLB_MAX_SIZE = 1;
 
