@@ -123,11 +123,11 @@ public class SNRegistry {
         return Objects.requireNonNull(EXPLOSION_TYPE_REGISTRY.get().getValue(name));
     }
 
-    public static <T extends IForgeRegistryEntry<T>> ResourceLocation getName(T type) {
+    public static <T extends IForgeRegistryEntry<?>> ResourceLocation getName(T type) {
         return Objects.requireNonNull(type.getRegistryName());
     }
 
-    public static <T extends IForgeRegistryEntry<T>> ResourceLocation getName(Supplier<T> supplier) {
+    public static <T extends IForgeRegistryEntry<?>> ResourceLocation getName(Supplier<T> supplier) {
         return getName(supplier.get());
     }
 }
