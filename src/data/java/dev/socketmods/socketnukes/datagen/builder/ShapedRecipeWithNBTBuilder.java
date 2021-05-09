@@ -40,8 +40,7 @@ public class ShapedRecipeWithNBTBuilder {
     private final Map<Character, Ingredient> key = Maps.newLinkedHashMap();
     private final Advancement.Builder advancementBuilder = Advancement.Builder.builder();
     private String group;
-    private @Nullable
-    CompoundNBT nbt;
+    private @Nullable CompoundNBT nbt;
 
     public ShapedRecipeWithNBTBuilder(IItemProvider resultIn, int countIn) {
         this.result = resultIn.asItem();
@@ -250,7 +249,7 @@ public class ShapedRecipeWithNBTBuilder {
 
             json.add("key", jsonobject);
             JsonObject jsonobject1 = new JsonObject();
-            jsonobject1.addProperty("item", Registry.ITEM.getKey(this.result).toString());
+            jsonobject1.addProperty("item", ForgeRegistries.ITEMS.getKey(this.result).toString());
             if (this.count > 1) {
                 jsonobject1.addProperty("count", this.count);
             }
