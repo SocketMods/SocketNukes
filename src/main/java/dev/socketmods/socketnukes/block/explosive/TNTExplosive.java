@@ -104,7 +104,7 @@ public class TNTExplosive extends Block {
      */
     @Override
     public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
-        if (!oldState.isIn(state.getBlock())) {
+        if (!oldState.matchesBlock(state.getBlock())) {
             if (worldIn.isBlockPowered(pos)) {
                 catchFire(state, worldIn, pos, null, null);
                 worldIn.removeBlock(pos, false);
