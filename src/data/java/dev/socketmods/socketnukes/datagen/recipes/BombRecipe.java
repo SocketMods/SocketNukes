@@ -3,18 +3,13 @@ package dev.socketmods.socketnukes.datagen.recipes;
 import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.datagen.builder.ShapedRecipeWithNBTBuilder;
 import dev.socketmods.socketnukes.datagen.utils.recipes.SocketRecipeProvider;
-import dev.socketmods.socketnukes.item.SocketItems;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.data.IFinishedRecipe;
-import net.minecraft.data.RecipeProvider;
-import net.minecraft.item.Item;
 import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.IItemProvider;
 
-import javax.annotation.Nullable;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -56,23 +51,14 @@ public class BombRecipe extends SocketRecipeProvider {
      */
     private void createRecipe(Supplier<? extends ExtendedExplosionType> type, IItemProvider mid,
                               IItemProvider midOuter, IItemProvider corners){
-        ShapedRecipeWithNBTBuilder recipe = ShapedRecipeWithNBTBuilder.shapedRecipe(SNRegistry.GENERIC_EXPLOSIVE_ITEM.get());
-        if(corners != Items.AIR){
-            recipe.patternLine("RSR")
-                    .patternLine("STS")
-                    .patternLine("RSR")
-                    .key('R', corners)
-                    .key('S', midOuter)
-                    .key('T', mid);
-        }else {
-            recipe.patternLine(" S ")
-                    .patternLine("STS")
-                    .patternLine(" S ")
-                    .key('S', midOuter)
-                    .key('T', mid);
-        }
-
-        recipe.addCriterion("has_tnt", RecipeProviders.hasItem(Items.TNT))
+        ShapedRecipeWithNBTBuilder.shapedRecipe(SNRegistry.GENERIC_EXPLOSIVE_ITEM.get())
+                .patternLine("RSR")
+                .patternLine("STS")
+                .patternLine("RSR")
+                .key('R', corners)
+                .key('S', midOuter)
+                .key('T', mid)
+                .addCriterion("has_tnt", RecipeProviders.hasItem(Items.TNT))
                 .setNBT(forExplosion(type.get()))
                 .build(consumer, SNRegistry.getName(type) +"_explosive");
     }

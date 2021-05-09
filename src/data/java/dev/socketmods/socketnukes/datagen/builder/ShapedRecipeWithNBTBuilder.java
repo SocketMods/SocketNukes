@@ -14,6 +14,7 @@ import net.minecraft.advancements.IRequirementsStrategy;
 import net.minecraft.advancements.criterion.RecipeUnlockedTrigger;
 import net.minecraft.data.IFinishedRecipe;
 import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
@@ -23,8 +24,9 @@ import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -38,7 +40,8 @@ public class ShapedRecipeWithNBTBuilder {
     private final Map<Character, Ingredient> key = Maps.newLinkedHashMap();
     private final Advancement.Builder advancementBuilder = Advancement.Builder.builder();
     private String group;
-    private @Nullable CompoundNBT nbt;
+    private @Nullable
+    CompoundNBT nbt;
 
     public ShapedRecipeWithNBTBuilder(IItemProvider resultIn, int countIn) {
         this.result = resultIn.asItem();
@@ -70,7 +73,7 @@ public class ShapedRecipeWithNBTBuilder {
      * Adds a key to the recipe pattern.
      */
     public ShapedRecipeWithNBTBuilder key(Character symbol, IItemProvider itemIn) {
-        return this.key(symbol, Ingredient.fromItems(itemIn));
+        return this.key(symbol, itemIn == Items.AIR ? Ingredient.EMPTY : Ingredient.fromItems(itemIn));
     }
 
     /**
@@ -153,6 +156,7 @@ public class ShapedRecipeWithNBTBuilder {
         if (this.pattern.isEmpty()) {
             throw new IllegalStateException("No pattern is defined for shaped recipe " + id + "!");
         } else {
+            convertEmpty();
             Set<Character> set = Sets.newHashSet(this.key.keySet());
             set.remove(' ');
 
@@ -174,6 +178,31 @@ public class ShapedRecipeWithNBTBuilder {
             } else if (this.advancementBuilder.getCriteria().isEmpty()) {
                 throw new IllegalStateException("No way of obtaining recipe " + id);
             }
+        }
+    }
+
+    /**
+     * Converts keys that use Ingredient.EMPTY to use the builtin space key instead
+     */
+    private void convertEmpty() {
+        List<Character> empty = new ArrayList<>();
+
+        // Find all Empty Ingredients
+        key.forEach((c, ingredient) -> {
+            if (ingredient == Ingredient.EMPTY) empty.add(c);
+        });
+
+        // Remove them from the key mappings
+        empty.forEach(key::remove);
+
+        // Replace them with ' ' in the pattern
+        for (int i = 0; i < pattern.size(); i++) {
+            String p = pattern.get(i);
+
+            for (Character c : empty)
+                p = p.replace(c, ' ');
+
+            pattern.set(i, p);
         }
     }
 
