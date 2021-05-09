@@ -1,8 +1,11 @@
 package dev.socketmods.socketnukes.datagen.recipes;
 
+import net.minecraft.advancements.ICriterionInstance;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.IFinishedRecipe;
 import net.minecraft.data.RecipeProvider;
+import net.minecraft.item.Item;
+import net.minecraft.tags.ITag;
 
 import java.util.function.Consumer;
 
@@ -15,5 +18,14 @@ public class RecipeProviders extends RecipeProvider {
     @Override
     protected void registerRecipes(Consumer<IFinishedRecipe> consumer) {
         new BombRecipe(consumer);
+    }
+
+    // expose the protected internal methods so i can use tem in external classes
+    public static ICriterionInstance hasItem(Item item) {
+        return RecipeProvider.hasItem(item);
+    }
+
+    public static ICriterionInstance hasItemTag(ITag<Item> tagItem) {
+        return RecipeProvider.hasItem(tagItem);
     }
 }
