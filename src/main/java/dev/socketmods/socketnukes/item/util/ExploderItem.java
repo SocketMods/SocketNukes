@@ -28,29 +28,29 @@ public class ExploderItem extends Item {
     }
 
     @Override
-    public ActionResultType onItemUse(ItemUseContext context) {
+    public ActionResultType useOn(ItemUseContext context) {
         // Short-circuit if we're targeting a TNTExplosive, as the logic for that is in that class.
-        if (context.getWorld().getBlockState(context.getPos()).getBlock() == SNRegistry.GENERIC_EXPLOSIVE.get())
-            return super.onItemUse(context);
+        if (context.getLevel().getBlockState(context.getClickedPos()).getBlock() == SNRegistry.GENERIC_EXPLOSIVE.get())
+            return super.useOn(context);
 
         // If we're on the client and we're sneaking, open the configuration menu.
         if(!(context.getPlayer() == null) && !context.getPlayer().isCrouching()) {
             // If we're just right clicking a block, trigger an immediate explosion with the configured type.
-            context.getItem().getCapability(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY).ifPresent(cap -> {
+            context.getItemInHand().getCapability(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY).ifPresent(cap -> {
                 ExtendedExplosionType explosion = SNRegistry.getExplosionType(cap.getConfig());
 
-                ExplosiveEntity explosiveEntity = new ExplosiveEntity(context.getWorld(), context.getPos(), explosion, context.getPlayer());
+                ExplosiveEntity explosiveEntity = new ExplosiveEntity(context.getLevel(), context.getClickedPos(), explosion, context.getPlayer());
                 explosiveEntity.setFuse(0);
-                context.getWorld().addEntity(explosiveEntity);
+                context.getLevel().addFreshEntity(explosiveEntity);
             });
         }
-        return super.onItemUse(context);
+        return super.useOn(context);
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        if(worldIn.isRemote) ClientThingDoer.openConfigScreen();
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        if(worldIn.isClientSide) ClientThingDoer.openConfigScreen();
 
-        return ActionResult.resultPass(playerIn.getHeldItem(handIn));
+        return ActionResult.pass(playerIn.getItemInHand(handIn));
     }
 }

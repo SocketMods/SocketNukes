@@ -44,7 +44,7 @@ import net.minecraft.world.World;
  */
 public class TNTExplosive extends Block {
     public TNTExplosive() {
-        super(AbstractBlock.Properties.create(Material.TNT));
+        super(AbstractBlock.Properties.of(Material.EXPLOSIVE));
     }
 
     /**
@@ -58,14 +58,14 @@ public class TNTExplosive extends Block {
      * @param stack The stack the entity was holding when it was placed.
      */
     @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        super.onBlockPlacedBy(world, pos, state, placer, stack);
+    public void setPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(world, pos, state, placer, stack);
 
-        TileEntity tileEntity = world.getTileEntity(pos);
+        TileEntity tileEntity = world.getBlockEntity(pos);
         if(stack.getItem() == SNRegistry.GENERIC_EXPLOSIVE_ITEM.get() && tileEntity instanceof ExplosiveTileEntity) {
             ExplosiveTileEntity explosive = (ExplosiveTileEntity) tileEntity;
 
-            ResourceLocation config = new ResourceLocation(stack.getOrCreateChildTag(SocketNukes.MODID).getString("explosion"));
+            ResourceLocation config = new ResourceLocation(stack.getOrCreateTagElement(SocketNukes.MODID).getString("explosion"));
             explosive.setConfiguration(config);
         }
     }
@@ -81,7 +81,7 @@ public class TNTExplosive extends Block {
      */
     @Override
     public void catchFire(BlockState state, World world, BlockPos pos, @Nullable Direction face, @Nullable LivingEntity igniter) {
-        TileEntity tileEntity = world.getTileEntity(pos);
+        TileEntity tileEntity = world.getBlockEntity(pos);
         if(tileEntity instanceof ExplosiveTileEntity) {
             ExplosiveTileEntity explosive = (ExplosiveTileEntity) tileEntity;
             ResourceLocation config = explosive.getConfiguration();
@@ -103,9 +103,9 @@ public class TNTExplosive extends Block {
      * @param isMoving whether this block was added by movement, ie. by a piston
      */
     @Override
-    public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
-        if (!oldState.matchesBlock(state.getBlock())) {
-            if (worldIn.isBlockPowered(pos)) {
+    public void onPlace(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+        if (!oldState.is(state.getBlock())) {
+            if (worldIn.hasNeighborSignal(pos)) {
                 catchFire(state, worldIn, pos, null, null);
                 worldIn.removeBlock(pos, false);
             }
@@ -124,7 +124,7 @@ public class TNTExplosive extends Block {
      */
     @Override
     public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-        if (worldIn.isBlockPowered(pos)) {
+        if (worldIn.hasNeighborSignal(pos)) {
             catchFire(state, worldIn, pos, null, null);
             worldIn.removeBlock(pos, false);
         }
@@ -142,15 +142,15 @@ public class TNTExplosive extends Block {
      */
     private static void explode(World worldIn, BlockPos pos, @Nullable LivingEntity entityIn, ExtendedExplosionType explosion, boolean chainExplosion) {
         ExplosiveEntity explosiveEntity = new ExplosiveEntity(worldIn, pos, explosion, entityIn);
-        worldIn.addEntity(explosiveEntity);
+        worldIn.addFreshEntity(explosiveEntity);
 
         if(chainExplosion)
-            explosiveEntity.setFuse((short)(worldIn.rand.nextInt(explosion.getFuseTime() / 4) + explosion.getFuseTime() / 8));
+            explosiveEntity.setFuse((short)(worldIn.random.nextInt(explosion.getFuseTime() / 4) + explosion.getFuseTime() / 8));
         else
             explosiveEntity.setFuse(explosion.getFuseTime());
 
-        worldIn.playSound(null, explosiveEntity.getPosX(), explosiveEntity.getPosY(), explosiveEntity.getPosZ(),
-                SoundEvents.ENTITY_TNT_PRIMED, SoundCategory.BLOCKS, 1.0F, 1.0F);
+        worldIn.playSound(null, explosiveEntity.getX(), explosiveEntity.getY(), explosiveEntity.getZ(),
+                SoundEvents.TNT_PRIMED, SoundCategory.BLOCKS, 1.0F, 1.0F);
     }
 
     /**
@@ -174,8 +174,8 @@ public class TNTExplosive extends Block {
      * @param explosionIn the explosion that destroyed the block
      */
     @Override
-    public void onExplosionDestroy(World worldIn, BlockPos pos, Explosion explosionIn) {
-        explode(worldIn, pos, explosionIn.getExplosivePlacedBy(), SNRegistry.VANILLA_EXPLOSION.get(), true);
+    public void wasExploded(World worldIn, BlockPos pos, Explosion explosionIn) {
+        explode(worldIn, pos, explosionIn.getSourceMob(), SNRegistry.VANILLA_EXPLOSION.get(), true);
     }
 
     /**
@@ -191,9 +191,9 @@ public class TNTExplosive extends Block {
      * @return an action result
      */
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand
             handIn, BlockRayTraceResult hit) {
-        ItemStack itemstack = player.getHeldItem(handIn);
+        ItemStack itemstack = player.getItemInHand(handIn);
         Item item = itemstack.getItem();
 
         // If used by an Exploder..
@@ -204,23 +204,23 @@ public class TNTExplosive extends Block {
                     explode(worldIn, pos, player, SNRegistry.getExplosionType(cap.getConfig()))
             );
             // delete the block because the entity was created
-            worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 11);
-            return ActionResultType.func_233537_a_(worldIn.isRemote);
+            worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 11);
+            return ActionResultType.sidedSuccess(worldIn.isClientSide);
 
         // Fallback to vanilla behavior
         } else if (item != Items.FLINT_AND_STEEL && item != Items.FIRE_CHARGE) {
-            return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+            return super.use(state, worldIn, pos, player, handIn, hit);
         } else {
-            catchFire(state, worldIn, pos, hit.getFace(), player);
-            worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 11);
+            catchFire(state, worldIn, pos, hit.getDirection(), player);
+            worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 11);
             if (!player.isCreative()) {
                 if (item == Items.FLINT_AND_STEEL) {
-                    itemstack.damageItem(1, player, (player1) -> player1.sendBreakAnimation(handIn));
+                    itemstack.hurtAndBreak(1, player, (player1) -> player1.broadcastBreakEvent(handIn));
                 } else {
                     itemstack.shrink(1);
                 }
             }
-            return ActionResultType.func_233537_a_(worldIn.isRemote);
+            return ActionResultType.sidedSuccess(worldIn.isClientSide);
         }
     }
 

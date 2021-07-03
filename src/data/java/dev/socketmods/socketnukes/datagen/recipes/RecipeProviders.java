@@ -18,6 +18,7 @@ public class RecipeProviders extends RecipeProvider {
     @Override
     protected void registerRecipes(Consumer<IFinishedRecipe> consumer) {
         new BombRecipe(consumer);
+
     }
 
     // expose the protected internal methods so we can use them in external classes

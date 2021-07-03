@@ -22,12 +22,12 @@ import net.minecraft.util.math.vector.Vector3f;
 public class ExplosiveEntityRenderer extends EntityRenderer<ExplosiveEntity> {
     public ExplosiveEntityRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn);
-        this.shadowSize = 0.5F;
+        this.shadowRadius = 0.5F;
     }
 
     @Override
     public void render(ExplosiveEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
-        matrixStackIn.push();
+        matrixStackIn.pushPose();
         matrixStackIn.translate(0.0D, 0.5D, 0.0D);
         if ((float)entityIn.getFuse() - partialTicks + 1.0F < 10.0F) {
             float f = 1.0F - ((float)entityIn.getFuse() - partialTicks + 1.0F) / 10.0F;
@@ -38,11 +38,11 @@ public class ExplosiveEntityRenderer extends EntityRenderer<ExplosiveEntity> {
             matrixStackIn.scale(f1, f1, f1);
         }
 
-        matrixStackIn.rotate(Vector3f.YP.rotationDegrees(-90.0F));
+        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-90.0F));
         matrixStackIn.translate(-0.5D, -0.5D, 0.5D);
-        matrixStackIn.rotate(Vector3f.YP.rotationDegrees(90.0F));
-        TNTMinecartRenderer.renderTntFlash(SNRegistry.GENERIC_EXPLOSIVE.get().getDefaultState(), matrixStackIn, bufferIn, packedLightIn, entityIn.getFuse() / 5 % 2 == 0);
-        matrixStackIn.pop();
+        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(90.0F));
+        TNTMinecartRenderer.renderWhiteSolidBlock(SNRegistry.GENERIC_EXPLOSIVE.get().defaultBlockState(), matrixStackIn, bufferIn, packedLightIn, entityIn.getFuse() / 5 % 2 == 0);
+        matrixStackIn.popPose();
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
 
@@ -50,8 +50,8 @@ public class ExplosiveEntityRenderer extends EntityRenderer<ExplosiveEntity> {
      * TODO: Fix this to take on the form of the block that created it?
      */
     @Override
-    public ResourceLocation getEntityTexture(ExplosiveEntity entity) {
-        return PlayerContainer.LOCATION_BLOCKS_TEXTURE;
+    public ResourceLocation getTextureLocation(ExplosiveEntity entity) {
+        return PlayerContainer.BLOCK_ATLAS;
     }
 
 }

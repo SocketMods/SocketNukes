@@ -80,35 +80,35 @@ public class CubicExplosionType extends ExtendedExplosionType {
                 int southBound = MathHelper.floor(source.getZ() - (double) radiusx2 - 1.0D);
                 int northBound = MathHelper.floor(source.getZ() + (double) radiusx2 + 1.0D);
 
-                List<Entity> list = worldIn.getEntitiesWithinAABBExcludingEntity(placer, new AxisAlignedBB(eastBound, lowerBound, southBound, westBound, upperBound, northBound));
+                List<Entity> list = worldIn.getEntities(placer, new AxisAlignedBB(eastBound, lowerBound, southBound, westBound, upperBound, northBound));
 
                 DummyExplosion vanillaExplosion = new DummyExplosion(worldIn, placer, source.getX(), source.getY(), source.getZ(), radiusx2, meta.affectedBlocks);
                 ForgeEventFactory.onExplosionDetonate(worldIn, vanillaExplosion, list, radiusx2);
                 Vector3d explosionPos = new Vector3d(source.getX(), source.getY(), source.getZ());
 
                 for (Entity currentEntity : list) {
-                    if (!currentEntity.isImmuneToExplosions()) {
-                        double currentEntityDistanceToExplosion = MathHelper.sqrt(currentEntity.getDistanceSq(explosionPos)) / radiusx2;
+                    if (!currentEntity.ignoreExplosion()) {
+                        double currentEntityDistanceToExplosion = MathHelper.sqrt(currentEntity.distanceToSqr(explosionPos)) / radiusx2;
                         if (currentEntityDistanceToExplosion <= 1.0D) {
-                            double currentEntityDistanceX = currentEntity.getPosX() - source.getX();
-                            double currentEntityDistanceY = (currentEntity instanceof TNTEntity ? currentEntity.getPosY() : currentEntity.getPosYEye()) - source.getY();
-                            double currentEntityDistanceZ = currentEntity.getPosZ() - source.getZ();
+                            double currentEntityDistanceX = currentEntity.getX() - source.getX();
+                            double currentEntityDistanceY = (currentEntity instanceof TNTEntity ? currentEntity.getY() : currentEntity.getEyeY()) - source.getY();
+                            double currentEntityDistanceZ = currentEntity.getZ() - source.getZ();
                             double pythagoreanDistance = MathHelper.sqrt(currentEntityDistanceX * currentEntityDistanceX + currentEntityDistanceY * currentEntityDistanceY + currentEntityDistanceZ * currentEntityDistanceZ);
                             if (pythagoreanDistance != 0.0D) {
                                 currentEntityDistanceX = currentEntityDistanceX / pythagoreanDistance;
                                 currentEntityDistanceY = currentEntityDistanceY / pythagoreanDistance;
                                 currentEntityDistanceZ = currentEntityDistanceZ / pythagoreanDistance;
-                                double rayLength = Explosion.getBlockDensity(explosionPos, currentEntity);
+                                double rayLength = Explosion.getSeenPercent(explosionPos, currentEntity);
                                 double damageFalloff = (1.0D - currentEntityDistanceToExplosion) * rayLength;
-                                currentEntity.attackEntityFrom(this.getDamageSource(), (float) ((int) ((damageFalloff * damageFalloff + damageFalloff) / 2.0D * 7.0D * (double) radiusx2 + 1.0D)));
+                                currentEntity.hurt(this.getDamageSource(), (float) ((int) ((damageFalloff * damageFalloff + damageFalloff) / 2.0D * 7.0D * (double) radiusx2 + 1.0D)));
                                 if (currentEntity instanceof LivingEntity) {
-                                    damageFalloff = ProtectionEnchantment.getBlastDamageReduction((LivingEntity) currentEntity, damageFalloff);
+                                    damageFalloff = ProtectionEnchantment.getExplosionKnockbackAfterDampener((LivingEntity) currentEntity, damageFalloff);
                                 }
 
-                                currentEntity.setMotion(currentEntity.getMotion().add(currentEntityDistanceX * damageFalloff, currentEntityDistanceY * damageFalloff, currentEntityDistanceZ * damageFalloff));
+                                currentEntity.setDeltaMovement(currentEntity.getDeltaMovement().add(currentEntityDistanceX * damageFalloff, currentEntityDistanceY * damageFalloff, currentEntityDistanceZ * damageFalloff));
                                 if (currentEntity instanceof PlayerEntity) {
                                     PlayerEntity playerentity = (PlayerEntity) currentEntity;
-                                    if (!playerentity.isSpectator() && (!playerentity.isCreative() || !playerentity.abilities.isFlying)) {
+                                    if (!playerentity.isSpectator() && (!playerentity.isCreative() || !playerentity.abilities.flying)) {
                                         meta.entityDisplacements.put(playerentity, new Vector3d(currentEntityDistanceX * damageFalloff, currentEntityDistanceY * damageFalloff, currentEntityDistanceZ * damageFalloff));
                                     }
                                 }
@@ -117,8 +117,8 @@ public class CubicExplosionType extends ExtendedExplosionType {
                     }
                 }
 
-                if (worldIn.isRemote) {
-                    worldIn.playSound(source.getX(), source.getY(), source.getZ(), properties.getExplosionSound(), SoundCategory.BLOCKS, 4.0F, (1.0F + (worldIn.rand.nextFloat() - worldIn.rand.nextFloat()) * 0.2F) * 0.7F, false);
+                if (worldIn.isClientSide) {
+                    worldIn.playLocalSound(source.getX(), source.getY(), source.getZ(), properties.getExplosionSound(), SoundCategory.BLOCKS, 4.0F, (1.0F + (worldIn.random.nextFloat() - worldIn.random.nextFloat()) * 0.2F) * 0.7F, false);
                 }
 
                 if (properties.doesMakeParticles()) {
@@ -127,42 +127,42 @@ public class CubicExplosionType extends ExtendedExplosionType {
 
                 if (doBlocksDrop) {
                     ObjectArrayList<Pair<ItemStack, BlockPos>> objectarraylist = new ObjectArrayList<>();
-                    Collections.shuffle(meta.affectedBlocks, worldIn.rand);
+                    Collections.shuffle(meta.affectedBlocks, worldIn.random);
 
                     for (BlockPos blockpos : meta.affectedBlocks) {
                         BlockState blockstate = worldIn.getBlockState(blockpos);
                         if (!blockstate.isAir(worldIn, blockpos)) {
-                            BlockPos blockpos1 = blockpos.toImmutable();
-                            worldIn.getProfiler().startSection("explosion_blocks");
+                            BlockPos blockpos1 = blockpos.immutable();
+                            worldIn.getProfiler().push("explosion_blocks");
 
                             Explosion vanillaExplosion2 = new DummyExplosion(worldIn, placer, source.getX(), source.getY(), source.getZ(), radius, meta.affectedBlocks);
 
                             if (blockstate.canDropFromExplosion(worldIn, blockpos, vanillaExplosion2) && worldIn instanceof ServerWorld) {
-                                TileEntity tileentity = blockstate.hasTileEntity() ? worldIn.getTileEntity(blockpos) : null;
-                                LootContext.Builder lootcontext$builder = (new LootContext.Builder((ServerWorld) worldIn)).withRandom(worldIn.rand).withParameter(LootParameters.ORIGIN, Vector3d.copyCentered(blockpos)).withParameter(LootParameters.TOOL, ItemStack.EMPTY).withNullableParameter(LootParameters.BLOCK_ENTITY, tileentity).withNullableParameter(LootParameters.THIS_ENTITY, placer);
+                                TileEntity tileentity = blockstate.hasTileEntity() ? worldIn.getBlockEntity(blockpos) : null;
+                                LootContext.Builder lootcontext$builder = (new LootContext.Builder((ServerWorld) worldIn)).withRandom(worldIn.random).withParameter(LootParameters.ORIGIN, Vector3d.atCenterOf(blockpos)).withParameter(LootParameters.TOOL, ItemStack.EMPTY).withOptionalParameter(LootParameters.BLOCK_ENTITY, tileentity).withOptionalParameter(LootParameters.THIS_ENTITY, placer);
                                 if (this.doBlocksDrop) {
                                     lootcontext$builder.withParameter(LootParameters.EXPLOSION_RADIUS, (float) radius);
                                 }
 
                                 blockstate.getDrops(lootcontext$builder).forEach((stack) -> handleExplosionDrops(objectarraylist, stack, blockpos1));
                             }
-                            if(!worldIn.isRemote)
+                            if(!worldIn.isClientSide)
                                 blockstate.onBlockExploded(worldIn, blockpos, vanillaExplosion2);
-                            worldIn.getProfiler().endSection();
+                            worldIn.getProfiler().pop();
                         }
                     }
 
                     for (Pair<ItemStack, BlockPos> pair : objectarraylist) {
-                        if(!worldIn.isRemote)
-                            Block.spawnAsEntity(worldIn, pair.getSecond(), pair.getFirst());
+                        if(!worldIn.isClientSide)
+                            Block.popResource(worldIn, pair.getSecond(), pair.getFirst());
                     }
                 }
 
                 // We have to manually tell the client that these blocks have broken, as onBlockExploded does not.
-                if(!worldIn.isRemote) {
+                if(!worldIn.isClientSide) {
                     ServerWorld sWorld = (ServerWorld) worldIn;
-                    for (ServerPlayerEntity serverplayerentity : sWorld.getPlayers()) {
-                        if (serverplayerentity.getDistanceSq(source.getX(), source.getY(), source.getZ()) < 4096.0D) {
+                    for (ServerPlayerEntity serverplayerentity : sWorld.players()) {
+                        if (serverplayerentity.distanceToSqr(source.getX(), source.getY(), source.getZ()) < 4096.0D) {
                             Network.sendToClient(new ExtendedExplosionPacket(source, meta.affectedBlocks, properties.getParticleToEmit().getType(), properties.getExplosionSound(), meta.entityDisplacements), serverplayerentity);
                         }
                     }

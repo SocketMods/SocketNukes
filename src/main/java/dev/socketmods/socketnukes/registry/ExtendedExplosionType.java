@@ -125,8 +125,8 @@ public class ExtendedExplosionType extends ForgeRegistryEntry<ExtendedExplosionT
         for(int j = 0; j < i; ++j) {
             Pair<ItemStack, BlockPos> pair = dropPositionArray.get(j);
             ItemStack itemstack = pair.getFirst();
-            if (ItemEntity.canMergeStacks(itemstack, stack)) {
-                ItemStack itemstack1 = ItemEntity.mergeStacks(itemstack, stack, 16);
+            if (ItemEntity.areMergable(itemstack, stack)) {
+                ItemStack itemstack1 = ItemEntity.merge(itemstack, stack, 16);
                 dropPositionArray.set(j, Pair.of(itemstack1, pair.getSecond()));
                 if (stack.isEmpty()) {
                     return;

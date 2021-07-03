@@ -16,7 +16,7 @@ public class SocketItems {
 
     public static ItemGroup SOCKETNUKES_GROUP = new ItemGroup(SocketNukes.MODID + ".main") {
         @Override
-        public ItemStack createIcon() {
+        public ItemStack makeIcon() {
             return new ItemStack(SNRegistry.GENERIC_EXPLOSIVE_ITEM.get());
         }
     };
@@ -25,7 +25,7 @@ public class SocketItems {
      *           Item Properties Instances         *
      ***********************************************/
 
-    public static final Item.Properties EXPLODER_PROPERTIES = new Item.Properties().maxStackSize(1).group(SOCKETNUKES_GROUP);
-    public static final Item.Properties EXPLOSIVE_PROPERTIES = new Item.Properties().group(SOCKETNUKES_GROUP);
+    public static final Item.Properties EXPLODER_PROPERTIES = new Item.Properties().stacksTo(1).tab(SOCKETNUKES_GROUP);
+    public static final Item.Properties EXPLOSIVE_PROPERTIES = new Item.Properties().tab(SOCKETNUKES_GROUP);
 
 }

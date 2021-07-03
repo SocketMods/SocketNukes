@@ -20,10 +20,10 @@ public class BolbGelLayer extends LayerRenderer<BolbEntity, BolbModel> {
     public void render(MatrixStack stack, IRenderTypeBuffer buffers, int packedLight, BolbEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if (entity.isInvisible()) return;
 
-        this.getEntityModel().copyModelAttributesTo(this.bolbModel);
-        this.bolbModel.setLivingAnimations(entity, limbSwing, limbSwingAmount, partialTicks);
-        this.bolbModel.setRotationAngles(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-        IVertexBuilder builder = buffers.getBuffer(RenderType.getEntityTranslucent(this.getEntityTexture(entity)));
-        this.bolbModel.render(stack, builder, packedLight, LivingRenderer.getPackedOverlay(entity, 0.0F), 1.0F, 1.0F, 1.0F, 1.0F);
+        this.getParentModel().copyPropertiesTo(this.bolbModel);
+        this.bolbModel.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTicks);
+        this.bolbModel.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+        IVertexBuilder builder = buffers.getBuffer(RenderType.entityTranslucent(this.getTextureLocation(entity)));
+        this.bolbModel.renderToBuffer(stack, builder, packedLight, LivingRenderer.getOverlayCoords(entity, 0.0F), 1.0F, 1.0F, 1.0F, 1.0F);
     }
 }

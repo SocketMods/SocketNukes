@@ -15,7 +15,7 @@ public class ClientThingDoer {
 
     public static void openConfigScreen() {
         if (Screen.hasShiftDown())
-            Minecraft.getInstance().displayGuiScreen(new ExploderConfigScreen());
+            Minecraft.getInstance().setScreen(new ExploderConfigScreen());
     }
 
 }

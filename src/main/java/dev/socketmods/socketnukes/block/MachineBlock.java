@@ -36,42 +36,42 @@ public abstract class MachineBlock extends CommonMachineBlock {
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(BlockStateProperties.FACING);
         builder.add(BlockStateProperties.LIT);
-        super.fillStateContainer(builder);
+        super.createBlockStateDefinition(builder);
     }
 
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
 
-        return getDefaultState()
-            .with(BlockStateProperties.FACING, context.getPlacementHorizontalFacing().getOpposite())
-            .with(BlockStateProperties.LIT, false);
+        return defaultBlockState()
+            .setValue(BlockStateProperties.FACING, context.getHorizontalDirection().getOpposite())
+            .setValue(BlockStateProperties.LIT, false);
     }
 
     @SuppressWarnings("deprecation")
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (!state.matchesBlock(newState.getBlock())) {
-            TileEntity te = worldIn.getTileEntity(pos);
+    public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (!state.is(newState.getBlock())) {
+            TileEntity te = worldIn.getBlockEntity(pos);
             if (te instanceof CommonTileEntity) {
                 LazyOptional<IItemHandler> inventory = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
                 inventory.ifPresent(inv -> dropInventoryItems(worldIn, pos, inv));
             }
         }
-        super.onReplaced(state, worldIn, pos, newState, isMoving);
+        super.onRemove(state, worldIn, pos, newState, isMoving);
     }
 
     @SuppressWarnings("rawtypes")
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (!worldIn.isRemote) {
-            TileEntity tile = worldIn.getTileEntity(pos);
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if (!worldIn.isClientSide) {
+            TileEntity tile = worldIn.getBlockEntity(pos);
             if (tile instanceof MachineTileEntity) {
                 MachineTileEntity CommonTe = (MachineTileEntity) tile;
-                NetworkHooks.openGui((ServerPlayerEntity) player, CommonTe, tile.getPos());
+                NetworkHooks.openGui((ServerPlayerEntity) player, CommonTe, tile.getBlockPos());
             } else {
                 throw new IllegalStateException("Missing Container provider");
             }
@@ -81,21 +81,21 @@ public abstract class MachineBlock extends CommonMachineBlock {
     }
 
     public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
-        if (stateIn.get(BlockStateProperties.LIT)) {
+        if (stateIn.getValue(BlockStateProperties.LIT)) {
             double d0 = (double) pos.getX() + 0.5D;
             double d1 = pos.getY();
             double d2 = (double) pos.getZ() + 0.5D;
             if (rand.nextDouble() < 0.1D) {
-                worldIn.playSound(d0, d1, d2, SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+                worldIn.playLocalSound(d0, d1, d2, SoundEvents.FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
             }
 
-            Direction direction = stateIn.get(BlockStateProperties.FACING);
+            Direction direction = stateIn.getValue(BlockStateProperties.FACING);
             Direction.Axis axis = direction.getAxis();
             double d3 = 0.52D;
             double d4 = rand.nextDouble() * 0.6D - 0.3D;
-            double d5 = axis == Direction.Axis.X ? (double) direction.getXOffset() * 0.52D : d4;
+            double d5 = axis == Direction.Axis.X ? (double) direction.getStepX() * 0.52D : d4;
             double d6 = rand.nextDouble() * 6.0D / 16.0D;
-            double d7 = axis == Direction.Axis.Z ? (double) direction.getZOffset() * 0.52D : d4;
+            double d7 = axis == Direction.Axis.Z ? (double) direction.getStepZ() * 0.52D : d4;
             worldIn.addParticle(ParticleTypes.SMOKE, d0 + d5, d1 + d6, d2 + d7, 0.0D, 0.0D, 0.0D);
             worldIn.addParticle(ParticleTypes.FLAME, d0 + d5, d1 + d6, d2 + d7, 0.0D, 0.0D, 0.0D);
         }

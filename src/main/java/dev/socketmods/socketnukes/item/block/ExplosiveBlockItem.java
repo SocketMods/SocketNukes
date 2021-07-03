@@ -29,11 +29,11 @@ public class ExplosiveBlockItem extends BlockItem {
     }
 
     @Override
-    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
+    public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
         if(group == SocketItems.SOCKETNUKES_GROUP)
             for(RegistryObject<ExtendedExplosionType> explosionType : SNRegistry.EXPLOSIONS.getEntries()) {
                 ItemStack newItem = new ItemStack(this);
-                CompoundNBT tag = newItem.getOrCreateChildTag(SocketNukes.MODID);
+                CompoundNBT tag = newItem.getOrCreateTagElement(SocketNukes.MODID);
                 tag.putString("explosion", SNRegistry.getName(explosionType).toString());
                 items.add(newItem);
             }
@@ -44,9 +44,9 @@ public class ExplosiveBlockItem extends BlockItem {
      * This is finnicky, and we deal with null pointers in bootstrap, so this is a little long winded.
      */
     @Override
-    public ITextComponent getDisplayName(ItemStack stack) {
-        ResourceLocation stackConfigLoc = new ResourceLocation(stack.getOrCreateChildTag(SocketNukes.MODID).getString("explosion"));
+    public ITextComponent getName(ItemStack stack) {
+        ResourceLocation stackConfigLoc = new ResourceLocation(stack.getOrCreateTagElement(SocketNukes.MODID).getString("explosion"));
         ITextComponent stackConfigComponent = SNRegistry.getExplosionType(stackConfigLoc).getTranslationText();
-        return new TranslationTextComponent(this.getTranslationKey(stack)).appendSibling(new StringTextComponent(" - ")).appendSibling(stackConfigComponent);
+        return new TranslationTextComponent(this.getDescriptionId(stack)).append(new StringTextComponent(" - ")).append(stackConfigComponent);
     }
 }

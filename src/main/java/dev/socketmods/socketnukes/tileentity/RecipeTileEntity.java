@@ -35,7 +35,7 @@ public abstract class RecipeTileEntity<T extends IRecipe<?>> extends CommonTileE
     protected abstract T getRecipe(ItemStack stack);
 
     public static Set<IRecipe<?>> findRecipeByType(IRecipeType<?> recipeType) {
-        ClientWorld world = Minecraft.getInstance().world;
+        ClientWorld world = Minecraft.getInstance().level;
         return world != null ?
             world.getRecipeManager().getRecipes().stream().filter(iRecipe -> iRecipe.getType() == recipeType).collect(Collectors.toSet())
             : Collections.emptySet();
@@ -56,7 +56,7 @@ public abstract class RecipeTileEntity<T extends IRecipe<?>> extends CommonTileE
             NonNullList<Ingredient> ingredients = recipe.getIngredients();
             ingredients.forEach(
                 ingredient ->
-                    inputs.addAll(Arrays.asList(ingredient.getMatchingStacks()))
+                    inputs.addAll(Arrays.asList(ingredient.getItems()))
             );
         }
         return inputs;
@@ -73,7 +73,7 @@ public abstract class RecipeTileEntity<T extends IRecipe<?>> extends CommonTileE
                 NonNullList<ItemStack> output = ((CommonRecipe) recipe).getOutput();
                 output.forEach(itemStack -> outputs.add(itemStack.getItem()));
             } else {
-                ItemStack output = recipe.getRecipeOutput();
+                ItemStack output = recipe.getResultItem();
                 outputs.add(output.getItem());
             }
         }
@@ -85,7 +85,7 @@ public abstract class RecipeTileEntity<T extends IRecipe<?>> extends CommonTileE
         Set<IRecipe<?>> recipes = findRecipeByType(type, world);
         for (IRecipe<?> recipe : recipes) {
             NonNullList<Ingredient> ingredients = recipe.getIngredients();
-            ingredients.forEach(ingredient -> Arrays.stream(ingredient.getMatchingStacks()).collect(Collectors.toList()).forEach(itemStack -> inputs.add(itemStack.getItem())));
+            ingredients.forEach(ingredient -> Arrays.stream(ingredient.getItems()).collect(Collectors.toList()).forEach(itemStack -> inputs.add(itemStack.getItem())));
         }
         return inputs;
     }
@@ -98,9 +98,9 @@ public abstract class RecipeTileEntity<T extends IRecipe<?>> extends CommonTileE
         }
 
         while (i > 0) {
-            int j = ExperienceOrbEntity.getXPSplit(i);
+            int j = ExperienceOrbEntity.getExperienceValue(i);
             i -= j;
-            world.addEntity(new ExperienceOrbEntity(world, pos.getX(), pos.getY(), pos.getZ(), j));
+            world.addFreshEntity(new ExperienceOrbEntity(world, pos.getX(), pos.getY(), pos.getZ(), j));
         }
     }
 }

@@ -33,7 +33,7 @@ public class ClientSNEvents {
         // Add the Player Hat Layer for the two skin types.
         // We need to do this for both default and slim
         event.enqueueWork(() -> {
-            EntityRendererManager manager = Minecraft.getInstance().getRenderManager();
+            EntityRendererManager manager = Minecraft.getInstance().getEntityRenderDispatcher();
 
             addPlayerHatLayer(manager, "default");
             addPlayerHatLayer(manager, "slim");

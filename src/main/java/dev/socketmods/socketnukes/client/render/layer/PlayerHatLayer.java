@@ -34,21 +34,21 @@ public class PlayerHatLayer extends LayerRenderer<AbstractClientPlayerEntity, Pl
         if (player.isInvisible()) return;
         if (!Bolbs.hasHat(player)) return;
 
-        stack.push();
+        stack.pushPose();
 
         if (player.hasItemInSlot(EquipmentSlotType.HEAD)) stack.translate(0, -0.02f, 0);
         if (player.isCrouching()) stack.translate(0, 0.27f, 0);
 
-        stack.rotate(Vector3f.YP.rotationDegrees(90));
-        stack.rotate(Vector3f.XP.rotationDegrees(180));
-        stack.rotate(Vector3f.YN.rotationDegrees(netHeadYaw));
-        stack.rotate(Vector3f.ZN.rotationDegrees(headPitch));
+        stack.mulPose(Vector3f.YP.rotationDegrees(90));
+        stack.mulPose(Vector3f.XP.rotationDegrees(180));
+        stack.mulPose(Vector3f.YN.rotationDegrees(netHeadYaw));
+        stack.mulPose(Vector3f.ZN.rotationDegrees(headPitch));
         stack.translate(-0.3, 0.5, -0.7);
 
         Minecraft minecraft = Minecraft.getInstance();
-        minecraft.getTextureManager().bindTexture(PlayerContainer.LOCATION_BLOCKS_TEXTURE);
-        minecraft.getBlockRendererDispatcher().getBlockModelRenderer().renderModel(stack.getLast(), buffer.getBuffer(RenderType.getCutout()), null, HAT_MODEL, 1f, 1f, 1f, packedLight, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
-        stack.pop();
+        minecraft.getTextureManager().bind(PlayerContainer.BLOCK_ATLAS);
+        minecraft.getBlockRenderer().getModelRenderer().renderModel(stack.last(), buffer.getBuffer(RenderType.cutout()), null, HAT_MODEL, 1f, 1f, 1f, packedLight, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
+        stack.popPose();
     }
 
 }

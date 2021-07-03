@@ -20,17 +20,17 @@ public class ExplosionList extends ExtendedList<ExplosionList.ExplosionListEntry
     private final FontRenderer font;
 
     public ExplosionList(Screen parent, int width, int height, int top, int bottom, @Nullable ResourceLocation entry) {
-        this(parent, parent.getMinecraft().fontRenderer, width, height, top, bottom, entry);
+        this(parent, parent.getMinecraft().font, width, height, top, bottom, entry);
     }
 
     public ExplosionList(Screen parent, FontRenderer font, int width, int height, int top, int bottom, @Nullable ResourceLocation entry) {
-        super(parent.getMinecraft(), width, height, top, bottom, font.FONT_HEIGHT + 8);
+        super(parent.getMinecraft(), width, height, top, bottom, font.lineHeight + 8);
         this.font = font;
 
         this.refreshList(entry);
 
-        this.func_244605_b(false);
-        this.func_244606_c(false);
+        this.setRenderBackground(false);
+        this.setRenderTopAndBottom(false);
         this.setRenderHeader(false, 0);
     }
 
@@ -72,7 +72,7 @@ public class ExplosionList extends ExtendedList<ExplosionList.ExplosionListEntry
 
             if (!isSelected) {
                 Tessellator tessellator = Tessellator.getInstance();
-                BufferBuilder bufferbuilder = tessellator.getBuffer();
+                BufferBuilder bufferbuilder = tessellator.getBuilder();
 
                 // j,   k,   j2,   k1,         j1
                 // idx, top, left, entryWidth, entryHeight
@@ -88,25 +88,25 @@ public class ExplosionList extends ExtendedList<ExplosionList.ExplosionListEntry
                 float f = parent.isFocused() ? 0.25F : 0.125F;
                 RenderSystem.color4f(f, f, f, 1.0F);
                 bufferbuilder.begin(7, DefaultVertexFormats.POSITION);
-                bufferbuilder.pos(l1, (i1 + j1 + 2), 0.0D).endVertex();
-                bufferbuilder.pos(i2, (i1 + j1 + 2), 0.0D).endVertex();
-                bufferbuilder.pos(i2, (i1 - 2), 0.0D).endVertex();
-                bufferbuilder.pos(l1, (i1 - 2), 0.0D).endVertex();
-                tessellator.draw();
+                bufferbuilder.vertex(l1, (i1 + j1 + 2), 0.0D).endVertex();
+                bufferbuilder.vertex(i2, (i1 + j1 + 2), 0.0D).endVertex();
+                bufferbuilder.vertex(i2, (i1 - 2), 0.0D).endVertex();
+                bufferbuilder.vertex(l1, (i1 - 2), 0.0D).endVertex();
+                tessellator.end();
 
                 RenderSystem.color4f(0.0F, 0.0F, 0.0F, 1.0F);
                 bufferbuilder.begin(7, DefaultVertexFormats.POSITION);
-                bufferbuilder.pos((l1 + 1), (i1 + j1 + 1), 0.0D).endVertex();
-                bufferbuilder.pos((i2 - 1), (i1 + j1 + 1), 0.0D).endVertex();
-                bufferbuilder.pos((i2 - 1), (i1 - 1), 0.0D).endVertex();
-                bufferbuilder.pos((l1 + 1), (i1 - 1), 0.0D).endVertex();
-                tessellator.draw();
+                bufferbuilder.vertex((l1 + 1), (i1 + j1 + 1), 0.0D).endVertex();
+                bufferbuilder.vertex((i2 - 1), (i1 + j1 + 1), 0.0D).endVertex();
+                bufferbuilder.vertex((i2 - 1), (i1 - 1), 0.0D).endVertex();
+                bufferbuilder.vertex((l1 + 1), (i1 - 1), 0.0D).endVertex();
+                tessellator.end();
 
                 RenderSystem.enableTexture();
             }
 
             String name = SNRegistry.getName(type).toString();
-            parent.font.drawStringWithShadow(stack, name, left + 3, top + 2, isSelected ? 0xFFFF55 : 0xFFFFFF);
+            parent.font.drawShadow(stack, name, left + 3, top + 2, isSelected ? 0xFFFF55 : 0xFFFFFF);
         }
 
         @Override

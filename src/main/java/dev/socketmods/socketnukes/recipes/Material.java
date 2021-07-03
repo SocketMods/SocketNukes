@@ -29,14 +29,14 @@ public class Material implements Predicate<ItemStack> {
 
     public JsonObject serialize() {
         JsonObject material = new JsonObject();
-        material.add("ingredient", ingredient.serialize());
+        material.add("ingredient", ingredient.toJson());
         material.addProperty("count", count);
         return material;
     }
 
     public static Material deserialize(JsonObject object) {
         Ingredient ingredient = CraftingHelper.getIngredient(object.get("ingredient"));
-        int count = JSONUtils.getInt(object, "count", 1);
+        int count = JSONUtils.getAsInt(object, "count", 1);
         if (count <= 0) {
             throw new IllegalArgumentException("Material count must be a positive integer.");
         }
@@ -45,12 +45,12 @@ public class Material implements Predicate<ItemStack> {
 
     public void write(PacketBuffer packet) {
         packet.writeVarInt(count);
-        ingredient.write(packet);
+        ingredient.toNetwork(packet);
     }
 
     public static Material read(PacketBuffer packet) {
         int count = packet.readVarInt();
-        Ingredient ingredient = Ingredient.read(packet);
+        Ingredient ingredient = Ingredient.fromNetwork(packet);
         return new Material(ingredient, count);
     }
 }

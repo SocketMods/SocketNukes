@@ -51,7 +51,7 @@ public class ExploderConfigScreen extends Screen {
         this.guiLeft = (this.width - SCREEN_WIDTH) / 2;
         this.guiTop = (this.height - SCREEN_HEIGHT) / 2;
 
-        ItemStack heldItem = minecraft.player.getHeldItemMainhand();
+        ItemStack heldItem = minecraft.player.getMainHandItem();
         ResourceLocation selected = heldItem.getCapability(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY).map(IConfiguration::getConfig).orElse(null);
 
         int width = SCREEN_WIDTH - 10 - 5;
@@ -70,12 +70,12 @@ public class ExploderConfigScreen extends Screen {
         drawCenteredString(stack, this.font, this.title, this.width / 2, 20, 0xFFFFFF);
 
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        minecraft.getTextureManager().bindTexture(BACKGROUND);
+        minecraft.getTextureManager().bind(BACKGROUND);
         blit(stack, guiLeft, guiTop, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-        minecraft.getTextureManager().bindTexture(Screen.BACKGROUND_LOCATION);
+        minecraft.getTextureManager().bind(Screen.BACKGROUND_LOCATION);
 
-        double scale = minecraft.getMainWindow().getGuiScaleFactor();
+        double scale = minecraft.getWindow().getGuiScale();
         int posY   = guiTop + 5;
         int height = SCREEN_HEIGHT - 10;
         RenderSystem.enableScissor((int) (guiLeft * scale), (int) (posY * scale), (int) (SCREEN_WIDTH * scale), (int) (height * scale));
@@ -86,12 +86,12 @@ public class ExploderConfigScreen extends Screen {
     }
 
     @Override
-    public void closeScreen() {
+    public void onClose() {
         ExplosionList.ExplosionListEntry entry = list.getSelected();
         if (entry != null)
             config(SNRegistry.getName(entry.getType()));
 
-        super.closeScreen();
+        super.onClose();
     }
 
     private void config(ResourceLocation registryName) {
@@ -101,7 +101,7 @@ public class ExploderConfigScreen extends Screen {
         assert minecraft != null;
         assert minecraft.player != null;
 
-        minecraft.player.getHeldItemMainhand().getCapability(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY).ifPresent(cap ->
+        minecraft.player.getMainHandItem().getCapability(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY).ifPresent(cap ->
                 cap.setConfig(registryName)
         );
         Network.sendToServer(new ExploderConfigChangedPacket(registryName));

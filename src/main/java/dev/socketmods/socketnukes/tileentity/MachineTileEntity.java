@@ -57,7 +57,7 @@ public abstract class MachineTileEntity<T extends IRecipe<?>> extends RecipeTile
         }
 
         @Override
-        public int size() {
+        public int getCount() {
             return 4;
         }
     };
@@ -68,24 +68,24 @@ public abstract class MachineTileEntity<T extends IRecipe<?>> extends RecipeTile
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT nbt) {
+    public void load(BlockState state, CompoundNBT nbt) {
         burnTime = nbt.getInt("burnTime");
         cookingTime = nbt.getInt("cookingTime");
         cookingTimeTotal = nbt.getInt("cookingTimeTotal");
         recipeUsed = nbt.getInt("recipeUsed");
         isBurning = nbt.getBoolean("isBurning");
-        super.read(state, nbt);
+        super.load(state, nbt);
     }
 
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
+    public CompoundNBT save(CompoundNBT compound) {
         compound.putInt("burnTime", burnTime);
         compound.putInt("cookingTime", cookingTime);
         compound.putInt("cookingTimeTotal", cookingTimeTotal);
         compound.putInt("recipeUsed", recipeUsed);
         compound.putBoolean("isBurning", isBurning);
-        return super.write(compound);
+        return super.save(compound);
     }
 
     public boolean isBurning() {
@@ -97,14 +97,14 @@ public abstract class MachineTileEntity<T extends IRecipe<?>> extends RecipeTile
     }
 
     public boolean setIsBurning() {
-        Objects.requireNonNull(this.world);
+        Objects.requireNonNull(this.level);
 
         if (!itemHandler.getStackInSlot(getFuelSlot()).isEmpty()) {
             isBurning = true;
             if (handleBurning(itemHandler.getStackInSlot(getFuelSlot()))) {
-                markDirty();
+                setChanged();
             }
-            this.world.setBlockState(this.pos, this.world.getBlockState(this.pos).with(AbstractFurnaceBlock.LIT, this.isBurning()), 3);
+            this.level.setBlock(this.worldPosition, this.level.getBlockState(this.worldPosition).setValue(AbstractFurnaceBlock.LIT, this.isBurning()), 3);
             return true;
         }
         return false;
@@ -117,22 +117,22 @@ public abstract class MachineTileEntity<T extends IRecipe<?>> extends RecipeTile
     @Nullable
     public T getRecipe(ItemStack stack) {
         if (stack == ItemStack.EMPTY) return null;
-        Objects.requireNonNull(this.world);
+        Objects.requireNonNull(this.level);
 
-        Set<IRecipe<?>> recipes = findRecipeByType(type, this.world);
+        Set<IRecipe<?>> recipes = findRecipeByType(type, this.level);
         RecipeWrapper wrapper = new RecipeWrapper(itemHandler);
-        return matching(recipes, wrapper, world);
+        return matching(recipes, wrapper, level);
     }
 
     @Override
     @Nullable
     public T getRecipeFromOutput(ItemStack result) {
         if (result == ItemStack.EMPTY) return null;
-        Objects.requireNonNull(this.world);
+        Objects.requireNonNull(this.level);
 
-        Set<IRecipe<?>> recipes = findRecipeByType(type, this.world);
+        Set<IRecipe<?>> recipes = findRecipeByType(type, this.level);
 
-        return matchingOutput(recipes, result, world);
+        return matchingOutput(recipes, result, level);
     }
 
     protected abstract T matchingOutput(Set<IRecipe<?>> recipes, ItemStack result, World world);
@@ -160,7 +160,7 @@ public abstract class MachineTileEntity<T extends IRecipe<?>> extends RecipeTile
     protected void smelt(@Nullable IRecipe<?> recipe) {
         if (recipe != null && this.canSmelt(recipe)) {
             ItemStack input = this.itemHandler.getStackInSlot(0);
-            ItemStack output = recipe.getRecipeOutput();
+            ItemStack output = recipe.getResultItem();
             if (recipe instanceof CommonRecipe) {
                 output = ((CommonRecipe) recipe).getOutput().get(0);
             }
@@ -181,14 +181,14 @@ public abstract class MachineTileEntity<T extends IRecipe<?>> extends RecipeTile
 
     protected boolean canSmelt(@Nullable IRecipe<?> recipeIn) {
         if (!this.itemHandler.getStackInSlot(0).isEmpty() && recipeIn != null) {
-            ItemStack output = recipeIn.getRecipeOutput();
+            ItemStack output = recipeIn.getResultItem();
             if (output.isEmpty()) {
                 return false;
             } else {
                 ItemStack outputSlot = this.itemHandler.getStackInSlot(2);
                 if (outputSlot.isEmpty()) {
                     return true;
-                } else if (!outputSlot.isItemEqual(output)) {
+                } else if (!outputSlot.sameItem(output)) {
                     return false;
                 } else {
                     return outputSlot.getCount() + output.getCount() <= output.getMaxStackSize(); // Forge fix: make furnace respect stack sizes in furnace recipes
@@ -209,8 +209,8 @@ public abstract class MachineTileEntity<T extends IRecipe<?>> extends RecipeTile
             --this.burnTime;
         }
 
-        Objects.requireNonNull(this.world);
-        if (!world.isRemote) {
+        Objects.requireNonNull(this.level);
+        if (!level.isClientSide) {
             ItemStack fuel = itemHandler.getStackInSlot(getFuelSlot());
             if (isBurning() || !fuel.isEmpty()) {
                 ICommonRecipe recipe = (ICommonRecipe) getRecipe(itemHandler.getStackInSlot(0));
@@ -242,12 +242,12 @@ public abstract class MachineTileEntity<T extends IRecipe<?>> extends RecipeTile
             if (localIsBurning != this.isBurning()) {
                 if (!this.isBurning()) isBurning = false;
                 isDirty = true;
-                this.world.setBlockState(this.pos, this.world.getBlockState(this.pos).with(AbstractFurnaceBlock.LIT, this.isBurning()), 3);
+                this.level.setBlock(this.worldPosition, this.level.getBlockState(this.worldPosition).setValue(AbstractFurnaceBlock.LIT, this.isBurning()), 3);
             }
         }
 
         if (isDirty) {
-            markDirty();
+            setChanged();
         }
     }
 

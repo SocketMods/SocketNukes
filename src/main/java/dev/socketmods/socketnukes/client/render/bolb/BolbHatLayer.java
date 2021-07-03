@@ -26,16 +26,16 @@ public class BolbHatLayer extends LayerRenderer<BolbEntity, BolbModel> {
         if (bolb.isInvisible()) return;
         if (!Bolbs.isCurle(bolb)) return;
 
-        IVertexBuilder builder = buffers.getBuffer(RenderType.getEntitySolid(bolb.getEntityTexture()));
+        IVertexBuilder builder = buffers.getBuffer(RenderType.entitySolid(bolb.getEntityTexture()));
 
-        int packedOverlay = LivingRenderer.getPackedOverlay(bolb, 0.0F);
+        int packedOverlay = LivingRenderer.getOverlayCoords(bolb, 0.0F);
 
-        stack.push();
+        stack.pushPose();
         stack.translate(-0.1, 1D, -0.1D);
         stack.scale(0.7F, 0.7F, 0.7F);
 
-        this.getEntityModel().renderHat(stack, builder, packedLight, packedOverlay);
-        stack.pop();
+        this.getParentModel().renderHat(stack, builder, packedLight, packedOverlay);
+        stack.popPose();
     }
 
 }

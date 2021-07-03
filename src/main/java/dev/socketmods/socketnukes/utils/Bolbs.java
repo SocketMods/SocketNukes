@@ -46,7 +46,7 @@ public class Bolbs {
         if (!FMLLoader.isProduction()) return true;
 
         // Otherwise do they have the Bolb-iness Factor
-        return BOLBERS.contains(player.getCachedUniqueIdString());
+        return BOLBERS.contains(player.getStringUUID());
     }
 
 }

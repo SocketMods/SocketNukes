@@ -37,14 +37,14 @@ public class BolbEntity extends SlimeEntity {
     }
 
     @Override
-    public IPacket<?> createSpawnPacket() {
+    public IPacket<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override
-    public void setSlimeSize(int size, boolean resetHealth) {
+    public void setSize(int size, boolean resetHealth) {
         // Overridden to raise the visibility
-        super.setSlimeSize(size, resetHealth);
+        super.setSize(size, resetHealth);
     }
 
     public ResourceLocation getEntityTexture() {

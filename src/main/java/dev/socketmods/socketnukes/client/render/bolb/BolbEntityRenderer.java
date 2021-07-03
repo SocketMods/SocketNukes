@@ -20,18 +20,18 @@ public class BolbEntityRenderer extends MobRenderer<BolbEntity, BolbModel> {
 
     @Override
     public void render(BolbEntity bolb, float entityYaw, float partialTicks, MatrixStack stack, IRenderTypeBuffer buffers, int packedLight) {
-        this.shadowSize = 0.25F * (float)bolb.getSlimeSize();
+        this.shadowRadius = 0.25F * (float)bolb.getSize();
         super.render(bolb, entityYaw, partialTicks, stack, buffers, packedLight);
     }
 
     @Override
-    protected void preRenderCallback(BolbEntity bolb, MatrixStack stack, float partialTickTime) {
+    protected void scale(BolbEntity bolb, MatrixStack stack, float partialTickTime) {
         // The following code is heavily based on Vanilla's SlimeRenderer
         stack.scale(0.999F, 0.999F, 0.999F);
         stack.translate(0.0D, 0.001F, 0.0D);
 
-        float size   = bolb.getSlimeSize();
-        float squish = MathHelper.lerp(partialTickTime, bolb.prevSquishFactor, bolb.squishFactor) / (size * 0.5F + 1.0F);
+        float size   = bolb.getSize();
+        float squish = MathHelper.lerp(partialTickTime, bolb.oSquish, bolb.squish) / (size * 0.5F + 1.0F);
         float squeeze = 1.0F / (squish + 1.0F);
 
         stack.scale(squeeze * size, 1.0F / squeeze * size, squeeze * size);
@@ -41,7 +41,7 @@ public class BolbEntityRenderer extends MobRenderer<BolbEntity, BolbModel> {
      * Returns the location of an entity's texture.
      */
     @Override
-    public ResourceLocation getEntityTexture(BolbEntity bolb) {
+    public ResourceLocation getTextureLocation(BolbEntity bolb) {
         return getEntityTextureLocation(bolb);
     }
 

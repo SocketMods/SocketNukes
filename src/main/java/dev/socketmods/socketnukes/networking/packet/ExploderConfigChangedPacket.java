@@ -40,7 +40,7 @@ public class ExploderConfigChangedPacket {
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() ->
             Objects.requireNonNull(ctx.get().getSender())
-                .getHeldItemMainhand()
+                .getMainHandItem()
                 .getCapability(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY)
                 .ifPresent(cap -> cap.setConfig(config))
         );

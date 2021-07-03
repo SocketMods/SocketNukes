@@ -60,12 +60,12 @@ public class DummyExplosion extends Explosion {
     }
 
     @Override
-    public void doExplosionA() {
+    public void explode() {
         // DO NOT RUN FOR CUSTOM EXPLOSIONS
     }
 
     @Override
-    public void doExplosionB(boolean spawnParticles) {
+    public void finalizeExplosion(boolean spawnParticles) {
         // DO NOT RUN FOR CUSTOM EXPLOSIONS
     }
 }

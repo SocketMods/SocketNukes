@@ -78,7 +78,7 @@ public class ExtendedExplosionPacket {
         this.explosionSound = explosionSound;
         this.entityDisplacements = new HashMap<>();
         for(Map.Entry<Entity, Vector3d> entry : entityDisplacements.entrySet()) {
-            this.entityDisplacements.put(entry.getKey().getEntityId(), entry.getValue());
+            this.entityDisplacements.put(entry.getKey().getId(), entry.getValue());
         }
     }
 
@@ -105,22 +105,22 @@ public class ExtendedExplosionPacket {
     // That being: Delete the blocks, move the entities, show the particles, play the sound.
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            ClientWorld world = Minecraft.getInstance().world;
+            ClientWorld world = Minecraft.getInstance().level;
             if (world == null) return;
 
             BlockPos source = affectedBlocks.get(0);
             for(BlockPos pos : affectedBlocks)  {
-                world.setBlockState(pos, Blocks.AIR.getDefaultState());
+                world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
             }
 
             for(Map.Entry<Integer, Vector3d> entry : this.entityDisplacements.entrySet()) {
-                Entity entity = world.getEntityByID(entry.getKey());
+                Entity entity = world.getEntity(entry.getKey());
                 if(entity != null)
-                    entity.setMotion(entry.getValue());
+                    entity.setDeltaMovement(entry.getValue());
             }
 
             world.addParticle((IParticleData) explosionParticle, source.getX(), source.getY(), source.getZ(), 0, 0, 0);
-            world.playSound(source, explosionSound, SoundCategory.BLOCKS, 1f, 1f, false);
+            world.playLocalSound(source, explosionSound, SoundCategory.BLOCKS, 1f, 1f, false);
         });
         return true;
     }

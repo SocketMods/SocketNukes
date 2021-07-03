@@ -43,7 +43,7 @@ public class Network {
 
     // Send an arbitrary packet to the given player, from the server.
     public static void sendToClient(Object packet, ServerPlayerEntity player) {
-        CHANNEL.sendTo(packet, player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
+        CHANNEL.sendTo(packet, player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
     }
 
     // Send an arbitrary packet to the server, from the client.

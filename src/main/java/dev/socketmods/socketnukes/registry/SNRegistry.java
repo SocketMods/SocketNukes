@@ -75,17 +75,17 @@ public class SNRegistry {
 
     // EXPLOSIONS
     public static final RegistryObject<VanillaExplosionType> VANILLA_EXPLOSION = EXPLOSIONS.register("vanilla", () ->
-            new VanillaExplosionType(new ExplosionProperties(true, false, ParticleTypes.EXPLOSION_EMITTER, SoundEvents.ENTITY_GENERIC_EXPLODE))
+            new VanillaExplosionType(new ExplosionProperties(true, false, ParticleTypes.EXPLOSION_EMITTER, SoundEvents.GENERIC_EXPLODE))
     );
 
     public static final RegistryObject<ExtendedExplosionType> NULL_EXPLOSION = EXPLOSIONS.register("null", NullExplosionType::new);
 
     public static final RegistryObject<CubicExplosionType> CUBIC_EXPLOSION = EXPLOSIONS.register("cubic", () ->
-            new CubicExplosionType(new ExplosionProperties(true, false, ParticleTypes.CLOUD, SoundEvents.BLOCK_DISPENSER_FAIL))
+            new CubicExplosionType(new ExplosionProperties(true, false, ParticleTypes.CLOUD, SoundEvents.DISPENSER_FAIL))
     );
 
     public static final RegistryObject<BolbExplosionType> BOLB_EXPLOSION = EXPLOSIONS.register("bolb", () ->
-            new BolbExplosionType(new ExplosionProperties(true, false, ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, SoundEvents.BLOCK_ANVIL_LAND))
+            new BolbExplosionType(new ExplosionProperties(true, false, ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, SoundEvents.ANVIL_LAND))
     );
 
     // ENTITY TYPE
@@ -94,7 +94,7 @@ public class SNRegistry {
     );
 
     public static final RegistryObject<EntityType<BolbEntity>> BOLB_ENTITY_TYPE = ENTITYTYPES.register("bolb", () ->
-            new EntityType<>(BolbEntity::new, EntityClassification.MISC, true, true, false, false, ImmutableSet.of(), EntitySize.flexible(2.04F, 2.04F), 10, 1)
+            new EntityType<>(BolbEntity::new, EntityClassification.MISC, true, true, false, false, ImmutableSet.of(), EntitySize.scalable(2.04F, 2.04F), 10, 1)
     );
 
     // TILE ENTITY TYPE
@@ -102,7 +102,7 @@ public class SNRegistry {
     // We can't sanely provide non null data-fixers for a TileEntityType
     @SuppressWarnings("ConstantConditions")
     public static final RegistryObject<TileEntityType<ExplosiveTileEntity>> EXPLOSIVE_TE = TETYPES.register("explosive", () ->
-            TileEntityType.Builder.create(ExplosiveTileEntity::new, GENERIC_EXPLOSIVE.get()).build(null)
+            TileEntityType.Builder.of(ExplosiveTileEntity::new, GENERIC_EXPLOSIVE.get()).build(null)
     );
 
     public static void initialize() {

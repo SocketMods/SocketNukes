@@ -40,21 +40,21 @@ public class BolbExplosionType extends ExtendedExplosionType {
 
             // Spawn the entities, set the velocity, add to the world
             for (int i = 0; i < BOLB_FACTOR; i++) {
-                double x = worldIn.rand.nextDouble() * 10;
-                double y = worldIn.rand.nextDouble() * 10;
-                double z = worldIn.rand.nextDouble() * 10;
+                double x = worldIn.random.nextDouble() * 10;
+                double y = worldIn.random.nextDouble() * 10;
+                double z = worldIn.random.nextDouble() * 10;
 
                 BolbEntity e = new BolbEntity(SNRegistry.BOLB_ENTITY_TYPE.get(), worldIn);
-                e.setVelocity(x, y, z);
-                e.setPosition(source.getX(), source.getY(), source.getZ());
-                e.setSlimeSize(worldIn.rand.nextInt(BOLB_MAX_SIZE) + 1, true);
-                e.velocityChanged = true;
-                worldIn.addEntity(e);
+                e.lerpMotion(x, y, z);
+                e.setPos(source.getX(), source.getY(), source.getZ());
+                e.setSize(worldIn.random.nextInt(BOLB_MAX_SIZE) + 1, true);
+                e.hurtMarked = true;
+                worldIn.addFreshEntity(e);
             }
 
             // Spawn particle, play sound
-            if (worldIn.isRemote) {
-                worldIn.playSound(source.getX(), source.getY(), source.getZ(), properties.getExplosionSound(), SoundCategory.BLOCKS, 4.0F, (1.0F + (worldIn.rand.nextFloat() - worldIn.rand.nextFloat()) * 0.2F) * 0.7F, false);
+            if (worldIn.isClientSide) {
+                worldIn.playLocalSound(source.getX(), source.getY(), source.getZ(), properties.getExplosionSound(), SoundCategory.BLOCKS, 4.0F, (1.0F + (worldIn.random.nextFloat() - worldIn.random.nextFloat()) * 0.2F) * 0.7F, false);
             }
 
             if (properties.doesMakeParticles()) {
