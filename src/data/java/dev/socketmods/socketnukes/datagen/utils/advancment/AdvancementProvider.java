@@ -26,7 +26,7 @@ public abstract class AdvancementProvider implements IDataProvider {
   }
 
   @Override
-  public void act(DirectoryCache cache) {
+  public void run(DirectoryCache cache) {
     Path path = this.generator.getOutputFolder();
     Set<ResourceLocation> set = Sets.newHashSet();
     registerAdvancement((advancement) -> {
@@ -36,7 +36,7 @@ public abstract class AdvancementProvider implements IDataProvider {
         Path path1 = getPath(path, advancement);
 
         try {
-          IDataProvider.save(GSON, cache, advancement.copy().serialize(), path1);
+          IDataProvider.save(GSON, cache, advancement.deconstruct().serializeToJson(), path1);
         } catch (IOException ioexception) {
           LOGGER.error("Couldn't save advancement {}", path1, ioexception);
         }

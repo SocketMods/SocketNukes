@@ -14,7 +14,7 @@ public class FluidTagsProviders extends FluidTagsProvider {
     }
 
     @Override
-    protected void registerTags() {
+    protected void addTags() {
 
     }
 }

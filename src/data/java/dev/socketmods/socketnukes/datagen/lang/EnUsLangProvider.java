@@ -35,7 +35,7 @@ public class EnUsLangProvider extends LanguageProvider {
     }
 
     private void add(ItemGroup group, String name) {
-        add("itemGroup." + Objects.requireNonNull(group.getPath()), name);
+        add("itemGroup." + Objects.requireNonNull(group.getRecipeFolderName()), name);
     }
 
     private void add(ExtendedExplosionType type, String name) {

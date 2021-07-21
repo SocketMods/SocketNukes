@@ -46,10 +46,11 @@ public class DataGen {
 
         if(event.includeClient()){
             LOGGER.info(DATAGEN, "Adding data providers for client assets");
-            generator.addProvider(new BlockModelProviders(generator, event.getExistingFileHelper()));
+            BlockModelProviders models = new BlockModelProviders(generator, event.getExistingFileHelper());
+            generator.addProvider(models);
             generator.addProvider(new ItemModelProviders(generator, event.getExistingFileHelper()));
             generator.addProvider(new EnUsLangProvider(generator));
-            generator.addProvider(new BlockStateProvider(generator, event.getExistingFileHelper()));
+            generator.addProvider(new BlockStateProvider(generator, event.getExistingFileHelper(), models));
         }
     }
 
