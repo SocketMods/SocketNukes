@@ -6,6 +6,6 @@ import net.minecraft.block.material.Material;
 public class TargettingStation extends Block {
 
     public TargettingStation() {
-        super(Properties.of(Material.STONE));
+        super(Properties.of(Material.STONE).noOcclusion());
     }
 }

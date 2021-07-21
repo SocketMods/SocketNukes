@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 public class Mainframe extends Block {
 
     public Mainframe() {
-        super(Properties.of(Material.STONE));
+        super(Properties.of(Material.STONE).noOcclusion().isRedstoneConductor((a, b, c) -> false));
     }
 
     @Override
