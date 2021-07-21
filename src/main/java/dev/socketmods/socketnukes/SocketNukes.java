@@ -8,6 +8,7 @@ import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
+import software.bernie.geckolib3.GeckoLib;
 
 @Mod(SocketNukes.MODID)
 public class SocketNukes {
@@ -19,6 +20,8 @@ public class SocketNukes {
 
         SNRegistry.initialize();
         Network.setup();
+
+        GeckoLib.initialize();
     }
 
 }

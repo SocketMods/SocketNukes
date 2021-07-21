@@ -92,8 +92,15 @@ configurations {
     dataImplementation.extendsFrom implementation
 }
 
+
+repositories {
+    maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
+}
+
 dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
+
+    implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.16.5:3.0.41')
 
     dataImplementation sourceSets.main.output
 }
