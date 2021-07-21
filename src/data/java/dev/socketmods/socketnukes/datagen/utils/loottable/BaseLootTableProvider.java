@@ -45,19 +45,19 @@ public abstract class BaseLootTableProvider extends LootTableProvider {
   protected abstract void addTables();
 
   public static LootTable.Builder createStandardBlockTable(String name, Block block) {
-    LootPool.Builder builder = LootPool.builder()
+    LootPool.Builder builder = LootPool.lootPool()
         .name(name)
-        .rolls(ConstantRange.of(1))
-        .addEntry(ItemLootEntry.builder(block)
-            .acceptFunction(CopyName.builder(CopyName.Source.BLOCK_ENTITY))
-            .acceptFunction(SetContents.builderIn()
-                .addLootEntry(DynamicLootEntry.func_216162_a(new ResourceLocation("minecraft", "contents"))))
+        .setRolls(ConstantRange.exactly(1))
+        .add(ItemLootEntry.lootTableItem(block)
+            .apply(CopyName.copyName(CopyName.Source.BLOCK_ENTITY))
+            .apply(SetContents.setContents()
+                .withEntry(DynamicLootEntry.dynamicEntry(new ResourceLocation("minecraft", "contents"))))
         );
-    return LootTable.builder().addLootPool(builder).setParameterSet(LootParameterSets.BLOCK);
+    return LootTable.lootTable().withPool(builder).setParamSet(LootParameterSets.BLOCK);
   }
 
   @Override
-  public void act(DirectoryCache cache) {
+  public void run(DirectoryCache cache) {
     addTables();
 
     lootTables.forEach(blockBuilderMap -> {
@@ -74,7 +74,7 @@ public abstract class BaseLootTableProvider extends LootTableProvider {
     tables.forEach((key, lootTable) -> {
       Path path = outputFolder.resolve("data/" + key.getNamespace() + "/loot_tables/" + key.getPath() + ".json");
       try {
-        IDataProvider.save(GSON, cache, LootTableManager.toJson(lootTable), path);
+        IDataProvider.save(GSON, cache, LootTableManager.serialize(lootTable), path);
       } catch (IOException e) {
         LOGGER.error("Couldn't write loot table {}", path, e);
       }

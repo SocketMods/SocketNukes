@@ -16,17 +16,17 @@ public class RecipeProviders extends RecipeProvider {
     }
 
     @Override
-    protected void registerRecipes(Consumer<IFinishedRecipe> consumer) {
+    protected void buildShapelessRecipes(Consumer<IFinishedRecipe> consumer) {
         new BombRecipe(consumer);
 
     }
 
     // expose the protected internal methods so we can use them in external classes
     public static ICriterionInstance hasItem(Item item) {
-        return RecipeProvider.hasItem(item);
+        return RecipeProvider.has(item);
     }
 
     public static ICriterionInstance hasItemTag(ITag<Item> tagItem) {
-        return RecipeProvider.hasItem(tagItem);
+        return RecipeProvider.has(tagItem);
     }
 }
