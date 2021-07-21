@@ -4,6 +4,7 @@ import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.client.render.ExplosiveEntityRenderer;
 import dev.socketmods.socketnukes.client.render.bolb.BolbEntityRenderer;
 import dev.socketmods.socketnukes.client.render.layer.PlayerHatLayer;
+import dev.socketmods.socketnukes.client.render.machine.MainframeRenderer;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -12,6 +13,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -26,13 +28,16 @@ public class ClientSNEvents {
 
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
-        // Register the Entity Renderers
-        RenderingRegistry.registerEntityRenderingHandler(SNRegistry.EXPLOSIVE_ENTITY_TYPE.get(), ExplosiveEntityRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(SNRegistry.BOLB_ENTITY_TYPE.get(), BolbEntityRenderer::new);
-
-        // Add the Player Hat Layer for the two skin types.
-        // We need to do this for both default and slim
         event.enqueueWork(() -> {
+            // Register the Entity Renderers
+            RenderingRegistry.registerEntityRenderingHandler(SNRegistry.EXPLOSIVE_ENTITY_TYPE.get(), ExplosiveEntityRenderer::new);
+            RenderingRegistry.registerEntityRenderingHandler(SNRegistry.BOLB_ENTITY_TYPE.get(), BolbEntityRenderer::new);
+
+            // Register Tile Entity Renderers.
+            ClientRegistry.bindTileEntityRenderer(SNRegistry.MAINFRAME_TE.get(), MainframeRenderer::new);
+
+            // Add the Player Hat Layer for the two skin types.
+            // We need to do this for both default and slim
             EntityRendererManager manager = Minecraft.getInstance().getEntityRenderDispatcher();
 
             addPlayerHatLayer(manager, "default");

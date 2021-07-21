@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 import com.google.common.collect.ImmutableSet;
 import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.block.explosive.TNTExplosive;
+import dev.socketmods.socketnukes.block.machine.Mainframe;
 import dev.socketmods.socketnukes.block.machine.TargettingStation;
 import dev.socketmods.socketnukes.entity.BolbEntity;
 import dev.socketmods.socketnukes.entity.ExplosiveEntity;
@@ -18,6 +19,7 @@ import dev.socketmods.socketnukes.item.SocketItems;
 import dev.socketmods.socketnukes.item.block.ExplosiveBlockItem;
 import dev.socketmods.socketnukes.item.util.ExploderItem;
 import dev.socketmods.socketnukes.tileentity.ExplosiveTileEntity;
+import dev.socketmods.socketnukes.tileentity.machine.MainframeTE;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySize;
@@ -70,6 +72,7 @@ public class SNRegistry {
     // BLOCKS
     public static final RegistryObject<Block> GENERIC_EXPLOSIVE = BLOCKS.register("explosive", TNTExplosive::new);
     public static final RegistryObject<Block> TARGETTING_STATION = BLOCKS.register("targetting_station", TargettingStation::new);
+    public static final RegistryObject<Block> MAINFRAME = BLOCKS.register("mainframe", Mainframe::new);
 
     // ITEMS
     public static final RegistryObject<Item> EXPLODER_ITEM = ITEMS.register("exploder_item", () -> new ExploderItem(SocketItems.EXPLODER_PROPERTIES));
@@ -105,6 +108,10 @@ public class SNRegistry {
     @SuppressWarnings("ConstantConditions")
     public static final RegistryObject<TileEntityType<ExplosiveTileEntity>> EXPLOSIVE_TE = TETYPES.register("explosive", () ->
             TileEntityType.Builder.of(ExplosiveTileEntity::new, GENERIC_EXPLOSIVE.get()).build(null)
+    );
+
+    public static final RegistryObject<TileEntityType<MainframeTE>> MAINFRAME_TE = TETYPES.register("mainframe", () ->
+            TileEntityType.Builder.of(MainframeTE::new, MAINFRAME.get()).build(null)
     );
 
     public static void initialize() {
