@@ -1,11 +1,11 @@
 package dev.socketmods.socketnukes.datagen.recipes;
 
-import net.minecraft.advancements.ICriterionInstance;
+import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.IFinishedRecipe;
-import net.minecraft.data.RecipeProvider;
-import net.minecraft.item.Item;
-import net.minecraft.tags.ITag;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.world.item.Item;
+import net.minecraft.tags.Tag;
 
 import java.util.function.Consumer;
 
@@ -16,17 +16,17 @@ public class RecipeProviders extends RecipeProvider {
     }
 
     @Override
-    protected void buildShapelessRecipes(Consumer<IFinishedRecipe> consumer) {
+    protected void buildShapelessRecipes(Consumer<FinishedRecipe> consumer) {
         new BombRecipe(consumer);
 
     }
 
     // expose the protected internal methods so we can use them in external classes
-    public static ICriterionInstance hasItem(Item item) {
+    public static CriterionTriggerInstance hasItem(Item item) {
         return RecipeProvider.has(item);
     }
 
-    public static ICriterionInstance hasItemTag(ITag<Item> tagItem) {
+    public static CriterionTriggerInstance hasItemTag(Tag<Item> tagItem) {
         return RecipeProvider.has(tagItem);
     }
 }

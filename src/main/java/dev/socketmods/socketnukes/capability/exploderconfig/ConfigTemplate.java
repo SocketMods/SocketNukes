@@ -1,7 +1,7 @@
 package dev.socketmods.socketnukes.capability.exploderconfig;
 
 import dev.socketmods.socketnukes.SocketNukes;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * A template for the getter/setter for the Exploder Configuration.

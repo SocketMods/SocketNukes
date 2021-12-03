@@ -6,26 +6,26 @@ import javax.annotation.Nullable;
 
 import dev.socketmods.socketnukes.recipes.CommonRecipe;
 import dev.socketmods.socketnukes.recipes.ICommonRecipe;
-import net.minecraft.block.AbstractFurnaceBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.IIntArray;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.AbstractFurnaceBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.util.Mth;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
-public abstract class MachineTileEntity<T extends IRecipe<?>> extends RecipeTileEntity<T> implements ITickableTileEntity, INamedContainerProvider {
+public abstract class MachineTileEntity<T extends Recipe<?>> extends RecipeTileEntity<T> implements TickableBlockEntity, MenuProvider {
 
     protected int burnTime;
     protected int cookingTime;
@@ -34,7 +34,7 @@ public abstract class MachineTileEntity<T extends IRecipe<?>> extends RecipeTile
     protected boolean isBurning;
     protected ICommonRecipe recipe;
 
-    protected IIntArray teData = new IIntArray() {
+    protected ContainerData teData = new ContainerData() {
         @Override
         public int get(int index) {
             switch (index) {
@@ -63,12 +63,12 @@ public abstract class MachineTileEntity<T extends IRecipe<?>> extends RecipeTile
     };
 
 
-    public MachineTileEntity(TileEntityType<?> tileEntityTypeIn, IRecipeType<?> recipeType) {
+    public MachineTileEntity(BlockEntityType<?> tileEntityTypeIn, RecipeType<?> recipeType) {
         super(tileEntityTypeIn, recipeType);
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT nbt) {
+    public void load(BlockState state, CompoundTag nbt) {
         burnTime = nbt.getInt("burnTime");
         cookingTime = nbt.getInt("cookingTime");
         cookingTimeTotal = nbt.getInt("cookingTimeTotal");
@@ -79,7 +79,7 @@ public abstract class MachineTileEntity<T extends IRecipe<?>> extends RecipeTile
 
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         compound.putInt("burnTime", burnTime);
         compound.putInt("cookingTime", cookingTime);
         compound.putInt("cookingTimeTotal", cookingTimeTotal);
@@ -119,7 +119,7 @@ public abstract class MachineTileEntity<T extends IRecipe<?>> extends RecipeTile
         if (stack == ItemStack.EMPTY) return null;
         Objects.requireNonNull(this.level);
 
-        Set<IRecipe<?>> recipes = findRecipeByType(type, this.level);
+        Set<Recipe<?>> recipes = findRecipeByType(type, this.level);
         RecipeWrapper wrapper = new RecipeWrapper(itemHandler);
         return matching(recipes, wrapper, level);
     }
@@ -130,14 +130,14 @@ public abstract class MachineTileEntity<T extends IRecipe<?>> extends RecipeTile
         if (result == ItemStack.EMPTY) return null;
         Objects.requireNonNull(this.level);
 
-        Set<IRecipe<?>> recipes = findRecipeByType(type, this.level);
+        Set<Recipe<?>> recipes = findRecipeByType(type, this.level);
 
         return matchingOutput(recipes, result, level);
     }
 
-    protected abstract T matchingOutput(Set<IRecipe<?>> recipes, ItemStack result, World world);
+    protected abstract T matchingOutput(Set<Recipe<?>> recipes, ItemStack result, Level world);
 
-    protected abstract T matching(Set<IRecipe<?>> recipes, RecipeWrapper wrapper, World world);
+    protected abstract T matching(Set<Recipe<?>> recipes, RecipeWrapper wrapper, Level world);
 
     protected boolean handleBurning(ItemStack fuel) {
         boolean isDirty = false;
@@ -157,7 +157,7 @@ public abstract class MachineTileEntity<T extends IRecipe<?>> extends RecipeTile
         return isDirty;
     }
 
-    protected void smelt(@Nullable IRecipe<?> recipe) {
+    protected void smelt(@Nullable Recipe<?> recipe) {
         if (recipe != null && this.canSmelt(recipe)) {
             ItemStack input = this.itemHandler.getStackInSlot(0);
             ItemStack output = recipe.getResultItem();
@@ -179,7 +179,7 @@ public abstract class MachineTileEntity<T extends IRecipe<?>> extends RecipeTile
         }
     }
 
-    protected boolean canSmelt(@Nullable IRecipe<?> recipeIn) {
+    protected boolean canSmelt(@Nullable Recipe<?> recipeIn) {
         if (!this.itemHandler.getStackInSlot(0).isEmpty() && recipeIn != null) {
             ItemStack output = recipeIn.getResultItem();
             if (output.isEmpty()) {
@@ -236,7 +236,7 @@ public abstract class MachineTileEntity<T extends IRecipe<?>> extends RecipeTile
                     cookingTimeTotal = recipe.getTimer();
                 }
             } else if (!this.isBurning() && this.cookingTime > 0) {
-                this.cookingTime = MathHelper.clamp(this.cookingTime - 2, 0, this.cookingTimeTotal);
+                this.cookingTime = Mth.clamp(this.cookingTime - 2, 0, this.cookingTimeTotal);
             }
 
             if (localIsBurning != this.isBurning()) {
@@ -252,8 +252,8 @@ public abstract class MachineTileEntity<T extends IRecipe<?>> extends RecipeTile
     }
 
     @Override
-    public ITextComponent getDisplayName() {
-        return new TranslationTextComponent(getScreenName());
+    public Component getDisplayName() {
+        return new TranslatableComponent(getScreenName());
     }
 
     protected abstract String getScreenName();

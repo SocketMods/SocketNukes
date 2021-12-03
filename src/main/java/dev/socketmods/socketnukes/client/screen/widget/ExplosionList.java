@@ -3,27 +3,27 @@ package dev.socketmods.socketnukes.client.screen.widget;
 import java.util.function.Supplier;
 import javax.annotation.Nullable;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import dev.socketmods.socketnukes.registry.SNRegistry;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.list.ExtendedList;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.ObjectSelectionList;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import net.minecraft.resources.ResourceLocation;
 
-public class ExplosionList extends ExtendedList<ExplosionList.ExplosionListEntry> {
+public class ExplosionList extends ObjectSelectionList<ExplosionList.ExplosionListEntry> {
 
-    private final FontRenderer font;
+    private final Font font;
 
     public ExplosionList(Screen parent, int width, int height, int top, int bottom, @Nullable ResourceLocation entry) {
         this(parent, parent.getMinecraft().font, width, height, top, bottom, entry);
     }
 
-    public ExplosionList(Screen parent, FontRenderer font, int width, int height, int top, int bottom, @Nullable ResourceLocation entry) {
+    public ExplosionList(Screen parent, Font font, int width, int height, int top, int bottom, @Nullable ResourceLocation entry) {
         super(parent.getMinecraft(), width, height, top, bottom, font.lineHeight + 8);
         this.font = font;
 
@@ -57,7 +57,7 @@ public class ExplosionList extends ExtendedList<ExplosionList.ExplosionListEntry
         return this.width;
     }
 
-    public class ExplosionListEntry extends ExtendedList.AbstractListEntry<ExplosionListEntry> {
+    public class ExplosionListEntry extends ObjectSelectionList.Entry<ExplosionListEntry> {
         private final Supplier<ExtendedExplosionType> type;
         private final ExplosionList parent;
 
@@ -67,11 +67,11 @@ public class ExplosionList extends ExtendedList<ExplosionList.ExplosionListEntry
         }
 
         @Override
-        public void render(MatrixStack stack, int idx, int top, int left, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean isMouseOver, float partialTicks) {
+        public void render(PoseStack stack, int idx, int top, int left, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean isMouseOver, float partialTicks) {
             boolean isSelected = getSelected() == this;
 
             if (!isSelected) {
-                Tessellator tessellator = Tessellator.getInstance();
+                Tesselator tessellator = Tesselator.getInstance();
                 BufferBuilder bufferbuilder = tessellator.getBuilder();
 
                 // j,   k,   j2,   k1,         j1
@@ -87,7 +87,7 @@ public class ExplosionList extends ExtendedList<ExplosionList.ExplosionListEntry
 
                 float f = parent.isFocused() ? 0.25F : 0.125F;
                 RenderSystem.color4f(f, f, f, 1.0F);
-                bufferbuilder.begin(7, DefaultVertexFormats.POSITION);
+                bufferbuilder.begin(7, DefaultVertexFormat.POSITION);
                 bufferbuilder.vertex(l1, (i1 + j1 + 2), 0.0D).endVertex();
                 bufferbuilder.vertex(i2, (i1 + j1 + 2), 0.0D).endVertex();
                 bufferbuilder.vertex(i2, (i1 - 2), 0.0D).endVertex();
@@ -95,7 +95,7 @@ public class ExplosionList extends ExtendedList<ExplosionList.ExplosionListEntry
                 tessellator.end();
 
                 RenderSystem.color4f(0.0F, 0.0F, 0.0F, 1.0F);
-                bufferbuilder.begin(7, DefaultVertexFormats.POSITION);
+                bufferbuilder.begin(7, DefaultVertexFormat.POSITION);
                 bufferbuilder.vertex((l1 + 1), (i1 + j1 + 1), 0.0D).endVertex();
                 bufferbuilder.vertex((i2 - 1), (i1 + j1 + 1), 0.0D).endVertex();
                 bufferbuilder.vertex((i2 - 1), (i1 - 1), 0.0D).endVertex();

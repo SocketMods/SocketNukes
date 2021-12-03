@@ -2,10 +2,10 @@ package dev.socketmods.socketnukes.explosion;
 
 import dev.socketmods.socketnukes.explosion.meta.ExplosionMetaPackage;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -23,13 +23,13 @@ public class DummyExplosion extends Explosion {
 
     private ExtendedExplosionType explosionType;
 
-    protected World world;
+    protected Level world;
     protected Entity source;
     protected BlockPos position;
 
     protected float radius;
 
-    public DummyExplosion(World worldIn, @Nullable Entity entityIn, double x, double y, double z, float size, List<BlockPos> affectedPositions) {
+    public DummyExplosion(Level worldIn, @Nullable Entity entityIn, double x, double y, double z, float size, List<BlockPos> affectedPositions) {
         super(worldIn, entityIn, x, y, z, size, affectedPositions);
         this.world = worldIn;
         this.source = entityIn;
@@ -37,7 +37,7 @@ public class DummyExplosion extends Explosion {
         this.radius = size;
     }
 
-    public DummyExplosion(World worldIn, @Nullable Entity entityIn, double x, double y, double z, ExtendedExplosionType type) {
+    public DummyExplosion(Level worldIn, @Nullable Entity entityIn, double x, double y, double z, ExtendedExplosionType type) {
         super(worldIn, entityIn, x, y, z, type.getRadius(), new ArrayList<>());
         this.world = worldIn;
         this.source = entityIn;

@@ -5,17 +5,17 @@ import dev.socketmods.socketnukes.datagen.builder.ShapedRecipeWithNBTBuilder;
 import dev.socketmods.socketnukes.datagen.utils.recipes.SocketRecipeProvider;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import dev.socketmods.socketnukes.registry.SNRegistry;
-import net.minecraft.data.IFinishedRecipe;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.IItemProvider;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.ItemLike;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class BombRecipe extends SocketRecipeProvider {
 
-    public BombRecipe(Consumer<IFinishedRecipe> consumer) {
+    public BombRecipe(Consumer<FinishedRecipe> consumer) {
         super(consumer);
     }
 
@@ -32,11 +32,11 @@ public class BombRecipe extends SocketRecipeProvider {
      * @param type the Explosion Type that should be set
      * @return the NBT Value that is set for the recipe
      */
-    public static CompoundNBT forExplosion(ExtendedExplosionType type) {
-        CompoundNBT data = new CompoundNBT();
+    public static CompoundTag forExplosion(ExtendedExplosionType type) {
+        CompoundTag data = new CompoundTag();
         data.putString("explosion", SNRegistry.getName(type).toString());
 
-        CompoundNBT nbt = new CompoundNBT();
+        CompoundTag nbt = new CompoundTag();
         nbt.put(SocketNukes.MODID, data);
 
         return nbt;
@@ -49,8 +49,8 @@ public class BombRecipe extends SocketRecipeProvider {
      * @param midOuter The items adjacent to the center
      * @param corners the 4 corners if this is {@link Items#AIR} the corners are empty
      */
-    private void createRecipe(Supplier<? extends ExtendedExplosionType> type, IItemProvider mid,
-                              IItemProvider midOuter, IItemProvider corners){
+    private void createRecipe(Supplier<? extends ExtendedExplosionType> type, ItemLike mid,
+                              ItemLike midOuter, ItemLike corners){
         ShapedRecipeWithNBTBuilder.shapedRecipe(SNRegistry.GENERIC_EXPLOSIVE_ITEM.get())
                 .patternLine("RSR")
                 .patternLine("STS")

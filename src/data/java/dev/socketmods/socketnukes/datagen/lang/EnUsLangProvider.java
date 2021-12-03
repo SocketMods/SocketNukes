@@ -7,7 +7,7 @@ import dev.socketmods.socketnukes.item.SocketItems;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.common.data.LanguageProvider;
 
 public class EnUsLangProvider extends LanguageProvider {
@@ -34,7 +34,7 @@ public class EnUsLangProvider extends LanguageProvider {
         add("socketnukes.title.exploderconfig", "Exploderiser Configuration");
     }
 
-    private void add(ItemGroup group, String name) {
+    private void add(CreativeModeTab group, String name) {
         add("itemGroup." + Objects.requireNonNull(group.getRecipeFolderName()), name);
     }
 

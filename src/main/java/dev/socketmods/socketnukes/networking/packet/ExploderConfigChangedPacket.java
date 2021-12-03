@@ -4,8 +4,8 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 import dev.socketmods.socketnukes.capability.Capabilities;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 /**
@@ -23,7 +23,7 @@ public class ExploderConfigChangedPacket {
     private final ResourceLocation config;
 
     // Deserializer - write this class into a buffer
-    public ExploderConfigChangedPacket(PacketBuffer buf) {
+    public ExploderConfigChangedPacket(FriendlyByteBuf buf) {
         config = buf.readResourceLocation();
     }
 
@@ -32,7 +32,7 @@ public class ExploderConfigChangedPacket {
     }
 
     // Serializer - read this class out of a buffer
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeResourceLocation(config);
     }
 

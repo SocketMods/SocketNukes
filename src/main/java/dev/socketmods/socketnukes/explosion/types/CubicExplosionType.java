@@ -8,28 +8,28 @@ import dev.socketmods.socketnukes.networking.Network;
 import dev.socketmods.socketnukes.networking.packet.ExtendedExplosionPacket;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.enchantment.ProtectionEnchantment;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.TNTEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.enchantment.ProtectionEnchantment;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.PrimedTnt;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.event.ForgeEventFactory;
 
 import java.util.Arrays;
@@ -56,7 +56,7 @@ public class CubicExplosionType extends ExtendedExplosionType {
     }
 
     @Override
-    public ExplosionMetaPackage explode(World worldIn, BlockPos source, int stage, Entity placer, ExplosionMetaPackage meta) {
+    public ExplosionMetaPackage explode(Level worldIn, BlockPos source, int stage, Entity placer, ExplosionMetaPackage meta) {
         switch(stage) {
             case STAGE_PREPARE:
                 for (int xPos = source.getX() - radius; xPos < source.getX() + radius; xPos++) {
@@ -73,27 +73,27 @@ public class CubicExplosionType extends ExtendedExplosionType {
             case STAGE_BREAK:
                 // Entity damage range is quite a bit bigger than the block breaking range.
                 float radiusx2 = radius * 2.0F;
-                int eastBound = MathHelper.floor(source.getX() - (double) radiusx2 - 1.0D);
-                int westBound = MathHelper.floor(source.getX() + (double) radiusx2 + 1.0D);
-                int lowerBound = MathHelper.floor(source.getY() - (double) radiusx2 - 1.0D);
-                int upperBound = MathHelper.floor(source.getY() + (double) radiusx2 + 1.0D);
-                int southBound = MathHelper.floor(source.getZ() - (double) radiusx2 - 1.0D);
-                int northBound = MathHelper.floor(source.getZ() + (double) radiusx2 + 1.0D);
+                int eastBound = Mth.floor(source.getX() - (double) radiusx2 - 1.0D);
+                int westBound = Mth.floor(source.getX() + (double) radiusx2 + 1.0D);
+                int lowerBound = Mth.floor(source.getY() - (double) radiusx2 - 1.0D);
+                int upperBound = Mth.floor(source.getY() + (double) radiusx2 + 1.0D);
+                int southBound = Mth.floor(source.getZ() - (double) radiusx2 - 1.0D);
+                int northBound = Mth.floor(source.getZ() + (double) radiusx2 + 1.0D);
 
-                List<Entity> list = worldIn.getEntities(placer, new AxisAlignedBB(eastBound, lowerBound, southBound, westBound, upperBound, northBound));
+                List<Entity> list = worldIn.getEntities(placer, new AABB(eastBound, lowerBound, southBound, westBound, upperBound, northBound));
 
                 DummyExplosion vanillaExplosion = new DummyExplosion(worldIn, placer, source.getX(), source.getY(), source.getZ(), radiusx2, meta.affectedBlocks);
                 ForgeEventFactory.onExplosionDetonate(worldIn, vanillaExplosion, list, radiusx2);
-                Vector3d explosionPos = new Vector3d(source.getX(), source.getY(), source.getZ());
+                Vec3 explosionPos = new Vec3(source.getX(), source.getY(), source.getZ());
 
                 for (Entity currentEntity : list) {
                     if (!currentEntity.ignoreExplosion()) {
-                        double currentEntityDistanceToExplosion = MathHelper.sqrt(currentEntity.distanceToSqr(explosionPos)) / radiusx2;
+                        double currentEntityDistanceToExplosion = Mth.sqrt(currentEntity.distanceToSqr(explosionPos)) / radiusx2;
                         if (currentEntityDistanceToExplosion <= 1.0D) {
                             double currentEntityDistanceX = currentEntity.getX() - source.getX();
-                            double currentEntityDistanceY = (currentEntity instanceof TNTEntity ? currentEntity.getY() : currentEntity.getEyeY()) - source.getY();
+                            double currentEntityDistanceY = (currentEntity instanceof PrimedTnt ? currentEntity.getY() : currentEntity.getEyeY()) - source.getY();
                             double currentEntityDistanceZ = currentEntity.getZ() - source.getZ();
-                            double pythagoreanDistance = MathHelper.sqrt(currentEntityDistanceX * currentEntityDistanceX + currentEntityDistanceY * currentEntityDistanceY + currentEntityDistanceZ * currentEntityDistanceZ);
+                            double pythagoreanDistance = Mth.sqrt(currentEntityDistanceX * currentEntityDistanceX + currentEntityDistanceY * currentEntityDistanceY + currentEntityDistanceZ * currentEntityDistanceZ);
                             if (pythagoreanDistance != 0.0D) {
                                 currentEntityDistanceX = currentEntityDistanceX / pythagoreanDistance;
                                 currentEntityDistanceY = currentEntityDistanceY / pythagoreanDistance;
@@ -106,10 +106,10 @@ public class CubicExplosionType extends ExtendedExplosionType {
                                 }
 
                                 currentEntity.setDeltaMovement(currentEntity.getDeltaMovement().add(currentEntityDistanceX * damageFalloff, currentEntityDistanceY * damageFalloff, currentEntityDistanceZ * damageFalloff));
-                                if (currentEntity instanceof PlayerEntity) {
-                                    PlayerEntity playerentity = (PlayerEntity) currentEntity;
+                                if (currentEntity instanceof Player) {
+                                    Player playerentity = (Player) currentEntity;
                                     if (!playerentity.isSpectator() && (!playerentity.isCreative() || !playerentity.abilities.flying)) {
-                                        meta.entityDisplacements.put(playerentity, new Vector3d(currentEntityDistanceX * damageFalloff, currentEntityDistanceY * damageFalloff, currentEntityDistanceZ * damageFalloff));
+                                        meta.entityDisplacements.put(playerentity, new Vec3(currentEntityDistanceX * damageFalloff, currentEntityDistanceY * damageFalloff, currentEntityDistanceZ * damageFalloff));
                                     }
                                 }
                             }
@@ -118,7 +118,7 @@ public class CubicExplosionType extends ExtendedExplosionType {
                 }
 
                 if (worldIn.isClientSide) {
-                    worldIn.playLocalSound(source.getX(), source.getY(), source.getZ(), properties.getExplosionSound(), SoundCategory.BLOCKS, 4.0F, (1.0F + (worldIn.random.nextFloat() - worldIn.random.nextFloat()) * 0.2F) * 0.7F, false);
+                    worldIn.playLocalSound(source.getX(), source.getY(), source.getZ(), properties.getExplosionSound(), SoundSource.BLOCKS, 4.0F, (1.0F + (worldIn.random.nextFloat() - worldIn.random.nextFloat()) * 0.2F) * 0.7F, false);
                 }
 
                 if (properties.doesMakeParticles()) {
@@ -137,11 +137,11 @@ public class CubicExplosionType extends ExtendedExplosionType {
 
                             Explosion vanillaExplosion2 = new DummyExplosion(worldIn, placer, source.getX(), source.getY(), source.getZ(), radius, meta.affectedBlocks);
 
-                            if (blockstate.canDropFromExplosion(worldIn, blockpos, vanillaExplosion2) && worldIn instanceof ServerWorld) {
-                                TileEntity tileentity = blockstate.hasTileEntity() ? worldIn.getBlockEntity(blockpos) : null;
-                                LootContext.Builder lootcontext$builder = (new LootContext.Builder((ServerWorld) worldIn)).withRandom(worldIn.random).withParameter(LootParameters.ORIGIN, Vector3d.atCenterOf(blockpos)).withParameter(LootParameters.TOOL, ItemStack.EMPTY).withOptionalParameter(LootParameters.BLOCK_ENTITY, tileentity).withOptionalParameter(LootParameters.THIS_ENTITY, placer);
+                            if (blockstate.canDropFromExplosion(worldIn, blockpos, vanillaExplosion2) && worldIn instanceof ServerLevel) {
+                                BlockEntity tileentity = blockstate.hasTileEntity() ? worldIn.getBlockEntity(blockpos) : null;
+                                LootContext.Builder lootcontext$builder = (new LootContext.Builder((ServerLevel) worldIn)).withRandom(worldIn.random).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(blockpos)).withParameter(LootContextParams.TOOL, ItemStack.EMPTY).withOptionalParameter(LootContextParams.BLOCK_ENTITY, tileentity).withOptionalParameter(LootContextParams.THIS_ENTITY, placer);
                                 if (this.doBlocksDrop) {
-                                    lootcontext$builder.withParameter(LootParameters.EXPLOSION_RADIUS, (float) radius);
+                                    lootcontext$builder.withParameter(LootContextParams.EXPLOSION_RADIUS, (float) radius);
                                 }
 
                                 blockstate.getDrops(lootcontext$builder).forEach((stack) -> handleExplosionDrops(objectarraylist, stack, blockpos1));
@@ -160,8 +160,8 @@ public class CubicExplosionType extends ExtendedExplosionType {
 
                 // We have to manually tell the client that these blocks have broken, as onBlockExploded does not.
                 if(!worldIn.isClientSide) {
-                    ServerWorld sWorld = (ServerWorld) worldIn;
-                    for (ServerPlayerEntity serverplayerentity : sWorld.players()) {
+                    ServerLevel sWorld = (ServerLevel) worldIn;
+                    for (ServerPlayer serverplayerentity : sWorld.players()) {
                         if (serverplayerentity.distanceToSqr(source.getX(), source.getY(), source.getZ()) < 4096.0D) {
                             Network.sendToClient(new ExtendedExplosionPacket(source, meta.affectedBlocks, properties.getParticleToEmit().getType(), properties.getExplosionSound(), meta.entityDisplacements), serverplayerentity);
                         }

@@ -3,8 +3,8 @@ package dev.socketmods.socketnukes.utils;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fml.loading.FMLLoader;
 
 public class Bolbs {
@@ -32,13 +32,13 @@ public class Bolbs {
     /**
      * Whether the Player should have the Vanity Hat rendered
      */
-    public static boolean hasHat(PlayerEntity player) {
+    public static boolean hasHat(Player player) {
         return isAllowedHat(player); //TODO: && hasHatEnabled(player)
     }
 
     //------------------------------------------------------------------------------------------------------------------
 
-    private static boolean isAllowedHat(PlayerEntity player) {
+    private static boolean isAllowedHat(Player player) {
         // If a Holiday has enabled the Hats Feature
         if (HolidayTracker.enabledHats()) return true;
 

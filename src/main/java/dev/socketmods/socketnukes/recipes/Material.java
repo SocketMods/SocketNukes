@@ -1,10 +1,10 @@
 package dev.socketmods.socketnukes.recipes;
 
 import com.google.gson.JsonObject;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
 import net.minecraftforge.common.crafting.CraftingHelper;
 
 import java.util.function.Predicate;
@@ -36,19 +36,19 @@ public class Material implements Predicate<ItemStack> {
 
     public static Material deserialize(JsonObject object) {
         Ingredient ingredient = CraftingHelper.getIngredient(object.get("ingredient"));
-        int count = JSONUtils.getAsInt(object, "count", 1);
+        int count = GsonHelper.getAsInt(object, "count", 1);
         if (count <= 0) {
             throw new IllegalArgumentException("Material count must be a positive integer.");
         }
         return new Material(ingredient, count);
     }
 
-    public void write(PacketBuffer packet) {
+    public void write(FriendlyByteBuf packet) {
         packet.writeVarInt(count);
         ingredient.toNetwork(packet);
     }
 
-    public static Material read(PacketBuffer packet) {
+    public static Material read(FriendlyByteBuf packet) {
         int count = packet.readVarInt();
         Ingredient ingredient = Ingredient.fromNetwork(packet);
         return new Material(ingredient, count);

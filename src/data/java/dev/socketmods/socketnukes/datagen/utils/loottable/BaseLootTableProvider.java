@@ -3,21 +3,21 @@ package dev.socketmods.socketnukes.datagen.utils.loottable;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dev.socketmods.socketnukes.SocketNukes;
-import net.minecraft.block.Block;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.DirectoryCache;
-import net.minecraft.data.IDataProvider;
-import net.minecraft.data.LootTableProvider;
-import net.minecraft.loot.ConstantRange;
-import net.minecraft.loot.DynamicLootEntry;
-import net.minecraft.loot.ItemLootEntry;
-import net.minecraft.loot.LootParameterSets;
-import net.minecraft.loot.LootPool;
-import net.minecraft.loot.LootTable;
-import net.minecraft.loot.LootTableManager;
-import net.minecraft.loot.functions.CopyName;
-import net.minecraft.loot.functions.SetContents;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.data.HashCache;
+import net.minecraft.data.DataProvider;
+import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.world.level.storage.loot.ConstantIntValue;
+import net.minecraft.world.level.storage.loot.entries.DynamicLoot;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.LootTables;
+import net.minecraft.world.level.storage.loot.functions.CopyNameFunction;
+import net.minecraft.world.level.storage.loot.functions.SetContainerContents;
+import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -47,17 +47,17 @@ public abstract class BaseLootTableProvider extends LootTableProvider {
   public static LootTable.Builder createStandardBlockTable(String name, Block block) {
     LootPool.Builder builder = LootPool.lootPool()
         .name(name)
-        .setRolls(ConstantRange.exactly(1))
-        .add(ItemLootEntry.lootTableItem(block)
-            .apply(CopyName.copyName(CopyName.Source.BLOCK_ENTITY))
-            .apply(SetContents.setContents()
-                .withEntry(DynamicLootEntry.dynamicEntry(new ResourceLocation("minecraft", "contents"))))
+        .setRolls(ConstantIntValue.exactly(1))
+        .add(LootItem.lootTableItem(block)
+            .apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
+            .apply(SetContainerContents.setContents()
+                .withEntry(DynamicLoot.dynamicEntry(new ResourceLocation("minecraft", "contents"))))
         );
-    return LootTable.lootTable().withPool(builder).setParamSet(LootParameterSets.BLOCK);
+    return LootTable.lootTable().withPool(builder).setParamSet(LootContextParamSets.BLOCK);
   }
 
   @Override
-  public void run(DirectoryCache cache) {
+  public void run(HashCache cache) {
     addTables();
 
     lootTables.forEach(blockBuilderMap -> {
@@ -69,12 +69,12 @@ public abstract class BaseLootTableProvider extends LootTableProvider {
     writeTables(cache, tables);
   }
 
-  private void writeTables(DirectoryCache cache, Map<ResourceLocation, LootTable> tables) {
+  private void writeTables(HashCache cache, Map<ResourceLocation, LootTable> tables) {
     Path outputFolder = this.generator.getOutputFolder();
     tables.forEach((key, lootTable) -> {
       Path path = outputFolder.resolve("data/" + key.getNamespace() + "/loot_tables/" + key.getPath() + ".json");
       try {
-        IDataProvider.save(GSON, cache, LootTableManager.serialize(lootTable), path);
+        DataProvider.save(GSON, cache, LootTables.serialize(lootTable), path);
       } catch (IOException e) {
         LOGGER.error("Couldn't write loot table {}", path, e);
       }

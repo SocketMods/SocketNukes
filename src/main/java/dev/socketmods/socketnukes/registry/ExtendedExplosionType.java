@@ -6,15 +6,15 @@ import com.mojang.datafixers.util.Pair;
 import dev.socketmods.socketnukes.explosion.ExplosionProperties;
 import dev.socketmods.socketnukes.explosion.meta.ExplosionMetaPackage;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 /**
@@ -89,7 +89,7 @@ public class ExtendedExplosionType extends ForgeRegistryEntry<ExtendedExplosionT
      * @return boolean; whether to continue with the explosion
      */
 
-    public boolean prepareExplosion(World worldIn, BlockPos source, Entity placer) {
+    public boolean prepareExplosion(Level worldIn, BlockPos source, Entity placer) {
         return true;
     }
 
@@ -102,7 +102,7 @@ public class ExtendedExplosionType extends ForgeRegistryEntry<ExtendedExplosionT
      * It allows the stages to be executed independently, but using data from all prior.
      *
      */
-    public ExplosionMetaPackage explode(World worldIn, BlockPos source, int stage, Entity placer, ExplosionMetaPackage meta) {
+    public ExplosionMetaPackage explode(Level worldIn, BlockPos source, int stage, Entity placer, ExplosionMetaPackage meta) {
         return new ExplosionMetaPackage();
     }
 
@@ -137,9 +137,9 @@ public class ExtendedExplosionType extends ForgeRegistryEntry<ExtendedExplosionT
         dropPositionArray.add(Pair.of(stack, pos));
     }
 
-    public TranslationTextComponent getTranslationText() {
+    public TranslatableComponent getTranslationText() {
         ResourceLocation name = SNRegistry.getName(this);
-        return new TranslationTextComponent(name.getNamespace() + ".explosions." + name.getPath());
+        return new TranslatableComponent(name.getNamespace() + ".explosions." + name.getPath());
     }
 
 }

@@ -5,14 +5,15 @@ import dev.socketmods.socketnukes.client.render.ExplosiveEntityRenderer;
 import dev.socketmods.socketnukes.client.render.bolb.BolbEntityRenderer;
 import dev.socketmods.socketnukes.client.render.layer.PlayerHatLayer;
 import dev.socketmods.socketnukes.registry.SNRegistry;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.entity.PlayerRenderer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
@@ -25,24 +26,26 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 public class ClientSNEvents {
 
     @SubscribeEvent
-    public static void clientSetup(FMLClientSetupEvent event) {
-        // Register the Entity Renderers
-        RenderingRegistry.registerEntityRenderingHandler(SNRegistry.EXPLOSIVE_ENTITY_TYPE.get(), ExplosiveEntityRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(SNRegistry.BOLB_ENTITY_TYPE.get(), BolbEntityRenderer::new);
-
-        // Add the Player Hat Layer for the two skin types.
-        // We need to do this for both default and slim
-        event.enqueueWork(() -> {
-            EntityRendererManager manager = Minecraft.getInstance().getEntityRenderDispatcher();
-
-            addPlayerHatLayer(manager, "default");
-            addPlayerHatLayer(manager, "slim");
-        });
+    public static void entityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(SNRegistry.EXPLOSIVE_ENTITY_TYPE.get(), ExplosiveEntityRenderer::new);
+        event.registerEntityRenderer(SNRegistry.BOLB_ENTITY_TYPE.get(), BolbEntityRenderer::new);
     }
 
-    private static void addPlayerHatLayer(EntityRendererManager manager, String skin) {
-        PlayerRenderer playerRenderer = manager.getSkinMap().get(skin);
-        playerRenderer.addLayer(new PlayerHatLayer(playerRenderer));
+    @SubscribeEvent
+    public static void entityLayers(EntityRenderersEvent.AddLayers event) {
+        event.getSkins().forEach(skin ->
+                addPlayerHatLayer(event.getSkin(skin)));
+    }
+
+    /**
+     * I hate generics.
+     * EntityRenderersEvent$AddLayers#getSkin returns an erased type R extends LivingEntityRenderer.
+     * Using the raw type causes pain and suffering on an unimaginable scale.
+     * Forcing it through this function as a parameter with defined type solves suffering and ends world hunger.
+     * I hate generics.
+     */
+    private static void addPlayerHatLayer(LivingEntityRenderer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> renderer) {
+        renderer.addLayer(new PlayerHatLayer(renderer));
     }
 
     @SubscribeEvent

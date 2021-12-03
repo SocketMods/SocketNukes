@@ -4,40 +4,40 @@ import java.util.HashMap;
 import java.util.Map;
 
 import dev.socketmods.socketnukes.client.render.bolb.BolbEntityRenderer;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.entity.monster.SlimeEntity;
-import net.minecraft.network.IPacket;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.monster.Slime;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-public class BolbEntity extends SlimeEntity {
+public class BolbEntity extends Slime {
 
-    public BolbEntity(EntityType<? extends SlimeEntity> type, World world) {
+    public BolbEntity(EntityType<? extends Slime> type, Level world) {
         super(type, world);
     }
 
-    public static AttributeModifierMap setupAttributes() {
-        Map<Attribute, ModifiableAttributeInstance> map = new HashMap<>();
-        map.put(Attributes.MAX_HEALTH, new ModifiableAttributeInstance(Attributes.MAX_HEALTH, inst -> inst.setBaseValue(6.0)));
-        map.put(Attributes.ATTACK_DAMAGE, new ModifiableAttributeInstance(Attributes.ATTACK_DAMAGE, inst -> inst.setBaseValue(3)));
-        map.put(Attributes.MOVEMENT_SPEED, new ModifiableAttributeInstance(Attributes.MOVEMENT_SPEED, inst -> inst.setBaseValue(0.5)));
-        map.put(Attributes.FOLLOW_RANGE, new ModifiableAttributeInstance(Attributes.FOLLOW_RANGE, inst -> inst.setBaseValue(20)));
-        map.put(Attributes.ARMOR, new ModifiableAttributeInstance(Attributes.ARMOR, inst -> inst.setBaseValue(0)));
-        map.put(Attributes.ARMOR_TOUGHNESS, new ModifiableAttributeInstance(Attributes.ARMOR_TOUGHNESS, inst -> inst.setBaseValue(0)));
-        map.put(Attributes.KNOCKBACK_RESISTANCE, new ModifiableAttributeInstance(Attributes.KNOCKBACK_RESISTANCE, inst -> inst.setBaseValue(0)));
-        map.put(ForgeMod.SWIM_SPEED.get(), new ModifiableAttributeInstance(ForgeMod.SWIM_SPEED.get(), inst -> inst.setBaseValue(1)));
-        map.put(ForgeMod.ENTITY_GRAVITY.get(), new ModifiableAttributeInstance(ForgeMod.ENTITY_GRAVITY.get(), inst -> inst.setBaseValue(1)));
-        return new AttributeModifierMap(map);
+    public static AttributeSupplier setupAttributes() {
+        Map<Attribute, AttributeInstance> map = new HashMap<>();
+        map.put(Attributes.MAX_HEALTH, new AttributeInstance(Attributes.MAX_HEALTH, inst -> inst.setBaseValue(6.0)));
+        map.put(Attributes.ATTACK_DAMAGE, new AttributeInstance(Attributes.ATTACK_DAMAGE, inst -> inst.setBaseValue(3)));
+        map.put(Attributes.MOVEMENT_SPEED, new AttributeInstance(Attributes.MOVEMENT_SPEED, inst -> inst.setBaseValue(0.5)));
+        map.put(Attributes.FOLLOW_RANGE, new AttributeInstance(Attributes.FOLLOW_RANGE, inst -> inst.setBaseValue(20)));
+        map.put(Attributes.ARMOR, new AttributeInstance(Attributes.ARMOR, inst -> inst.setBaseValue(0)));
+        map.put(Attributes.ARMOR_TOUGHNESS, new AttributeInstance(Attributes.ARMOR_TOUGHNESS, inst -> inst.setBaseValue(0)));
+        map.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeInstance(Attributes.KNOCKBACK_RESISTANCE, inst -> inst.setBaseValue(0)));
+        map.put(ForgeMod.SWIM_SPEED.get(), new AttributeInstance(ForgeMod.SWIM_SPEED.get(), inst -> inst.setBaseValue(1)));
+        map.put(ForgeMod.ENTITY_GRAVITY.get(), new AttributeInstance(ForgeMod.ENTITY_GRAVITY.get(), inst -> inst.setBaseValue(1)));
+        return new AttributeSupplier(map);
     }
 
     @Override
-    public IPacket<?> getAddEntityPacket() {
+    public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 

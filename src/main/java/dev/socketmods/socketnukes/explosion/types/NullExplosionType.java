@@ -1,7 +1,7 @@
 package dev.socketmods.socketnukes.explosion.types;
 
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
-import net.minecraft.util.DamageSource;
+import net.minecraft.world.damagesource.DamageSource;
 
 import java.util.ArrayList;
 

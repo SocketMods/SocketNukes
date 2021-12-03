@@ -1,6 +1,6 @@
 package dev.socketmods.socketnukes.client.screen;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.capability.Capabilities;
@@ -9,10 +9,10 @@ import dev.socketmods.socketnukes.client.screen.widget.ExplosionList;
 import dev.socketmods.socketnukes.networking.Network;
 import dev.socketmods.socketnukes.networking.packet.ExploderConfigChangedPacket;
 import dev.socketmods.socketnukes.registry.SNRegistry;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.TranslatableComponent;
 
 /**
  * When the Exploder Item is used, it brings up this screen.
@@ -37,7 +37,7 @@ public class ExploderConfigScreen extends Screen {
     private ExplosionList list;
 
     public ExploderConfigScreen() {
-        super(new TranslationTextComponent("socketnukes.title.exploderconfig"));
+        super(new TranslatableComponent("socketnukes.title.exploderconfig"));
     }
 
     @Override
@@ -63,7 +63,7 @@ public class ExploderConfigScreen extends Screen {
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         // Due to the way the Screen / Gui System is designed we can safely assume that `minecraft` is non null here
         assert minecraft != null;
 

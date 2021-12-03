@@ -9,19 +9,19 @@ import com.google.gson.JsonObject;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
-import net.minecraft.advancements.ICriterionInstance;
-import net.minecraft.advancements.IRequirementsStrategy;
-import net.minecraft.advancements.criterion.RecipeUnlockedTrigger;
-import net.minecraft.data.IFinishedRecipe;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTDynamicOps;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.advancements.CriterionTriggerInstance;
+import net.minecraft.advancements.RequirementsStrategy;
+import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.tags.Tag;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -40,9 +40,9 @@ public class ShapedRecipeWithNBTBuilder {
     private final Map<Character, Ingredient> key = Maps.newLinkedHashMap();
     private final Advancement.Builder advancementBuilder = Advancement.Builder.advancement();
     private String group;
-    private @Nullable CompoundNBT nbt;
+    private @Nullable CompoundTag nbt;
 
-    public ShapedRecipeWithNBTBuilder(IItemProvider resultIn, int countIn) {
+    public ShapedRecipeWithNBTBuilder(ItemLike resultIn, int countIn) {
         this.result = resultIn.asItem();
         this.count = countIn;
     }
@@ -50,28 +50,28 @@ public class ShapedRecipeWithNBTBuilder {
     /**
      * Creates a new builder for a shaped recipe.
      */
-    public static ShapedRecipeWithNBTBuilder shapedRecipe(IItemProvider resultIn) {
+    public static ShapedRecipeWithNBTBuilder shapedRecipe(ItemLike resultIn) {
         return shapedRecipe(resultIn, 1);
     }
 
     /**
      * Creates a new builder for a shaped recipe.
      */
-    public static ShapedRecipeWithNBTBuilder shapedRecipe(IItemProvider resultIn, int countIn) {
+    public static ShapedRecipeWithNBTBuilder shapedRecipe(ItemLike resultIn, int countIn) {
         return new ShapedRecipeWithNBTBuilder(resultIn, countIn);
     }
 
     /**
      * Adds a key to the recipe pattern.
      */
-    public ShapedRecipeWithNBTBuilder key(Character symbol, ITag<Item> tagIn) {
+    public ShapedRecipeWithNBTBuilder key(Character symbol, Tag<Item> tagIn) {
         return this.key(symbol, Ingredient.of(tagIn));
     }
 
     /**
      * Adds a key to the recipe pattern.
      */
-    public ShapedRecipeWithNBTBuilder key(Character symbol, IItemProvider itemIn) {
+    public ShapedRecipeWithNBTBuilder key(Character symbol, ItemLike itemIn) {
         return this.key(symbol, itemIn == Items.AIR ? Ingredient.EMPTY : Ingredient.of(itemIn));
     }
 
@@ -104,7 +104,7 @@ public class ShapedRecipeWithNBTBuilder {
     /**
      * Adds a criterion needed to unlock the recipe.
      */
-    public ShapedRecipeWithNBTBuilder addCriterion(String name, ICriterionInstance criterionIn) {
+    public ShapedRecipeWithNBTBuilder addCriterion(String name, CriterionTriggerInstance criterionIn) {
         this.advancementBuilder.addCriterion(name, criterionIn);
         return this;
     }
@@ -114,7 +114,7 @@ public class ShapedRecipeWithNBTBuilder {
         return this;
     }
 
-    public ShapedRecipeWithNBTBuilder setNBT(CompoundNBT nbtIn){
+    public ShapedRecipeWithNBTBuilder setNBT(CompoundTag nbtIn){
         this.nbt = nbtIn;
         return this;
     }
@@ -122,7 +122,7 @@ public class ShapedRecipeWithNBTBuilder {
     /**
      * Builds this recipe into an {@link IFinishedRecipe}.
      */
-    public void build(Consumer<IFinishedRecipe> consumerIn) {
+    public void build(Consumer<FinishedRecipe> consumerIn) {
         this.build(consumerIn, Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(this.result)));
     }
 
@@ -130,7 +130,7 @@ public class ShapedRecipeWithNBTBuilder {
      * Builds this recipe into an {@link IFinishedRecipe}. Use {@link #build(Consumer)} if save is the same as the ID for
      * the result.
      */
-    public void build(Consumer<IFinishedRecipe> consumerIn, String save) {
+    public void build(Consumer<FinishedRecipe> consumerIn, String save) {
         ResourceLocation resourcelocation = ForgeRegistries.ITEMS.getKey(this.result);
         if ((new ResourceLocation(save)).equals(resourcelocation)) {
             throw new IllegalStateException("Shaped Recipe " + save + " should remove its 'save' argument");
@@ -142,9 +142,9 @@ public class ShapedRecipeWithNBTBuilder {
     /**
      * Builds this recipe into an {@link IFinishedRecipe}.
      */
-    public void build(Consumer<IFinishedRecipe> consumerIn, ResourceLocation id) {
+    public void build(Consumer<FinishedRecipe> consumerIn, ResourceLocation id) {
         this.validate(id);
-        this.advancementBuilder.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id)).rewards(AdvancementRewards.Builder.recipe(id)).requirements(IRequirementsStrategy.OR);
+        this.advancementBuilder.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id)).rewards(AdvancementRewards.Builder.recipe(id)).requirements(RequirementsStrategy.OR);
         consumerIn.accept(new Result(id, this.result, this.count, this.group == null ? "" : this.group, this.pattern, this.key, this.advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + Objects.requireNonNull(this.result.getItemCategory()).getRecipeFolderName() + "/" + id.getPath()), nbt));
     }
 
@@ -205,7 +205,7 @@ public class ShapedRecipeWithNBTBuilder {
         }
     }
 
-    public static class Result implements IFinishedRecipe {
+    public static class Result implements FinishedRecipe {
         private final ResourceLocation id;
         private final Item result;
         private final int count;
@@ -214,9 +214,9 @@ public class ShapedRecipeWithNBTBuilder {
         private final Map<Character, Ingredient> key;
         private final Advancement.Builder advancementBuilder;
         private final ResourceLocation advancementId;
-        private final CompoundNBT nbt;
+        private final CompoundTag nbt;
 
-        public Result(ResourceLocation idIn, Item resultIn, int countIn, String groupIn, List<String> patternIn, Map<Character, Ingredient> keyIn, Advancement.Builder advancementBuilderIn, ResourceLocation advancementIdIn,  @Nullable CompoundNBT nbtIn) {
+        public Result(ResourceLocation idIn, Item resultIn, int countIn, String groupIn, List<String> patternIn, Map<Character, Ingredient> keyIn, Advancement.Builder advancementBuilderIn, ResourceLocation advancementIdIn,  @Nullable CompoundTag nbtIn) {
             this.id = idIn;
             this.result = resultIn;
             this.count = countIn;
@@ -254,7 +254,7 @@ public class ShapedRecipeWithNBTBuilder {
                 jsonobject1.addProperty("count", this.count);
             }
             if(this.nbt != null){
-                JsonElement test = NBTDynamicOps.INSTANCE.convertTo(JsonOps.INSTANCE, nbt);
+                JsonElement test = NbtOps.INSTANCE.convertTo(JsonOps.INSTANCE, nbt);
                 jsonobject1.add("nbt", test);
             }
 
@@ -262,8 +262,8 @@ public class ShapedRecipeWithNBTBuilder {
         }
 
         @Override
-        public IRecipeSerializer<?> getType() {
-            return IRecipeSerializer.SHAPED_RECIPE;
+        public RecipeSerializer<?> getType() {
+            return RecipeSerializer.SHAPED_RECIPE;
         }
 
         /**

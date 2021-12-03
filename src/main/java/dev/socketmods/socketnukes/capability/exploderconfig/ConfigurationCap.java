@@ -1,11 +1,11 @@
 package dev.socketmods.socketnukes.capability.exploderconfig;
 
-import java.util.Objects;
 import javax.annotation.Nullable;
 
 import dev.socketmods.socketnukes.capability.Capabilities;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
@@ -18,7 +18,7 @@ import net.minecraftforge.common.util.LazyOptional;
  *
  * @author Citrine
  */
-public class ConfigProvider implements ICapabilitySerializable<CompoundNBT> {
+public class ConfigurationCap implements ICapabilitySerializable<CompoundTag> {
 
     private final ConfigTemplate config = new ConfigTemplate();
     private final LazyOptional<IConfiguration> configOptional = LazyOptional.of(() -> config);
@@ -36,17 +36,19 @@ public class ConfigProvider implements ICapabilitySerializable<CompoundNBT> {
     }
 
     @Override
-    public CompoundNBT serializeNBT() {
+    public CompoundTag serializeNBT() {
         if(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY == null) {
-            return new CompoundNBT();
+            return new CompoundTag();
         } else {
-            return (CompoundNBT) Objects.requireNonNull(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY.writeNBT(config, null));
+            CompoundTag tag = new CompoundTag();
+            tag.putString("configuration", config.getConfig().toString());
+            return tag;
         }
     }
 
     @Override
-    public void deserializeNBT(CompoundNBT nbt) {
+    public void deserializeNBT(CompoundTag nbt) {
         if(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY != null)
-            Capabilities.EXPLODER_CONFIGURATION_CAPABILITY.readNBT(config, null, nbt);
+            config.setConfig(new ResourceLocation(nbt.getString("configuration")));
     }
 }

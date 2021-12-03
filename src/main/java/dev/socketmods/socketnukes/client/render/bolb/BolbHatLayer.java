@@ -1,34 +1,34 @@
 package dev.socketmods.socketnukes.client.render.bolb;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.socketmods.socketnukes.entity.BolbEntity;
 import dev.socketmods.socketnukes.utils.Bolbs;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.IEntityRenderer;
-import net.minecraft.client.renderer.entity.LivingRenderer;
-import net.minecraft.client.renderer.entity.layers.LayerRenderer;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
 
 /**
  * Render the bolbmas hat on Bolbs called Curle.
  *
  * @author Citrine
  */
-public class BolbHatLayer extends LayerRenderer<BolbEntity, BolbModel> {
+public class BolbHatLayer extends RenderLayer<BolbEntity, BolbModel> {
 
-    public BolbHatLayer(IEntityRenderer<BolbEntity, BolbModel> renderManager) {
+    public BolbHatLayer(RenderLayerParent<BolbEntity, BolbModel> renderManager) {
         super(renderManager);
     }
 
     @Override
-    public void render(MatrixStack stack, IRenderTypeBuffer buffers, int packedLight, BolbEntity bolb, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void render(PoseStack stack, MultiBufferSource buffers, int packedLight, BolbEntity bolb, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if (bolb.isInvisible()) return;
         if (!Bolbs.isCurle(bolb)) return;
 
-        IVertexBuilder builder = buffers.getBuffer(RenderType.entitySolid(bolb.getEntityTexture()));
+        VertexConsumer builder = buffers.getBuffer(RenderType.entitySolid(bolb.getEntityTexture()));
 
-        int packedOverlay = LivingRenderer.getOverlayCoords(bolb, 0.0F);
+        int packedOverlay = LivingEntityRenderer.getOverlayCoords(bolb, 0.0F);
 
         stack.pushPose();
         stack.translate(-0.1, 1D, -0.1D);

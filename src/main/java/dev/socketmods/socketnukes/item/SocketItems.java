@@ -2,9 +2,9 @@ package dev.socketmods.socketnukes.item;
 
 import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.registry.SNRegistry;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * The name here is a little bit of a misnomer.
@@ -14,7 +14,7 @@ import net.minecraft.item.ItemStack;
  */
 public class SocketItems {
 
-    public static ItemGroup SOCKETNUKES_GROUP = new ItemGroup(SocketNukes.MODID + ".main") {
+    public static CreativeModeTab SOCKETNUKES_GROUP = new CreativeModeTab(SocketNukes.MODID + ".main") {
         @Override
         public ItemStack makeIcon() {
             return new ItemStack(SNRegistry.GENERIC_EXPLOSIVE_ITEM.get());

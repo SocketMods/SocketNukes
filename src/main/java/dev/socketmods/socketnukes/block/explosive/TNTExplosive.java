@@ -8,28 +8,28 @@ import dev.socketmods.socketnukes.entity.ExplosiveEntity;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import dev.socketmods.socketnukes.tileentity.ExplosiveTileEntity;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 
 /**
  * The explosive block used for testing.
@@ -44,7 +44,7 @@ import net.minecraft.world.World;
  */
 public class TNTExplosive extends Block {
     public TNTExplosive() {
-        super(AbstractBlock.Properties.of(Material.EXPLOSIVE));
+        super(BlockBehaviour.Properties.of(Material.EXPLOSIVE));
     }
 
     /**
@@ -58,10 +58,10 @@ public class TNTExplosive extends Block {
      * @param stack The stack the entity was holding when it was placed.
      */
     @Override
-    public void setPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(world, pos, state, placer, stack);
 
-        TileEntity tileEntity = world.getBlockEntity(pos);
+        BlockEntity tileEntity = world.getBlockEntity(pos);
         if(stack.getItem() == SNRegistry.GENERIC_EXPLOSIVE_ITEM.get() && tileEntity instanceof ExplosiveTileEntity) {
             ExplosiveTileEntity explosive = (ExplosiveTileEntity) tileEntity;
 
@@ -80,8 +80,8 @@ public class TNTExplosive extends Block {
      * @param igniter the entity that performed the ignition. Usually either the player or Lightning.
      */
     @Override
-    public void catchFire(BlockState state, World world, BlockPos pos, @Nullable Direction face, @Nullable LivingEntity igniter) {
-        TileEntity tileEntity = world.getBlockEntity(pos);
+    public void catchFire(BlockState state, Level world, BlockPos pos, @Nullable Direction face, @Nullable LivingEntity igniter) {
+        BlockEntity tileEntity = world.getBlockEntity(pos);
         if(tileEntity instanceof ExplosiveTileEntity) {
             ExplosiveTileEntity explosive = (ExplosiveTileEntity) tileEntity;
             ResourceLocation config = explosive.getConfiguration();
@@ -103,7 +103,7 @@ public class TNTExplosive extends Block {
      * @param isMoving whether this block was added by movement, ie. by a piston
      */
     @Override
-    public void onPlace(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+    public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
         if (!oldState.is(state.getBlock())) {
             if (worldIn.hasNeighborSignal(pos)) {
                 catchFire(state, worldIn, pos, null, null);
@@ -123,7 +123,7 @@ public class TNTExplosive extends Block {
      * @param isMoving whether this block was updated by movement (ie. a piston)
      */
     @Override
-    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         if (worldIn.hasNeighborSignal(pos)) {
             catchFire(state, worldIn, pos, null, null);
             worldIn.removeBlock(pos, false);
@@ -140,7 +140,7 @@ public class TNTExplosive extends Block {
      * @param explosion the explosion to invoke when the entity pops
      * @param chainExplosion whether this explosion was triggered by another nearby
      */
-    private static void explode(World worldIn, BlockPos pos, @Nullable LivingEntity entityIn, ExtendedExplosionType explosion, boolean chainExplosion) {
+    private static void explode(Level worldIn, BlockPos pos, @Nullable LivingEntity entityIn, ExtendedExplosionType explosion, boolean chainExplosion) {
         ExplosiveEntity explosiveEntity = new ExplosiveEntity(worldIn, pos, explosion, entityIn);
         worldIn.addFreshEntity(explosiveEntity);
 
@@ -150,7 +150,7 @@ public class TNTExplosive extends Block {
             explosiveEntity.setFuse(explosion.getFuseTime());
 
         worldIn.playSound(null, explosiveEntity.getX(), explosiveEntity.getY(), explosiveEntity.getZ(),
-                SoundEvents.TNT_PRIMED, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                SoundEvents.TNT_PRIMED, SoundSource.BLOCKS, 1.0F, 1.0F);
     }
 
     /**
@@ -160,7 +160,7 @@ public class TNTExplosive extends Block {
      * @param entity the entity that triggered the explosion
      * @param type the explosion to trigger
      */
-    private static void explode(World worldin, BlockPos pos, @Nullable LivingEntity entity, ExtendedExplosionType type) {
+    private static void explode(Level worldin, BlockPos pos, @Nullable LivingEntity entity, ExtendedExplosionType type) {
         explode(worldin, pos, entity, type, false);
     }
 
@@ -174,7 +174,7 @@ public class TNTExplosive extends Block {
      * @param explosionIn the explosion that destroyed the block
      */
     @Override
-    public void wasExploded(World worldIn, BlockPos pos, Explosion explosionIn) {
+    public void wasExploded(Level worldIn, BlockPos pos, Explosion explosionIn) {
         explode(worldIn, pos, explosionIn.getSourceMob(), SNRegistry.VANILLA_EXPLOSION.get(), true);
     }
 
@@ -191,8 +191,8 @@ public class TNTExplosive extends Block {
      * @return an action result
      */
     @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand
-            handIn, BlockRayTraceResult hit) {
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand
+            handIn, BlockHitResult hit) {
         ItemStack itemstack = player.getItemInHand(handIn);
         Item item = itemstack.getItem();
 
@@ -205,7 +205,7 @@ public class TNTExplosive extends Block {
             );
             // delete the block because the entity was created
             worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 11);
-            return ActionResultType.sidedSuccess(worldIn.isClientSide);
+            return InteractionResult.sidedSuccess(worldIn.isClientSide);
 
         // Fallback to vanilla behavior
         } else if (item != Items.FLINT_AND_STEEL && item != Items.FIRE_CHARGE) {
@@ -220,7 +220,7 @@ public class TNTExplosive extends Block {
                     itemstack.shrink(1);
                 }
             }
-            return ActionResultType.sidedSuccess(worldIn.isClientSide);
+            return InteractionResult.sidedSuccess(worldIn.isClientSide);
         }
     }
 
@@ -231,7 +231,7 @@ public class TNTExplosive extends Block {
 
     @Nullable
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
         return new ExplosiveTileEntity();
     }
 }

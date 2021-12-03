@@ -12,7 +12,7 @@ import dev.socketmods.socketnukes.datagen.recipes.RecipeProviders;
 import dev.socketmods.socketnukes.datagen.tags.BlockTagProviders;
 import dev.socketmods.socketnukes.datagen.tags.FluidTagsProviders;
 import dev.socketmods.socketnukes.datagen.tags.ItemTagProviders;
-import net.minecraft.data.BlockTagsProvider;
+import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;

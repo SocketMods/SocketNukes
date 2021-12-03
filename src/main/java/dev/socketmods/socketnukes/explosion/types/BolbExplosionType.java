@@ -7,11 +7,11 @@ import dev.socketmods.socketnukes.explosion.ExplosionProperties;
 import dev.socketmods.socketnukes.explosion.meta.ExplosionMetaPackage;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import dev.socketmods.socketnukes.registry.SNRegistry;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 /**
  * Spawns 16 (configurable by modifying the int in the explode function) Bolb entities.
@@ -30,12 +30,12 @@ public class BolbExplosionType extends ExtendedExplosionType {
     }
 
     @Override
-    public boolean prepareExplosion(World worldIn, BlockPos source, Entity placer) {
+    public boolean prepareExplosion(Level worldIn, BlockPos source, Entity placer) {
         return true;
     }
 
     @Override
-    public ExplosionMetaPackage explode(World worldIn, BlockPos source, int stage, Entity placer, ExplosionMetaPackage meta) {
+    public ExplosionMetaPackage explode(Level worldIn, BlockPos source, int stage, Entity placer, ExplosionMetaPackage meta) {
         if (stage == STAGE_POP) {
 
             // Spawn the entities, set the velocity, add to the world
@@ -54,7 +54,7 @@ public class BolbExplosionType extends ExtendedExplosionType {
 
             // Spawn particle, play sound
             if (worldIn.isClientSide) {
-                worldIn.playLocalSound(source.getX(), source.getY(), source.getZ(), properties.getExplosionSound(), SoundCategory.BLOCKS, 4.0F, (1.0F + (worldIn.random.nextFloat() - worldIn.random.nextFloat()) * 0.2F) * 0.7F, false);
+                worldIn.playLocalSound(source.getX(), source.getY(), source.getZ(), properties.getExplosionSound(), SoundSource.BLOCKS, 4.0F, (1.0F + (worldIn.random.nextFloat() - worldIn.random.nextFloat()) * 0.2F) * 0.7F, false);
             }
 
             if (properties.doesMakeParticles()) {

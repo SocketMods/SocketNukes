@@ -1,14 +1,14 @@
 package dev.socketmods.socketnukes.recipes;
 
-import net.minecraft.entity.item.ExperienceOrbEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 public abstract class CommonRecipe extends SNRecipe {
@@ -18,7 +18,7 @@ public abstract class CommonRecipe extends SNRecipe {
     protected final int timer;
     protected final float xp;
 
-    public CommonRecipe(ResourceLocation id, IRecipeType<?> recipeType, NonNullList<Ingredient> ingredients, int timer, NonNullList<ItemStack> result, float xp) {
+    public CommonRecipe(ResourceLocation id, RecipeType<?> recipeType, NonNullList<Ingredient> ingredients, int timer, NonNullList<ItemStack> result, float xp) {
         super(id, recipeType);
         this.ingredients = ingredients;
         this.timer = timer;
@@ -26,17 +26,17 @@ public abstract class CommonRecipe extends SNRecipe {
         this.xp = xp;
     }
 
-    private static void splitAndSpawnExperience(World world, Vector3d pos, int craftedAmount, float experience) {
-        int i = MathHelper.floor((float) craftedAmount * experience);
-        float f = MathHelper.frac((float) craftedAmount * experience);
+    private static void splitAndSpawnExperience(Level world, Vec3 pos, int craftedAmount, float experience) {
+        int i = Mth.floor((float) craftedAmount * experience);
+        float f = Mth.frac((float) craftedAmount * experience);
         if (f != 0.0F && Math.random() < (double) f) {
             ++i;
         }
 
         while (i > 0) {
-            int j = ExperienceOrbEntity.getExperienceValue(i);
+            int j = ExperienceOrb.getExperienceValue(i);
             i -= j;
-            world.addFreshEntity(new ExperienceOrbEntity(world, pos.x, pos.y, pos.z, j));
+            world.addFreshEntity(new ExperienceOrb(world, pos.x, pos.y, pos.z, j));
         }
 
     }

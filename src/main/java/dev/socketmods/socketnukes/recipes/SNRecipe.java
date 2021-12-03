@@ -1,25 +1,25 @@
 package dev.socketmods.socketnukes.recipes;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
 public abstract class SNRecipe implements ICommonRecipe {
     protected ResourceLocation id;
-    protected IRecipeType<?> recipeType;
+    protected RecipeType<?> recipeType;
 
-    public SNRecipe(ResourceLocation id, IRecipeType<?> recipeType) {
+    public SNRecipe(ResourceLocation id, RecipeType<?> recipeType) {
         this.id = id;
         this.recipeType = recipeType;
     }
 
     @Override
     @Nonnull
-    public IRecipeType<?> getType() {
+    public RecipeType<?> getType() {
         return recipeType;
     }
 

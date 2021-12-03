@@ -5,14 +5,14 @@ import dev.socketmods.socketnukes.client.ClientThingDoer;
 import dev.socketmods.socketnukes.entity.ExplosiveEntity;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import dev.socketmods.socketnukes.registry.SNRegistry;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.level.Level;
 
 /**
  * Contains a bunch of logic for testing ExtendedExplosionTypes.
@@ -28,7 +28,7 @@ public class ExploderItem extends Item {
     }
 
     @Override
-    public ActionResultType useOn(ItemUseContext context) {
+    public InteractionResult useOn(UseOnContext context) {
         // Short-circuit if we're targeting a TNTExplosive, as the logic for that is in that class.
         if (context.getLevel().getBlockState(context.getClickedPos()).getBlock() == SNRegistry.GENERIC_EXPLOSIVE.get())
             return super.useOn(context);
@@ -48,9 +48,9 @@ public class ExploderItem extends Item {
     }
 
     @Override
-    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         if(worldIn.isClientSide) ClientThingDoer.openConfigScreen();
 
-        return ActionResult.pass(playerIn.getItemInHand(handIn));
+        return InteractionResultHolder.pass(playerIn.getItemInHand(handIn));
     }
 }

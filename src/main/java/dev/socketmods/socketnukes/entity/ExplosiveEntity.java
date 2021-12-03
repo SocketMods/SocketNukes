@@ -5,18 +5,18 @@ import javax.annotation.Nullable;
 import dev.socketmods.socketnukes.explosion.DummyExplosion;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import dev.socketmods.socketnukes.registry.SNRegistry;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MoverType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 /**
@@ -28,18 +28,18 @@ import net.minecraftforge.fml.network.NetworkHooks;
  * @author Citrine
  */
 public class ExplosiveEntity extends Entity {
-    private static final DataParameter<Integer> FUSE = EntityDataManager.defineId(ExplosiveEntity.class, DataSerializers.INT);
+    private static final EntityDataAccessor<Integer> FUSE = SynchedEntityData.defineId(ExplosiveEntity.class, EntityDataSerializers.INT);
     @Nullable
     private LivingEntity placer;
     private int fuse = 80;
 
     private ExtendedExplosionType explosion;
 
-    public ExplosiveEntity(EntityType<?> entityTypeIn, World worldIn) {
+    public ExplosiveEntity(EntityType<?> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
 
-    public ExplosiveEntity(World worldIn, BlockPos position, ExtendedExplosionType explosive, @Nullable LivingEntity igniter) {
+    public ExplosiveEntity(Level worldIn, BlockPos position, ExtendedExplosionType explosive, @Nullable LivingEntity igniter) {
         this(SNRegistry.EXPLOSIVE_ENTITY_TYPE.get(), worldIn);
         this.setPos(position.getX(), position.getY(), position.getZ());
         double d0 = worldIn.random.nextDouble() * (double)((float)Math.PI * 2F);
@@ -53,7 +53,7 @@ public class ExplosiveEntity extends Entity {
     }
 
     // Static factory method, used for registration.
-    public static ExplosiveEntity create(EntityType<?> type, World worldin) {
+    public static ExplosiveEntity create(EntityType<?> type, Level worldin) {
         return new ExplosiveEntity(type, worldin);
     }
 
@@ -114,13 +114,13 @@ public class ExplosiveEntity extends Entity {
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundNBT compound) {
+    protected void addAdditionalSaveData(CompoundTag compound) {
         compound.putShort("fuse", (short)this.getFuse());
         compound.putString("explosionType", SNRegistry.getName(explosion).toString());
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundNBT compound) {
+    protected void readAdditionalSaveData(CompoundTag compound) {
         this.setFuse(compound.getShort("fuse"));
         String resLoc = compound.getString("explosionType");
         this.setExplosion(SNRegistry.getExplosionType(resLoc));
@@ -131,7 +131,7 @@ public class ExplosiveEntity extends Entity {
     }
 
     @Override
-    public IPacket<?> getAddEntityPacket() {
+    public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 

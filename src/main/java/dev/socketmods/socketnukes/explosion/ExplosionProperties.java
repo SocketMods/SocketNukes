@@ -1,7 +1,7 @@
 package dev.socketmods.socketnukes.explosion;
 
-import net.minecraft.particles.IParticleData;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.sounds.SoundEvent;
 
 /**
  * Stores all the needed metadata for explosions, for carrying around information like the sound, particle,
@@ -12,18 +12,18 @@ import net.minecraft.util.SoundEvent;
 public class ExplosionProperties {
     private final boolean makesParticles;
     private final boolean causesFire;
-    private final IParticleData particleToEmit;
+    private final ParticleOptions particleToEmit;
 
     private final SoundEvent explosionSound;
 
-    public ExplosionProperties(boolean particles, boolean fire, IParticleData particle, SoundEvent sound) {
+    public ExplosionProperties(boolean particles, boolean fire, ParticleOptions particle, SoundEvent sound) {
         this.makesParticles = particles;
         this.causesFire = fire;
         this.particleToEmit = particle;
         this.explosionSound = sound;
     }
 
-    public IParticleData getParticleToEmit() {
+    public ParticleOptions getParticleToEmit() {
         return particleToEmit;
     }
 
