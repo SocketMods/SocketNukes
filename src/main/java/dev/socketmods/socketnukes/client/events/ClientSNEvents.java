@@ -6,6 +6,7 @@ import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.client.render.ExplosiveEntityRenderer;
 import dev.socketmods.socketnukes.client.render.SNModelLayers;
 import dev.socketmods.socketnukes.client.render.bolb.BolbEntityRenderer;
+import dev.socketmods.socketnukes.client.render.bolb.BolbHatLayer;
 import dev.socketmods.socketnukes.client.render.bolb.BolbModel;
 import dev.socketmods.socketnukes.client.render.layer.PlayerHatLayer;
 import dev.socketmods.socketnukes.registry.SNRegistry;
@@ -37,7 +38,7 @@ public class ClientSNEvents {
     public static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(SNModelLayers.BOLB, BolbModel::createInnerBodyLayer);
         event.registerLayerDefinition(SNModelLayers.BOLB_OUTER, BolbModel::createOuterBodyLayer);
-        event.registerLayerDefinition(SNModelLayers.BOLB_HAT, BolbModel::createHatLayer);
+        event.registerLayerDefinition(SNModelLayers.BOLB_HAT, BolbHatLayer::createLayer);
     }
 
     @SubscribeEvent
