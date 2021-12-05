@@ -2,9 +2,9 @@ package dev.socketmods.socketnukes.client.render.bolb;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.socketmods.socketnukes.SocketNukes;
+import dev.socketmods.socketnukes.client.render.SNModelLayers;
 import dev.socketmods.socketnukes.entity.BolbEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -14,9 +14,9 @@ public class BolbEntityRenderer extends MobRenderer<BolbEntity, BolbModel> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(SocketNukes.MODID, "textures/entity/bolb.png");
 
     public BolbEntityRenderer(EntityRendererProvider.Context context) {
-        super(context, new BolbModel(16), 0.25F);
-        this.addLayer(new BolbGelLayer(this));
-        this.addLayer(new BolbHatLayer(this));
+        super(context, new BolbModel(context.bakeLayer(SNModelLayers.BOLB)), 0.25F);
+        this.addLayer(new BolbGelLayer(this, context.getModelSet()));
+        this.addLayer(new BolbHatLayer(this, context.getModelSet()));
     }
 
     @Override

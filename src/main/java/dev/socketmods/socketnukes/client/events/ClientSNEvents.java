@@ -1,21 +1,23 @@
 package dev.socketmods.socketnukes.client.events;
 
+import java.util.Objects;
+
 import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.client.render.ExplosiveEntityRenderer;
+import dev.socketmods.socketnukes.client.render.SNModelLayers;
 import dev.socketmods.socketnukes.client.render.bolb.BolbEntityRenderer;
+import dev.socketmods.socketnukes.client.render.bolb.BolbModel;
 import dev.socketmods.socketnukes.client.render.layer.PlayerHatLayer;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 /**
  * Runs all the client-only events. Currently, only Entity Rendering.
@@ -32,9 +34,15 @@ public class ClientSNEvents {
     }
 
     @SubscribeEvent
+    public static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(SNModelLayers.BOLB, BolbModel::createInnerBodyLayer);
+        event.registerLayerDefinition(SNModelLayers.BOLB_OUTER, BolbModel::createOuterBodyLayer);
+        event.registerLayerDefinition(SNModelLayers.BOLB_HAT, BolbModel::createHatLayer);
+    }
+
+    @SubscribeEvent
     public static void entityLayers(EntityRenderersEvent.AddLayers event) {
-        event.getSkins().forEach(skin ->
-                addPlayerHatLayer(event.getSkin(skin)));
+        event.getSkins().forEach(skin -> addPlayerHatLayer(Objects.requireNonNull(event.getSkin(skin))));
     }
 
     /**

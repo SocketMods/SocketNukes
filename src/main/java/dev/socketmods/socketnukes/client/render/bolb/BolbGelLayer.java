@@ -2,7 +2,9 @@ package dev.socketmods.socketnukes.client.render.bolb;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import dev.socketmods.socketnukes.client.render.SNModelLayers;
 import dev.socketmods.socketnukes.entity.BolbEntity;
+import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
@@ -10,10 +12,11 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 
 public class BolbGelLayer extends RenderLayer<BolbEntity, BolbModel> {
-    private final BolbModel bolbModel = new BolbModel(0);
+    private final BolbModel bolbModel;
 
-    public BolbGelLayer(RenderLayerParent<BolbEntity, BolbModel> entityRenderer) {
-        super(entityRenderer);
+    public BolbGelLayer(RenderLayerParent<BolbEntity, BolbModel> parent, EntityModelSet modelSet) {
+        super(parent);
+        bolbModel = new BolbModel(modelSet.bakeLayer(SNModelLayers.BOLB_OUTER));
     }
 
     @Override
