@@ -41,7 +41,7 @@ public class ExplosionList extends ObjectSelectionList<ExplosionList.ExplosionLi
 
             this.addEntry(entry);
 
-            if (SNRegistry.getName(entry.getType()) == selected)
+            if (SNRegistry.getName(entry.getType()).equals(selected))
                 setSelected(entry);
         });
     }
@@ -85,6 +85,7 @@ public class ExplosionList extends ObjectSelectionList<ExplosionList.ExplosionLi
                 RenderSystem.disableTexture();
 
                 float f = parent.isFocused() ? 0.25F : 0.125F;
+                //TODO: RenderSystem.color4f(f, f, f, 1.0F);
                 bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
                 bufferbuilder.vertex(l1, (i1 + j1 + 2), 0.0D).endVertex();
                 bufferbuilder.vertex(i2, (i1 + j1 + 2), 0.0D).endVertex();
@@ -92,7 +93,7 @@ public class ExplosionList extends ObjectSelectionList<ExplosionList.ExplosionLi
                 bufferbuilder.vertex(l1, (i1 - 2), 0.0D).endVertex();
                 tessellator.end();
 
-                //RenderSystem.color4f(0.0F, 0.0F, 0.0F, 1.0F);
+                //TODO: RenderSystem.color4f(0.0F, 0.0F, 0.0F, 1.0F);
                 bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
                 bufferbuilder.vertex((l1 + 1), (i1 + j1 + 1), 0.0D).endVertex();
                 bufferbuilder.vertex((i2 - 1), (i1 + j1 + 1), 0.0D).endVertex();
