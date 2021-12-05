@@ -2,6 +2,6 @@
 @ParametersAreNonnullByDefault
 package dev.socketmods.socketnukes.datagen.tags;
 
-import net.minecraft.MethodsReturnNonnullByDefault;
-
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import net.minecraft.MethodsReturnNonnullByDefault;

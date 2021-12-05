@@ -2,6 +2,6 @@
 @ParametersAreNonnullByDefault
 package dev.socketmods.socketnukes.client.screen.widget;
 
-import net.minecraft.MethodsReturnNonnullByDefault;
-
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import net.minecraft.MethodsReturnNonnullByDefault;
