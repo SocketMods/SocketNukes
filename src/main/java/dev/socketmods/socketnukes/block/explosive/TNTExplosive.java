@@ -20,9 +20,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -41,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Citrine
  */
-public class TNTExplosive extends BaseEntityBlock {
+public class TNTExplosive extends Block implements EntityBlock {
     public TNTExplosive() {
         super(BlockBehaviour.Properties.of(Material.EXPLOSIVE));
     }

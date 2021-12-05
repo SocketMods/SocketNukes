@@ -84,7 +84,7 @@ public class ExplosiveEntity extends Entity {
 
         --this.fuse;
         if (this.fuse <= 0) {
-            this.remove(RemovalReason.DISCARDED);
+            this.discard();
             this.explode();
         } else {
             this.updateInWaterStateAndDoFluidPushing();
