@@ -21,7 +21,7 @@ println('Mod version: ' + version)
 group = 'dev.socketmods.socketnukes'
 archivesBaseName = "socketnukes-${mc_version}"
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '17'
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 sourceSets {
     data
