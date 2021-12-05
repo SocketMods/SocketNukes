@@ -120,7 +120,7 @@ public class ExplosionList extends ObjectSelectionList<ExplosionList.ExplosionLi
 
         @Override
         public Component getNarration() {
-            return getSelected().getNarration();
+            return new TranslatableComponent("narrator.select", getType().getTranslationText());
         }
     }
 
