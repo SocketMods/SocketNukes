@@ -18,7 +18,7 @@ import net.minecraftforge.common.util.LazyOptional;
  *
  * @author Citrine
  */
-public class ConfigurationCap implements ICapabilitySerializable<CompoundTag> {
+public class ConfigurationCap implements ICapabilitySerializable<CompoundTag>, IConfiguration {
 
     private final ConfigTemplate config = new ConfigTemplate();
     private final LazyOptional<IConfiguration> configOptional = LazyOptional.of(() -> config);
@@ -50,5 +50,15 @@ public class ConfigurationCap implements ICapabilitySerializable<CompoundTag> {
     public void deserializeNBT(CompoundTag nbt) {
         if(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY != null)
             config.setConfig(new ResourceLocation(nbt.getString("configuration")));
+    }
+
+    @Override
+    public void setConfig(ResourceLocation resLoc) {
+        config.setConfig(resLoc);
+    }
+
+    @Override
+    public ResourceLocation getConfig() {
+        return config.getConfig();
     }
 }

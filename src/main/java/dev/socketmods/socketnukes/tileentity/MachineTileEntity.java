@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import dev.socketmods.socketnukes.recipes.CommonRecipe;
 import dev.socketmods.socketnukes.recipes.ICommonRecipe;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.AbstractFurnaceBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
@@ -15,7 +16,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.util.Mth;
@@ -25,7 +25,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
-public abstract class MachineTileEntity<T extends Recipe<?>> extends RecipeTileEntity<T> implements TickableBlockEntity, MenuProvider {
+public abstract class MachineTileEntity<T extends Recipe<?>> extends RecipeTileEntity<T> implements MenuProvider {
 
     protected int burnTime;
     protected int cookingTime;
@@ -37,18 +37,13 @@ public abstract class MachineTileEntity<T extends Recipe<?>> extends RecipeTileE
     protected ContainerData teData = new ContainerData() {
         @Override
         public int get(int index) {
-            switch (index) {
-                case 0:
-                    return MachineTileEntity.this.isBurning() ? MachineTileEntity.this.burnTime : 0;
-                case 1:
-                    return MachineTileEntity.this.cookingTime;
-                case 2:
-                    return MachineTileEntity.this.cookingTimeTotal;
-                case 3:
-                    return MachineTileEntity.this.recipeUsed;
-                default:
-                    throw new IllegalArgumentException("Invalid index: " + index);
-            }
+            return switch (index) {
+                case 0 -> MachineTileEntity.this.isBurning() ? MachineTileEntity.this.burnTime : 0;
+                case 1 -> MachineTileEntity.this.cookingTime;
+                case 2 -> MachineTileEntity.this.cookingTimeTotal;
+                case 3 -> MachineTileEntity.this.recipeUsed;
+                default -> throw new IllegalArgumentException("Invalid index: " + index);
+            };
         }
 
         @Override
@@ -63,18 +58,18 @@ public abstract class MachineTileEntity<T extends Recipe<?>> extends RecipeTileE
     };
 
 
-    public MachineTileEntity(BlockEntityType<?> tileEntityTypeIn, RecipeType<?> recipeType) {
-        super(tileEntityTypeIn, recipeType);
+    public MachineTileEntity(BlockEntityType<?> tileEntityTypeIn, RecipeType<?> recipeType, BlockPos blockPos, BlockState blockState) {
+        super(tileEntityTypeIn, recipeType, blockPos, blockState);
     }
 
     @Override
-    public void load(BlockState state, CompoundTag nbt) {
+    public void load(CompoundTag nbt) {
         burnTime = nbt.getInt("burnTime");
         cookingTime = nbt.getInt("cookingTime");
         cookingTimeTotal = nbt.getInt("cookingTimeTotal");
         recipeUsed = nbt.getInt("recipeUsed");
         isBurning = nbt.getBoolean("isBurning");
-        super.load(state, nbt);
+        super.load(nbt);
     }
 
 
@@ -141,7 +136,7 @@ public abstract class MachineTileEntity<T extends Recipe<?>> extends RecipeTileE
 
     protected boolean handleBurning(ItemStack fuel) {
         boolean isDirty = false;
-        burnTime = ForgeHooks.getBurnTime(fuel);
+        burnTime = ForgeHooks.getBurnTime(fuel, type);
         recipeUsed = burnTime;
         if (isBurning()) {
             isDirty = true;
@@ -200,8 +195,7 @@ public abstract class MachineTileEntity<T extends Recipe<?>> extends RecipeTileE
     }
 
 
-    @Override
-    public void tick() {
+    public void tickServer() {
         boolean localIsBurning = isBurning();
         boolean isDirty = false;
 

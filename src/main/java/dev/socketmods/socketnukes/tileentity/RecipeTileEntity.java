@@ -14,6 +14,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -26,8 +27,8 @@ public abstract class RecipeTileEntity<T extends Recipe<?>> extends CommonTileEn
 
     protected RecipeType<?> type;
 
-    public RecipeTileEntity(BlockEntityType<?> tileEntityTypeIn, RecipeType<?> recipeType) {
-        super(tileEntityTypeIn);
+    public RecipeTileEntity(BlockEntityType<?> tileEntityTypeIn, RecipeType<?> recipeType, BlockPos blockPos, BlockState blockState) {
+        super(tileEntityTypeIn, blockPos, blockState);
         type = recipeType;
     }
 

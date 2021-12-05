@@ -3,21 +3,22 @@ package dev.socketmods.socketnukes.datagen.utils.loottable;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dev.socketmods.socketnukes.SocketNukes;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.HashCache;
 import net.minecraft.data.DataProvider;
+import net.minecraft.data.HashCache;
 import net.minecraft.data.loot.LootTableProvider;
-import net.minecraft.world.level.storage.loot.ConstantIntValue;
-import net.minecraft.world.level.storage.loot.entries.DynamicLoot;
-import net.minecraft.world.level.storage.loot.entries.LootItem;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.LootTables;
+import net.minecraft.world.level.storage.loot.entries.DynamicLoot;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.CopyNameFunction;
 import net.minecraft.world.level.storage.loot.functions.SetContainerContents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,13 +45,13 @@ public abstract class BaseLootTableProvider extends LootTableProvider {
 
   protected abstract void addTables();
 
-  public static LootTable.Builder createStandardBlockTable(String name, Block block) {
+  public static LootTable.Builder createStandardBlockTable(String name, Block block, BlockEntityType<?> blockEntityType) {
     LootPool.Builder builder = LootPool.lootPool()
         .name(name)
-        .setRolls(ConstantIntValue.exactly(1))
+        .setRolls(ConstantValue.exactly(1))
         .add(LootItem.lootTableItem(block)
             .apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
-            .apply(SetContainerContents.setContents()
+            .apply(SetContainerContents.setContents(blockEntityType)
                 .withEntry(DynamicLoot.dynamicEntry(new ResourceLocation("minecraft", "contents"))))
         );
     return LootTable.lootTable().withPool(builder).setParamSet(LootContextParamSets.BLOCK);

@@ -59,7 +59,7 @@ public class ExploderConfigScreen extends Screen {
 
         list = new ExplosionList(this, width, height, guiTop + 5, guiTop + height, selected);
         list.setLeftPos(guiLeft + 5);
-        children.add(list);
+        addWidget(list);
     }
 
     @Override
@@ -69,11 +69,10 @@ public class ExploderConfigScreen extends Screen {
 
         drawCenteredString(stack, this.font, this.title, this.width / 2, 20, 0xFFFFFF);
 
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        minecraft.getTextureManager().bind(BACKGROUND);
+        RenderSystem.setShaderTexture(0, BACKGROUND);
         blit(stack, guiLeft, guiTop, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-        minecraft.getTextureManager().bind(Screen.BACKGROUND_LOCATION);
+        RenderSystem.setShaderTexture(0, Screen.BACKGROUND_LOCATION);
 
         double scale = minecraft.getWindow().getGuiScale();
         int posY   = guiTop + 5;

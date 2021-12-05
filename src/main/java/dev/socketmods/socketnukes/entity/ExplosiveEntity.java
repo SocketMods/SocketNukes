@@ -17,7 +17,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.network.NetworkHooks;
 
 /**
  * The Explosive Entity is what runs the actual logic for exploding things from a TNTExplosive.
@@ -85,7 +85,7 @@ public class ExplosiveEntity extends Entity {
 
         --this.fuse;
         if (this.fuse <= 0) {
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
             this.explode();
         } else {
             this.updateInWaterStateAndDoFluidPushing();

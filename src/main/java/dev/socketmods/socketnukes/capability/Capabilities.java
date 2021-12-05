@@ -2,12 +2,10 @@ package dev.socketmods.socketnukes.capability;
 
 import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.capability.exploderconfig.ConfigurationCap;
-import dev.socketmods.socketnukes.capability.exploderconfig.IConfiguration;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.event.AttachCapabilitiesEvent;

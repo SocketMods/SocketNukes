@@ -135,12 +135,12 @@ public class VanillaExplosionType extends ExtendedExplosionType {
 
                 for (Entity currentEntity : list) {
                     if (!currentEntity.ignoreExplosion()) {
-                        double currentEntityDistanceToExplosion = Mth.sqrt(currentEntity.distanceToSqr(explosionPos)) / radiusx2;
+                        double currentEntityDistanceToExplosion = Mth.sqrt((float) currentEntity.distanceToSqr(explosionPos)) / radiusx2;
                         if (currentEntityDistanceToExplosion <= 1.0D) {
                             double currentEntityDistanceX = currentEntity.getX() - source.getX();
                             double currentEntityDistanceY = (currentEntity instanceof PrimedTnt ? currentEntity.getY() : currentEntity.getEyeY()) - source.getY();
                             double currentEntityDistanceZ = currentEntity.getZ() - source.getZ();
-                            double pythagoreanDistance = Mth.sqrt(currentEntityDistanceX * currentEntityDistanceX + currentEntityDistanceY * currentEntityDistanceY + currentEntityDistanceZ * currentEntityDistanceZ);
+                            double pythagoreanDistance = Mth.sqrt((float) (currentEntityDistanceX * currentEntityDistanceX + currentEntityDistanceY * currentEntityDistanceY + currentEntityDistanceZ * currentEntityDistanceZ));
                             if (pythagoreanDistance != 0.0D) {
                                 currentEntityDistanceX = currentEntityDistanceX / pythagoreanDistance;
                                 currentEntityDistanceY = currentEntityDistanceY / pythagoreanDistance;
@@ -155,7 +155,7 @@ public class VanillaExplosionType extends ExtendedExplosionType {
                                 currentEntity.setDeltaMovement(currentEntity.getDeltaMovement().add(currentEntityDistanceX * damageFalloff, currentEntityDistanceY * damageFalloff, currentEntityDistanceZ * damageFalloff));
                                 if (currentEntity instanceof Player) {
                                     Player playerentity = (Player) currentEntity;
-                                    if (!playerentity.isSpectator() && (!playerentity.isCreative() || !playerentity.abilities.flying)) {
+                                    if (!playerentity.isSpectator() && (!playerentity.isCreative() || !playerentity.getAbilities().flying)) {
                                         meta.entityDisplacements.put(playerentity, new Vec3(currentEntityDistanceX * damageFalloff, currentEntityDistanceY * damageFalloff, currentEntityDistanceZ * damageFalloff));
                                     }
                                 }
@@ -179,15 +179,15 @@ public class VanillaExplosionType extends ExtendedExplosionType {
 
                     for (BlockPos blockpos : meta.affectedBlocks) {
                         BlockState blockstate = worldIn.getBlockState(blockpos);
-                        if (!blockstate.isAir(worldIn, blockpos)) {
+                        if (!blockstate.isAir()) {
                             BlockPos blockpos1 = blockpos.immutable();
                             worldIn.getProfiler().push("explosion_blocks");
 
                             Explosion vanillaExplosion2 = new DummyExplosion(worldIn, placer, source.getX(), source.getY(), source.getZ(), radius, meta.affectedBlocks);
 
                             if (blockstate.canDropFromExplosion(worldIn, blockpos, vanillaExplosion2) && worldIn instanceof ServerLevel) {
-                                BlockEntity tileentity = blockstate.hasTileEntity() ? worldIn.getBlockEntity(blockpos) : null;
-                                LootContext.Builder lootcontext$builder = (new LootContext.Builder((ServerLevel) worldIn)).withRandom(worldIn.random).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(blockpos)).withParameter(LootContextParams.TOOL, ItemStack.EMPTY).withOptionalParameter(LootContextParams.BLOCK_ENTITY, tileentity).withOptionalParameter(LootContextParams.THIS_ENTITY, placer);
+                                BlockEntity blockEntity = blockstate.hasBlockEntity() ? worldIn.getBlockEntity(blockpos) : null;
+                                LootContext.Builder lootcontext$builder = (new LootContext.Builder((ServerLevel) worldIn)).withRandom(worldIn.random).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(blockpos)).withParameter(LootContextParams.TOOL, ItemStack.EMPTY).withOptionalParameter(LootContextParams.BLOCK_ENTITY, blockEntity).withOptionalParameter(LootContextParams.THIS_ENTITY, placer);
                                 if (this.doBlocksDrop) {
                                     lootcontext$builder.withParameter(LootContextParams.EXPLOSION_RADIUS, (float) radius);
                                 }

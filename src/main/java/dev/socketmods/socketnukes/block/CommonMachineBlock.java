@@ -1,7 +1,11 @@
 package dev.socketmods.socketnukes.block;
 
+import dev.socketmods.socketnukes.tileentity.MachineTileEntity;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.Containers;
@@ -18,7 +22,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class CommonMachineBlock extends Block implements EntityBlock {
+public abstract class CommonMachineBlock extends BaseEntityBlock {
 
     public CommonMachineBlock(Properties properties) {
         super(properties);
@@ -37,5 +41,17 @@ public abstract class CommonMachineBlock extends Block implements EntityBlock {
                 Containers.dropItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), itemstack);
             }
         }
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> blockEntityType) {
+        if(level.isClientSide()) return null;
+
+        return (p_155253_, p_155254_, p_155255_, p_155256_) -> {
+            if(p_155256_ instanceof MachineTileEntity<?> tile){
+                tile.tickServer();
+            }
+        };
     }
 }

@@ -7,7 +7,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 public class BlockStateProvider extends net.minecraftforge.client.model.generators.BlockStateProvider {
-    public BlockStateProvider(DataGenerator gen, ExistingFileHelper exFileHelper) {
+    public BlockStateProvider(DataGenerator gen, ExistingFileHelper exFileHelper, BlockModelProviders models) {
         super(gen, SocketNukes.MODID, exFileHelper);
     }
 

@@ -3,16 +3,15 @@ package dev.socketmods.socketnukes.client.screen.widget;
 import java.util.function.Supplier;
 import javax.annotation.Nullable;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.*;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.components.ObjectSelectionList;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 public class ExplosionList extends ObjectSelectionList<ExplosionList.ExplosionListEntry> {
@@ -86,16 +85,15 @@ public class ExplosionList extends ObjectSelectionList<ExplosionList.ExplosionLi
                 RenderSystem.disableTexture();
 
                 float f = parent.isFocused() ? 0.25F : 0.125F;
-                RenderSystem.color4f(f, f, f, 1.0F);
-                bufferbuilder.begin(7, DefaultVertexFormat.POSITION);
+                bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
                 bufferbuilder.vertex(l1, (i1 + j1 + 2), 0.0D).endVertex();
                 bufferbuilder.vertex(i2, (i1 + j1 + 2), 0.0D).endVertex();
                 bufferbuilder.vertex(i2, (i1 - 2), 0.0D).endVertex();
                 bufferbuilder.vertex(l1, (i1 - 2), 0.0D).endVertex();
                 tessellator.end();
 
-                RenderSystem.color4f(0.0F, 0.0F, 0.0F, 1.0F);
-                bufferbuilder.begin(7, DefaultVertexFormat.POSITION);
+                //RenderSystem.color4f(0.0F, 0.0F, 0.0F, 1.0F);
+                bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
                 bufferbuilder.vertex((l1 + 1), (i1 + j1 + 1), 0.0D).endVertex();
                 bufferbuilder.vertex((i2 - 1), (i1 + j1 + 1), 0.0D).endVertex();
                 bufferbuilder.vertex((i2 - 1), (i1 - 1), 0.0D).endVertex();
@@ -118,6 +116,11 @@ public class ExplosionList extends ObjectSelectionList<ExplosionList.ExplosionLi
 
         public ExtendedExplosionType getType() {
             return type.get();
+        }
+
+        @Override
+        public Component getNarration() {
+            return getSelected().getNarration();
         }
     }
 

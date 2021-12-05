@@ -8,10 +8,15 @@ import dev.socketmods.socketnukes.entity.ExplosiveEntity;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import dev.socketmods.socketnukes.tileentity.ExplosiveTileEntity;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.gameevent.GameEventListener;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -28,7 +33,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 
 /**
@@ -42,7 +46,7 @@ import net.minecraft.world.level.Level;
  *
  * @author Citrine
  */
-public class TNTExplosive extends Block {
+public class TNTExplosive extends BaseEntityBlock {
     public TNTExplosive() {
         super(BlockBehaviour.Properties.of(Material.EXPLOSIVE));
     }
@@ -80,7 +84,7 @@ public class TNTExplosive extends Block {
      * @param igniter the entity that performed the ignition. Usually either the player or Lightning.
      */
     @Override
-    public void catchFire(BlockState state, Level world, BlockPos pos, @Nullable Direction face, @Nullable LivingEntity igniter) {
+    public void onCaughtFire(BlockState state, Level world, BlockPos pos, @org.jetbrains.annotations.Nullable Direction face, @org.jetbrains.annotations.Nullable LivingEntity igniter) {
         BlockEntity tileEntity = world.getBlockEntity(pos);
         if(tileEntity instanceof ExplosiveTileEntity) {
             ExplosiveTileEntity explosive = (ExplosiveTileEntity) tileEntity;
@@ -106,7 +110,7 @@ public class TNTExplosive extends Block {
     public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
         if (!oldState.is(state.getBlock())) {
             if (worldIn.hasNeighborSignal(pos)) {
-                catchFire(state, worldIn, pos, null, null);
+                onCaughtFire(state, worldIn, pos, null, null);
                 worldIn.removeBlock(pos, false);
             }
         }
@@ -125,7 +129,7 @@ public class TNTExplosive extends Block {
     @Override
     public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         if (worldIn.hasNeighborSignal(pos)) {
-            catchFire(state, worldIn, pos, null, null);
+            onCaughtFire(state, worldIn, pos, null, null);
             worldIn.removeBlock(pos, false);
         }
     }
@@ -211,7 +215,7 @@ public class TNTExplosive extends Block {
         } else if (item != Items.FLINT_AND_STEEL && item != Items.FIRE_CHARGE) {
             return super.use(state, worldIn, pos, player, handIn, hit);
         } else {
-            catchFire(state, worldIn, pos, hit.getDirection(), player);
+            onCaughtFire(state, worldIn, pos, hit.getDirection(), player);
             worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 11);
             if (!player.isCreative()) {
                 if (item == Items.FLINT_AND_STEEL) {
@@ -224,14 +228,21 @@ public class TNTExplosive extends Block {
         }
     }
 
+    @org.jetbrains.annotations.Nullable
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
+    public BlockEntity newBlockEntity(BlockPos blockPos, BlockState state) {
+        return new ExplosiveTileEntity(blockPos, state);
     }
 
-    @Nullable
+    @org.jetbrains.annotations.Nullable
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-        return new ExplosiveTileEntity();
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_153212_, BlockState p_153213_, BlockEntityType<T> p_153214_) {
+        return null;
+    }
+
+    @org.jetbrains.annotations.Nullable
+    @Override
+    public <T extends BlockEntity> GameEventListener getListener(Level p_153210_, T p_153211_) {
+        return null;
     }
 }

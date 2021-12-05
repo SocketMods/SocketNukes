@@ -1,5 +1,6 @@
 package dev.socketmods.socketnukes.tileentity;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -19,16 +20,16 @@ public abstract class CommonTileEntity extends BlockEntity {
 
     protected LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemHandler);
 
-    public CommonTileEntity(BlockEntityType<?> tileEntityTypeIn) {
-        super(tileEntityTypeIn);
+    public CommonTileEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos blockPos, BlockState blockState) {
+        super(tileEntityTypeIn, blockPos, blockState);
         itemHandler = createHandler();
     }
 
     @Override
-    public void load(BlockState state, CompoundTag nbt) {
+    public void load(CompoundTag nbt) {
         itemHandler.deserializeNBT(nbt.getCompound("inv"));
 
-        super.load(state, nbt);
+        super.load(nbt);
     }
 
     @Override
