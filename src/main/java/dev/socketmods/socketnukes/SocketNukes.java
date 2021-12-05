@@ -15,8 +15,6 @@ public class SocketNukes {
     public static final String MODID = "socketnukes";
 
     public SocketNukes() {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> ClientThingDoer::registerSpecialModels);
-
         SNRegistry.initialize();
         Network.setup();
     }
