@@ -6,8 +6,8 @@ import dev.socketmods.socketnukes.datagen.utils.recipes.SocketRecipeProvider;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.world.item.Items;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 
 import java.util.function.Consumer;

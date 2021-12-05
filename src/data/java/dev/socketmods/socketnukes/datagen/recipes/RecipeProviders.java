@@ -4,8 +4,8 @@ import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.world.item.Item;
 import net.minecraft.tags.Tag;
+import net.minecraft.world.item.Item;
 
 import java.util.function.Consumer;
 

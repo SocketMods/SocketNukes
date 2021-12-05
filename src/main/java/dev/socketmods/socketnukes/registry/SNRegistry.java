@@ -1,8 +1,5 @@
 package dev.socketmods.socketnukes.registry;
 
-import java.util.Objects;
-import java.util.function.Supplier;
-
 import com.google.common.collect.ImmutableSet;
 import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.block.explosive.TNTExplosive;
@@ -17,19 +14,22 @@ import dev.socketmods.socketnukes.item.SocketItems;
 import dev.socketmods.socketnukes.item.block.ExplosiveBlockItem;
 import dev.socketmods.socketnukes.item.util.ExploderItem;
 import dev.socketmods.socketnukes.tileentity.ExplosiveTileEntity;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.Item;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.*;
+
+import java.util.Objects;
+import java.util.function.Supplier;
 
 public class SNRegistry {
 

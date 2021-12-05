@@ -1,10 +1,10 @@
 package dev.socketmods.socketnukes.recipes;
 
 import com.google.gson.JsonObject;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.crafting.CraftingHelper;
 
 import java.util.function.Predicate;

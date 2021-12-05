@@ -2,8 +2,8 @@ package dev.socketmods.socketnukes.explosion;
 
 import dev.socketmods.socketnukes.explosion.meta.ExplosionMetaPackage;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;

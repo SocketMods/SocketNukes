@@ -1,21 +1,21 @@
 package dev.socketmods.socketnukes.registry;
 
-import java.util.List;
-
 import com.mojang.datafixers.util.Pair;
 import dev.socketmods.socketnukes.explosion.ExplosionProperties;
 import dev.socketmods.socketnukes.explosion.meta.ExplosionMetaPackage;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+
+import java.util.List;
 
 /**
  * Extended-capability Explosion

@@ -1,29 +1,29 @@
 package dev.socketmods.socketnukes.tileentity;
 
-import java.util.Objects;
-import java.util.Set;
-import javax.annotation.Nullable;
-
 import dev.socketmods.socketnukes.recipes.CommonRecipe;
 import dev.socketmods.socketnukes.recipes.ICommonRecipe;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.AbstractFurnaceBlock;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.util.Mth;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.util.Mth;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.AbstractFurnaceBlock;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
+import java.util.Set;
 
 public abstract class MachineTileEntity<T extends Recipe<?>> extends RecipeTileEntity<T> implements MenuProvider {
 

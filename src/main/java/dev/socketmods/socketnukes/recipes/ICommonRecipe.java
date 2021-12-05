@@ -1,8 +1,8 @@
 package dev.socketmods.socketnukes.recipes;
 
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.core.NonNullList;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 public interface ICommonRecipe extends Recipe<RecipeWrapper> {

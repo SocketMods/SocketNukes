@@ -1,7 +1,7 @@
 package dev.socketmods.socketnukes.client.screen;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.capability.Capabilities;
 import dev.socketmods.socketnukes.capability.exploderconfig.IConfiguration;
@@ -10,9 +10,9 @@ import dev.socketmods.socketnukes.networking.Network;
 import dev.socketmods.socketnukes.networking.packet.ExploderConfigChangedPacket;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * When the Exploder Item is used, it brings up this screen.

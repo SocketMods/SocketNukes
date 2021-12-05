@@ -2,8 +2,8 @@ package dev.socketmods.socketnukes.item;
 
 import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.registry.SNRegistry;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 /**

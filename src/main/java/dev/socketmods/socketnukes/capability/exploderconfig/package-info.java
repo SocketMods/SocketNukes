@@ -2,6 +2,6 @@
 @ParametersAreNonnullByDefault
 package dev.socketmods.socketnukes.capability.exploderconfig;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.minecraft.MethodsReturnNonnullByDefault;
+
+import javax.annotation.ParametersAreNonnullByDefault;

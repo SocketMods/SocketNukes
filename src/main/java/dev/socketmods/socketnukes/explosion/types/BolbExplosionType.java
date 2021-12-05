@@ -1,17 +1,17 @@
 package dev.socketmods.socketnukes.explosion.types;
 
-import java.util.Collections;
-
 import dev.socketmods.socketnukes.entity.BolbEntity;
 import dev.socketmods.socketnukes.explosion.ExplosionProperties;
 import dev.socketmods.socketnukes.explosion.meta.ExplosionMetaPackage;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import dev.socketmods.socketnukes.registry.SNRegistry;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+
+import java.util.Collections;
 
 /**
  * Spawns 16 (configurable by modifying the int in the explode function) Bolb entities.

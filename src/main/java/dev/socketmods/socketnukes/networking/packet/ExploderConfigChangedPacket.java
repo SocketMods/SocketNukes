@@ -1,12 +1,12 @@
 package dev.socketmods.socketnukes.networking.packet;
 
-import java.util.Objects;
-import java.util.function.Supplier;
-
 import dev.socketmods.socketnukes.capability.Capabilities;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkEvent;
+
+import java.util.Objects;
+import java.util.function.Supplier;
 
 /**
  * Tells the server that the configuration on a player's Exploder Item has changed.
