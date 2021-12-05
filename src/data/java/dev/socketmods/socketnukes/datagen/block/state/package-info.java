@@ -4,4 +4,4 @@ package dev.socketmods.socketnukes.datagen.block.state;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import mcp.MethodsReturnNonnullByDefault;
+import  net.minecraft.MethodsReturnNonnullByDefault;
