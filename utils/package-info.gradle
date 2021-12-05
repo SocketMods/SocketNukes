@@ -54,7 +54,7 @@ static String generatePackageInfo(String packageName) {
              |
              |import javax.annotation.ParametersAreNonnullByDefault;
              |
-             |import  net.minecraft.MethodsReturnNonnullByDefault;""".stripMargin()
+             |import net.minecraft.MethodsReturnNonnullByDefault;""".stripMargin()
 }
 
 static String getPackageName(File root, File current) {
