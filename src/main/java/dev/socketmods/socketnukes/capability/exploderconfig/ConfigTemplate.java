@@ -5,7 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 
 /**
  * A template for the getter/setter for the Exploder Configuration.
- *
+ * <p>
  * Exploder Configuration is a ResourceLocation that represents the currently selected explosion in the Exploder Item.
  *
  * @author Citrine
@@ -25,6 +25,7 @@ public class ConfigTemplate implements IConfiguration {
 
     /**
      * Set a new configuration value.
+     *
      * @param config the new config value
      */
     @Override

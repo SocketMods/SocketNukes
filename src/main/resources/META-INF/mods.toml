@@ -1,31 +1,31 @@
-modLoader="javafml"
-loaderVersion="[38,)"
-license="MIT License"
-issueTrackerURL="https://github.com/SocketMods/SocketNukes/issues"
+modLoader = "javafml"
+loaderVersion = "[38,)"
+license = "MIT License"
+issueTrackerURL = "https://github.com/SocketMods/SocketNukes/issues"
 
 [[mods]]
-modId="socketnukes"
-version="${file.jarVersion}"
-displayName="SocketNukes"
+modId = "socketnukes"
+version = "${file.jarVersion}"
+displayName = "SocketNukes"
 #updateJSONURL=""
-displayURL="https://socketsmod.dev/"
+displayURL = "https://socketsmod.dev/"
 #logoFile="examplemod.png"
-credits="Calclavia for the original ICBM mod, BuiltBrokenModding for their ICBM-Classic continuation"
-authors="The team at SocketMods"
-description='''
+credits = "Calclavia for the original ICBM mod, BuiltBrokenModding for their ICBM-Classic continuation"
+authors = "The team at SocketMods"
+description = '''
 Boom goes the bombs and the missiles!
 '''
 
 [[dependencies.socketnukes]]
-    modId="forge"
-    mandatory=true
-    versionRange="[38,)"
-    ordering="NONE"
-    side="BOTH"
+modId = "forge"
+mandatory = true
+versionRange = "[38,)"
+ordering = "NONE"
+side = "BOTH"
 
 [[dependencies.socketnukes]]
-    modId="minecraft"
-    mandatory=true
-    versionRange="[1.18,1.19)"
-    ordering="NONE"
-    side="BOTH"
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.18,1.19)"
+ordering = "NONE"
+side = "BOTH"

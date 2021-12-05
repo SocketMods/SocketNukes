@@ -4,8 +4,8 @@ import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.capability.exploderconfig.ConfigProvider;
 import dev.socketmods.socketnukes.capability.exploderconfig.IConfiguration;
 import dev.socketmods.socketnukes.registry.SNRegistry;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
@@ -26,7 +26,7 @@ public class Capabilities {
 
     @SubscribeEvent
     public static void attachCapabilities(AttachCapabilitiesEvent<ItemStack> e) {
-        if(e.getObject().getItem() == SNRegistry.EXPLODER_ITEM.get()) {
+        if (e.getObject().getItem() == SNRegistry.EXPLODER_ITEM.get()) {
             ConfigProvider provider = new ConfigProvider();
             e.addCapability(new ResourceLocation(SocketNukes.MODID, "config"), provider);
             e.addListener(provider::invalidate);

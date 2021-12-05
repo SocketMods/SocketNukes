@@ -1,18 +1,18 @@
 package dev.socketmods.socketnukes.client.screen.widget;
 
-import java.util.function.Supplier;
-import javax.annotation.Nullable;
-
-import com.mojang.blaze3d.vertex.*;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
+
+import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 public class ExplosionList extends ObjectSelectionList<ExplosionList.ExplosionListEntry> {
 
@@ -76,7 +76,7 @@ public class ExplosionList extends ObjectSelectionList<ExplosionList.ExplosionLi
                 // j,   k,   j2,   k1,         j1
                 // idx, top, left, entryWidth, entryHeight
 
-                int p3 = y0 + 4 - (int)getScrollAmount();
+                int p3 = y0 + 4 - (int) getScrollAmount();
                 int i1 = p3 + idx * itemHeight + headerHeight;
                 int j1 = itemHeight - 4;
                 int l1 = x0 + width / 2 - entryWidth / 2;

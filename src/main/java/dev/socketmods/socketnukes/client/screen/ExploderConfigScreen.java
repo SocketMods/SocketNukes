@@ -1,7 +1,7 @@
 package dev.socketmods.socketnukes.client.screen;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.capability.Capabilities;
 import dev.socketmods.socketnukes.capability.exploderconfig.IConfiguration;
@@ -10,16 +10,16 @@ import dev.socketmods.socketnukes.networking.Network;
 import dev.socketmods.socketnukes.networking.packet.ExploderConfigChangedPacket;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * When the Exploder Item is used, it brings up this screen.
- *
+ * <p>
  * This screen shows a list of buttons - filled by the currently registered ExplosiveTypes, and allows you to select between them.
  * Upon a selection being made, it updates the server to make it aware.
- *
+ * <p>
  * This is an otherwise simple class.
  *
  * @author Citrine
@@ -75,7 +75,7 @@ public class ExploderConfigScreen extends Screen {
         RenderSystem.setShaderTexture(0, Screen.BACKGROUND_LOCATION);
 
         double scale = minecraft.getWindow().getGuiScale();
-        int posY   = guiTop + 5;
+        int posY = guiTop + 5;
         int height = SCREEN_HEIGHT - 10;
         RenderSystem.enableScissor((int) (guiLeft * scale), (int) (posY * scale), (int) (SCREEN_WIDTH * scale), (int) (height * scale));
         list.render(stack, mouseX, mouseY, partialTicks);

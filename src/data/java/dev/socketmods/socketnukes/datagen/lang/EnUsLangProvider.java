@@ -1,7 +1,5 @@
 package dev.socketmods.socketnukes.datagen.lang;
 
-import java.util.Objects;
-
 import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.item.SocketItems;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
@@ -9,6 +7,8 @@ import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.common.data.LanguageProvider;
+
+import java.util.Objects;
 
 public class EnUsLangProvider extends LanguageProvider {
 

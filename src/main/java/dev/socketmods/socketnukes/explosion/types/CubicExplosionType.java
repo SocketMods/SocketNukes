@@ -8,28 +8,28 @@ import dev.socketmods.socketnukes.networking.Network;
 import dev.socketmods.socketnukes.networking.packet.ExtendedExplosionPacket;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.item.enchantment.ProtectionEnchantment;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.item.enchantment.ProtectionEnchantment;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
 
 import java.util.Arrays;
@@ -43,11 +43,10 @@ import java.util.List;
  * @author Citrine
  */
 public class CubicExplosionType extends ExtendedExplosionType {
-    private final ExplosionProperties properties;
-
     // Stage constants - we gather the blocks to be broken in stage 1, and actually break them in stage 2.
     private static final int STAGE_PREPARE = 1;
     private static final int STAGE_BREAK = 2;
+    private final ExplosionProperties properties;
 
     public CubicExplosionType(ExplosionProperties props) {
         super(4, Arrays.asList(Blocks.OBSIDIAN, Blocks.BEDROCK), 2, DamageSource.GENERIC, false);
@@ -57,13 +56,13 @@ public class CubicExplosionType extends ExtendedExplosionType {
 
     @Override
     public ExplosionMetaPackage explode(Level worldIn, BlockPos source, int stage, Entity placer, ExplosionMetaPackage meta) {
-        switch(stage) {
+        switch (stage) {
             case STAGE_PREPARE:
                 for (int xPos = source.getX() - radius; xPos < source.getX() + radius; xPos++) {
                     for (int yPos = source.getY() - radius; yPos < source.getY() + radius; yPos++) {
                         for (int zPos = source.getZ() - radius; zPos < source.getZ() + radius; zPos++) {
                             BlockPos pos = new BlockPos(xPos, yPos, zPos);
-                            if(!immuneBlocks.contains(worldIn.getBlockState(pos).getBlock()))
+                            if (!immuneBlocks.contains(worldIn.getBlockState(pos).getBlock()))
                                 meta.affectedBlocks.add(new BlockPos(xPos, yPos, zPos));
                         }
                     }
@@ -146,20 +145,20 @@ public class CubicExplosionType extends ExtendedExplosionType {
 
                                 blockstate.getDrops(lootcontext$builder).forEach((stack) -> handleExplosionDrops(objectarraylist, stack, blockpos1));
                             }
-                            if(!worldIn.isClientSide)
+                            if (!worldIn.isClientSide)
                                 blockstate.onBlockExploded(worldIn, blockpos, vanillaExplosion2);
                             worldIn.getProfiler().pop();
                         }
                     }
 
                     for (Pair<ItemStack, BlockPos> pair : objectarraylist) {
-                        if(!worldIn.isClientSide)
+                        if (!worldIn.isClientSide)
                             Block.popResource(worldIn, pair.getSecond(), pair.getFirst());
                     }
                 }
 
                 // We have to manually tell the client that these blocks have broken, as onBlockExploded does not.
-                if(!worldIn.isClientSide) {
+                if (!worldIn.isClientSide) {
                     ServerLevel sWorld = (ServerLevel) worldIn;
                     for (ServerPlayer serverplayerentity : sWorld.players()) {
                         if (serverplayerentity.distanceToSqr(source.getX(), source.getY(), source.getZ()) < 4096.0D) {

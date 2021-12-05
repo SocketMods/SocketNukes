@@ -2,8 +2,8 @@ package dev.socketmods.socketnukes.explosion;
 
 import dev.socketmods.socketnukes.explosion.meta.ExplosionMetaPackage;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 
@@ -14,20 +14,18 @@ import java.util.List;
 /**
  * A wrapper for the ExtendedExplosions, intended to be used where an Explosion is hard coded as a requirement,
  * for example the Forge events, and calculating resistances.
- *
+ * <p>
  * It is what actually executes the ExtendedExplosionType#explode method, for every stage.
  *
  * @author Citrine
  */
 public class DummyExplosion extends Explosion {
 
-    private ExtendedExplosionType explosionType;
-
     protected Level world;
     protected Entity source;
     protected BlockPos position;
-
     protected float radius;
+    private ExtendedExplosionType explosionType;
 
     public DummyExplosion(Level worldIn, @Nullable Entity entityIn, double x, double y, double z, float size, List<BlockPos> affectedPositions) {
         super(worldIn, entityIn, x, y, z, size, affectedPositions);
@@ -49,7 +47,7 @@ public class DummyExplosion extends Explosion {
     // Execute the explosion extensibly.
     // TODO: tick delay?
     public void runExplosion() {
-        if(!explosionType.prepareExplosion(world, position, source)) return;
+        if (!explosionType.prepareExplosion(world, position, source)) return;
 
         ExplosionMetaPackage meta = new ExplosionMetaPackage();
 

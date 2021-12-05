@@ -1,8 +1,5 @@
 package dev.socketmods.socketnukes.registry;
 
-import java.util.Objects;
-import java.util.function.Supplier;
-
 import com.google.common.collect.ImmutableSet;
 import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.block.explosive.TNTExplosive;
@@ -17,19 +14,22 @@ import dev.socketmods.socketnukes.item.SocketItems;
 import dev.socketmods.socketnukes.item.block.ExplosiveBlockItem;
 import dev.socketmods.socketnukes.item.util.ExploderItem;
 import dev.socketmods.socketnukes.tileentity.ExplosiveTileEntity;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.Item;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.*;
+
+import java.util.Objects;
+import java.util.function.Supplier;
 
 public class SNRegistry {
 
@@ -46,59 +46,44 @@ public class SNRegistry {
     public static final DeferredRegister<EntityType<?>> ENTITYTYPES = DeferredRegister.create(ForgeRegistries.ENTITIES, SocketNukes.MODID);
 
     public static final DeferredRegister<ExtendedExplosionType> EXPLOSIONS = DeferredRegister.create(ExtendedExplosionType.class, SocketNukes.MODID);
-
-    /***********************************************
-     *            SocketNukes Registries           *
-     **********************************************/
-
-    public static Supplier<IForgeRegistry<ExtendedExplosionType>> EXPLOSION_TYPE_REGISTRY = EXPLOSIONS.makeRegistry("explosion_types", () ->
-            new RegistryBuilder<ExtendedExplosionType>().setMaxID(Integer.MAX_VALUE - 1).onAdd((owner, stage, id, obj, old) ->
-                SocketNukes.LOGGER.info("ExplosionType Added: " + getName(obj).toString() + " ")
-            ).setDefaultKey(new ResourceLocation(SocketNukes.MODID, "null"))
-    );
-
     /***********************************************
      *          Registry Object Instances          *
      ***********************************************/
 
     // BLOCKS
     public static final RegistryObject<Block> GENERIC_EXPLOSIVE = BLOCKS.register("explosive", TNTExplosive::new);
-
     // ITEMS
     public static final RegistryObject<Item> EXPLODER_ITEM = ITEMS.register("exploder_item", () -> new ExploderItem(SocketItems.EXPLODER_PROPERTIES));
     public static final RegistryObject<Item> GENERIC_EXPLOSIVE_ITEM = ITEMS.register("explosive", () -> new ExplosiveBlockItem(SocketItems.EXPLOSIVE_PROPERTIES));
-
     // EXPLOSIONS
     public static final RegistryObject<VanillaExplosionType> VANILLA_EXPLOSION = EXPLOSIONS.register("vanilla", () ->
             new VanillaExplosionType(new ExplosionProperties(true, false, ParticleTypes.EXPLOSION_EMITTER, SoundEvents.GENERIC_EXPLODE))
     );
-
     public static final RegistryObject<ExtendedExplosionType> NULL_EXPLOSION = EXPLOSIONS.register("null", NullExplosionType::new);
-
     public static final RegistryObject<CubicExplosionType> CUBIC_EXPLOSION = EXPLOSIONS.register("cubic", () ->
             new CubicExplosionType(new ExplosionProperties(true, false, ParticleTypes.CLOUD, SoundEvents.DISPENSER_FAIL))
     );
-
     public static final RegistryObject<BolbExplosionType> BOLB_EXPLOSION = EXPLOSIONS.register("bolb", () ->
             new BolbExplosionType(new ExplosionProperties(true, false, ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, SoundEvents.ANVIL_LAND))
     );
-
     // ENTITY TYPE
     public static final RegistryObject<EntityType<ExplosiveEntity>> EXPLOSIVE_ENTITY_TYPE = ENTITYTYPES.register("explosive", () ->
-        new EntityType<>(ExplosiveEntity::create, MobCategory.MISC, true, true, false, false, ImmutableSet.of(), EntityDimensions.fixed(1f, 1f), 200, 1)
+            new EntityType<>(ExplosiveEntity::create, MobCategory.MISC, true, true, false, false, ImmutableSet.of(), EntityDimensions.fixed(1f, 1f), 200, 1)
     );
-
     public static final RegistryObject<EntityType<BolbEntity>> BOLB_ENTITY_TYPE = ENTITYTYPES.register("bolb", () ->
             new EntityType<>(BolbEntity::new, MobCategory.MISC, true, true, false, false, ImmutableSet.of(), EntityDimensions.scalable(2.04F, 2.04F), 10, 1)
     );
+    /***********************************************
+     *            SocketNukes Registries           *
+     **********************************************/
+
+    public static Supplier<IForgeRegistry<ExtendedExplosionType>> EXPLOSION_TYPE_REGISTRY = EXPLOSIONS.makeRegistry("explosion_types", () ->
+            new RegistryBuilder<ExtendedExplosionType>().setMaxID(Integer.MAX_VALUE - 1).onAdd((owner, stage, id, obj, old) ->
+                    SocketNukes.LOGGER.info("ExplosionType Added: " + getName(obj).toString() + " ")
+            ).setDefaultKey(new ResourceLocation(SocketNukes.MODID, "null"))
+    );
 
     // TILE ENTITY TYPE
-
-    // We can't sanely provide non null data-fixers for a TileEntityType
-    @SuppressWarnings("ConstantConditions")
-    public static final RegistryObject<BlockEntityType<ExplosiveTileEntity>> EXPLOSIVE_TE = TETYPES.register("explosive", () ->
-            BlockEntityType.Builder.of(ExplosiveTileEntity::new, GENERIC_EXPLOSIVE.get()).build(null)
-    );
 
     public static void initialize() {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -108,7 +93,11 @@ public class SNRegistry {
         CONTAINERTYPES.register(modBus);
         EXPLOSIONS.register(modBus);
         ENTITYTYPES.register(modBus);
-    }
+    }    // We can't sanely provide non null data-fixers for a TileEntityType
+    @SuppressWarnings("ConstantConditions")
+    public static final RegistryObject<BlockEntityType<ExplosiveTileEntity>> EXPLOSIVE_TE = TETYPES.register("explosive", () ->
+            BlockEntityType.Builder.of(ExplosiveTileEntity::new, GENERIC_EXPLOSIVE.get()).build(null)
+    );
 
     public static ExtendedExplosionType getExplosionType(String name) {
         return Objects.requireNonNull(EXPLOSION_TYPE_REGISTRY.get().getValue(new ResourceLocation(name)));
@@ -125,4 +114,6 @@ public class SNRegistry {
     public static <T extends IForgeRegistryEntry<?>> ResourceLocation getName(Supplier<T> supplier) {
         return getName(supplier.get());
     }
+
+
 }

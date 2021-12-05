@@ -12,8 +12,8 @@ import dev.socketmods.socketnukes.datagen.recipes.RecipeProviders;
 import dev.socketmods.socketnukes.datagen.tags.BlockTagProviders;
 import dev.socketmods.socketnukes.datagen.tags.FluidTagsProviders;
 import dev.socketmods.socketnukes.datagen.tags.ItemTagProviders;
-import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
@@ -30,7 +30,7 @@ public class DataGen {
     public static void onGatherData(GatherDataEvent event) {
         LOGGER.info(DATAGEN, "Gathering data providers");
         DataGenerator generator = event.getGenerator();
-        if(event.includeServer()){
+        if (event.includeServer()) {
             LOGGER.info(DATAGEN, "Adding data providers for server data");
             generator.addProvider(new RecipeProviders(generator));
             generator.addProvider(new AdvancementsProvider(generator));
@@ -44,7 +44,7 @@ public class DataGen {
 
         }
 
-        if(event.includeClient()){
+        if (event.includeClient()) {
             LOGGER.info(DATAGEN, "Adding data providers for client assets");
             BlockModelProviders models = new BlockModelProviders(generator, event.getExistingFileHelper());
             generator.addProvider(models);

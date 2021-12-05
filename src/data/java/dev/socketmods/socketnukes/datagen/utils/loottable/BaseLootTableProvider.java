@@ -31,59 +31,58 @@ import java.util.Set;
 
 public abstract class BaseLootTableProvider extends LootTableProvider {
 
-  private static final Logger LOGGER = LogManager.getLogger();
-  private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+    public static Map<ResourceLocation, LootTable> tables = new HashMap<>();
+    protected final Set<Map<Block, LootTable.Builder>> lootTables = new HashSet<>();
+    protected final DataGenerator generator;
 
-  protected final Set<Map<Block, LootTable.Builder>> lootTables = new HashSet<>();
-  public static Map<ResourceLocation, LootTable> tables = new HashMap<>();
-  protected final DataGenerator generator;
+    public BaseLootTableProvider(DataGenerator generatorIn) {
+        super(generatorIn);
+        this.generator = generatorIn;
+    }
 
-  public BaseLootTableProvider(DataGenerator generatorIn) {
-    super(generatorIn);
-    this.generator = generatorIn;
-  }
+    public static LootTable.Builder createStandardBlockTable(String name, Block block, BlockEntityType<?> blockEntityType) {
+        LootPool.Builder builder = LootPool.lootPool()
+                .name(name)
+                .setRolls(ConstantValue.exactly(1))
+                .add(LootItem.lootTableItem(block)
+                        .apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
+                        .apply(SetContainerContents.setContents(blockEntityType)
+                                .withEntry(DynamicLoot.dynamicEntry(new ResourceLocation("minecraft", "contents"))))
+                );
+        return LootTable.lootTable().withPool(builder).setParamSet(LootContextParamSets.BLOCK);
+    }
 
-  protected abstract void addTables();
+    protected abstract void addTables();
 
-  public static LootTable.Builder createStandardBlockTable(String name, Block block, BlockEntityType<?> blockEntityType) {
-    LootPool.Builder builder = LootPool.lootPool()
-        .name(name)
-        .setRolls(ConstantValue.exactly(1))
-        .add(LootItem.lootTableItem(block)
-            .apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
-            .apply(SetContainerContents.setContents(blockEntityType)
-                .withEntry(DynamicLoot.dynamicEntry(new ResourceLocation("minecraft", "contents"))))
-        );
-    return LootTable.lootTable().withPool(builder).setParamSet(LootContextParamSets.BLOCK);
-  }
+    @Override
+    public void run(HashCache cache) {
+        addTables();
 
-  @Override
-  public void run(HashCache cache) {
-    addTables();
+        lootTables.forEach(blockBuilderMap -> {
+            for (Map.Entry<Block, LootTable.Builder> entry : blockBuilderMap.entrySet()) {
+                tables.put(entry.getKey().getLootTable(), entry.getValue().build());
+            }
+        });
 
-    lootTables.forEach(blockBuilderMap -> {
-      for (Map.Entry<Block, LootTable.Builder> entry : blockBuilderMap.entrySet()) {
-        tables.put(entry.getKey().getLootTable(), entry.getValue().build());
-      }
-    });
+        writeTables(cache, tables);
+    }
 
-    writeTables(cache, tables);
-  }
+    private void writeTables(HashCache cache, Map<ResourceLocation, LootTable> tables) {
+        Path outputFolder = this.generator.getOutputFolder();
+        tables.forEach((key, lootTable) -> {
+            Path path = outputFolder.resolve("data/" + key.getNamespace() + "/loot_tables/" + key.getPath() + ".json");
+            try {
+                DataProvider.save(GSON, cache, LootTables.serialize(lootTable), path);
+            } catch (IOException e) {
+                LOGGER.error("Couldn't write loot table {}", path, e);
+            }
+        });
+    }
 
-  private void writeTables(HashCache cache, Map<ResourceLocation, LootTable> tables) {
-    Path outputFolder = this.generator.getOutputFolder();
-    tables.forEach((key, lootTable) -> {
-      Path path = outputFolder.resolve("data/" + key.getNamespace() + "/loot_tables/" + key.getPath() + ".json");
-      try {
-        DataProvider.save(GSON, cache, LootTables.serialize(lootTable), path);
-      } catch (IOException e) {
-        LOGGER.error("Couldn't write loot table {}", path, e);
-      }
-    });
-  }
-
-  @Override
-  public String getName() {
-    return SocketNukes.MODID + " LootTables";
-  }
+    @Override
+    public String getName() {
+        return SocketNukes.MODID + " LootTables";
+    }
 }
