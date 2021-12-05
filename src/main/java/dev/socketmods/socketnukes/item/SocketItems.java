@@ -2,14 +2,14 @@ package dev.socketmods.socketnukes.item;
 
 import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.registry.SNRegistry;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 
 /**
  * The name here is a little bit of a misnomer.
  * It contains Item.Properties instances for reuse, plus the tabs.
- * <p>
+ *
  * Item instances are in SNRegistry.
  */
 public class SocketItems {

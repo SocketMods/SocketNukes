@@ -1,10 +1,13 @@
 package dev.socketmods.socketnukes;
 
-import dev.socketmods.socketnukes.networking.Network;
-import dev.socketmods.socketnukes.registry.SNRegistry;
-import net.minecraftforge.fml.common.Mod;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import dev.socketmods.socketnukes.client.ClientThingDoer;
+import dev.socketmods.socketnukes.networking.Network;
+import dev.socketmods.socketnukes.registry.SNRegistry;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.common.Mod;
 
 @Mod(SocketNukes.MODID)
 public class SocketNukes {

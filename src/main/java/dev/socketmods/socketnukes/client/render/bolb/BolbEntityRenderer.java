@@ -19,13 +19,9 @@ public class BolbEntityRenderer extends MobRenderer<BolbEntity, BolbModel> {
         this.addLayer(new BolbHatLayer(this, context.getModelSet()));
     }
 
-    public static ResourceLocation getEntityTextureLocation(BolbEntity bolb) {
-        return TEXTURE;
-    }
-
     @Override
     public void render(BolbEntity bolb, float entityYaw, float partialTicks, PoseStack stack, MultiBufferSource buffers, int packedLight) {
-        this.shadowRadius = 0.25F * (float) bolb.getSize();
+        this.shadowRadius = 0.25F * (float)bolb.getSize();
         super.render(bolb, entityYaw, partialTicks, stack, buffers, packedLight);
     }
 
@@ -35,7 +31,7 @@ public class BolbEntityRenderer extends MobRenderer<BolbEntity, BolbModel> {
         stack.scale(0.999F, 0.999F, 0.999F);
         stack.translate(0.0D, 0.001F, 0.0D);
 
-        float size = bolb.getSize();
+        float size   = bolb.getSize();
         float squish = Mth.lerp(partialTickTime, bolb.oSquish, bolb.squish) / (size * 0.5F + 1.0F);
         float squeeze = 1.0F / (squish + 1.0F);
 
@@ -48,6 +44,10 @@ public class BolbEntityRenderer extends MobRenderer<BolbEntity, BolbModel> {
     @Override
     public ResourceLocation getTextureLocation(BolbEntity bolb) {
         return getEntityTextureLocation(bolb);
+    }
+
+    public static ResourceLocation getEntityTextureLocation(BolbEntity bolb) {
+        return TEXTURE;
     }
 }
 

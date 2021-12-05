@@ -1,5 +1,7 @@
 package dev.socketmods.socketnukes.client.events;
 
+import java.util.Objects;
+
 import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.client.render.ExplosiveEntityRenderer;
 import dev.socketmods.socketnukes.client.render.SNModelLayers;
@@ -19,8 +21,6 @@ import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-
-import java.util.Objects;
 
 /**
  * Runs all the client-only events. Currently, only Entity Rendering.

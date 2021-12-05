@@ -2,8 +2,8 @@ package dev.socketmods.socketnukes.tileentity;
 
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class ExplosiveTileEntity extends BlockEntity {

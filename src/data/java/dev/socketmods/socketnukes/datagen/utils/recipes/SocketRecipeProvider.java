@@ -6,10 +6,10 @@ import java.util.function.Consumer;
 
 public abstract class SocketRecipeProvider implements ISocketRecipeProvider {
 
-    protected Consumer<FinishedRecipe> consumer;
+  protected Consumer<FinishedRecipe> consumer;
 
-    public SocketRecipeProvider(Consumer<FinishedRecipe> consumer) {
-        this.consumer = consumer;
-        init();
-    }
+  public SocketRecipeProvider(Consumer<FinishedRecipe> consumer) {
+    this.consumer = consumer;
+    init();
+  }
 }

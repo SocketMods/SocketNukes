@@ -13,19 +13,23 @@ import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.advancements.RequirementsStrategy;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
 import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.Tag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.tags.Tag;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class ShapedRecipeWithNBTBuilder {
@@ -35,8 +39,7 @@ public class ShapedRecipeWithNBTBuilder {
     private final Map<Character, Ingredient> key = Maps.newLinkedHashMap();
     private final Advancement.Builder advancementBuilder = Advancement.Builder.advancement();
     private String group;
-    private @Nullable
-    CompoundTag nbt;
+    private @Nullable CompoundTag nbt;
 
     public ShapedRecipeWithNBTBuilder(ItemLike resultIn, int countIn) {
         this.result = resultIn.asItem();
@@ -110,7 +113,7 @@ public class ShapedRecipeWithNBTBuilder {
         return this;
     }
 
-    public ShapedRecipeWithNBTBuilder setNBT(CompoundTag nbtIn) {
+    public ShapedRecipeWithNBTBuilder setNBT(CompoundTag nbtIn){
         this.nbt = nbtIn;
         return this;
     }
@@ -155,8 +158,8 @@ public class ShapedRecipeWithNBTBuilder {
             Set<Character> set = Sets.newHashSet(this.key.keySet());
             set.remove(' ');
 
-            for (String s : this.pattern) {
-                for (int i = 0; i < s.length(); ++i) {
+            for(String s : this.pattern) {
+                for(int i = 0; i < s.length(); ++i) {
                     char c0 = s.charAt(i);
                     if (!this.key.containsKey(c0) && c0 != ' ') {
                         throw new IllegalStateException("Pattern in recipe " + id + " uses undefined symbol '" + c0 + "'");
@@ -212,7 +215,7 @@ public class ShapedRecipeWithNBTBuilder {
         private final ResourceLocation advancementId;
         private final CompoundTag nbt;
 
-        public Result(ResourceLocation idIn, Item resultIn, int countIn, String groupIn, List<String> patternIn, Map<Character, Ingredient> keyIn, Advancement.Builder advancementBuilderIn, ResourceLocation advancementIdIn, @Nullable CompoundTag nbtIn) {
+        public Result(ResourceLocation idIn, Item resultIn, int countIn, String groupIn, List<String> patternIn, Map<Character, Ingredient> keyIn, Advancement.Builder advancementBuilderIn, ResourceLocation advancementIdIn,  @Nullable CompoundTag nbtIn) {
             this.id = idIn;
             this.result = resultIn;
             this.count = countIn;
@@ -232,14 +235,14 @@ public class ShapedRecipeWithNBTBuilder {
 
             JsonArray jsonarray = new JsonArray();
 
-            for (String s : this.pattern) {
+            for(String s : this.pattern) {
                 jsonarray.add(s);
             }
 
             json.add("pattern", jsonarray);
             JsonObject jsonobject = new JsonObject();
 
-            for (Map.Entry<Character, Ingredient> entry : this.key.entrySet()) {
+            for(Map.Entry<Character, Ingredient> entry : this.key.entrySet()) {
                 jsonobject.add(String.valueOf(entry.getKey()), entry.getValue().toJson());
             }
 
@@ -249,7 +252,7 @@ public class ShapedRecipeWithNBTBuilder {
             if (this.count > 1) {
                 jsonobject1.addProperty("count", this.count);
             }
-            if (this.nbt != null) {
+            if(this.nbt != null){
                 JsonElement test = NbtOps.INSTANCE.convertTo(JsonOps.INSTANCE, nbt);
                 jsonobject1.add("nbt", test);
             }

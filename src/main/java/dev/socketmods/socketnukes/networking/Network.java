@@ -2,8 +2,8 @@ package dev.socketmods.socketnukes.networking;
 
 import dev.socketmods.socketnukes.networking.packet.ExploderConfigChangedPacket;
 import dev.socketmods.socketnukes.networking.packet.ExtendedExplosionPacket;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
@@ -17,13 +17,15 @@ import static dev.socketmods.socketnukes.SocketNukes.MODID;
  */
 public class Network {
     private static final String networkVer = "1";
+
+    private static int PACKETID = 0;
+
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
             new ResourceLocation(MODID, "explosions"),
             () -> networkVer,
             networkVer::equals,
             networkVer::equals
     );
-    private static int PACKETID = 0;
 
     // Register valid packets, called from SocketNukes, the main class
     public static void setup() {

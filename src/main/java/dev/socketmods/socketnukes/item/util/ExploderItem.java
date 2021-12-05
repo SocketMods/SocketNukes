@@ -5,13 +5,13 @@ import dev.socketmods.socketnukes.client.ClientThingDoer;
 import dev.socketmods.socketnukes.entity.ExplosiveEntity;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import dev.socketmods.socketnukes.registry.SNRegistry;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.level.Level;
 
 /**
@@ -34,7 +34,7 @@ public class ExploderItem extends Item {
             return super.useOn(context);
 
         // If we're on the client and we're sneaking, open the configuration menu.
-        if (!(context.getPlayer() == null) && !context.getPlayer().isCrouching()) {
+        if(!(context.getPlayer() == null) && !context.getPlayer().isCrouching()) {
             // If we're just right clicking a block, trigger an immediate explosion with the configured type.
             context.getItemInHand().getCapability(Capabilities.EXPLODER_CONFIGURATION_CAPABILITY).ifPresent(cap -> {
                 ExtendedExplosionType explosion = SNRegistry.getExplosionType(cap.getConfig());
@@ -49,7 +49,7 @@ public class ExploderItem extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
-        if (worldIn.isClientSide) ClientThingDoer.openConfigScreen();
+        if(worldIn.isClientSide) ClientThingDoer.openConfigScreen();
 
         return InteractionResultHolder.pass(playerIn.getItemInHand(handIn));
     }

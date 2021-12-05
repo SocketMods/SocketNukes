@@ -1,27 +1,28 @@
 package dev.socketmods.socketnukes.entity;
 
+import javax.annotation.Nullable;
+
 import dev.socketmods.socketnukes.explosion.DummyExplosion;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import dev.socketmods.socketnukes.registry.SNRegistry;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MoverType;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkHooks;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * The Explosive Entity is what runs the actual logic for exploding things from a TNTExplosive.
  * It waits, bouncing around slightly, before actually popping.
- * <p>
+ *
  * This entity can be given any ExplosiveType you need, and it will run that logic via DummyExplosion.
  *
  * @author Citrine
@@ -41,7 +42,7 @@ public class ExplosiveEntity extends Entity {
     public ExplosiveEntity(Level worldIn, BlockPos position, ExtendedExplosionType explosive, @Nullable LivingEntity igniter) {
         this(SNRegistry.EXPLOSIVE_ENTITY_TYPE.get(), worldIn);
         this.setPos(position.getX(), position.getY(), position.getZ());
-        double d0 = worldIn.random.nextDouble() * (double) ((float) Math.PI * 2F);
+        double d0 = worldIn.random.nextDouble() * (double)((float)Math.PI * 2F);
         this.setDeltaMovement(-Math.sin(d0) * 0.02D, 0.2F, -Math.cos(d0) * 0.02D);
         this.setFuse(80);
         this.xo = position.getX();
@@ -60,7 +61,7 @@ public class ExplosiveEntity extends Entity {
      * Runs the actual logic for preparing to execute.
      * It slowly ticks down, bouncing slightly, creating smoke as a visual indicator.
      * Once the tick counter runs out, it explodes via the explode method.
-     * <p>
+     *
      * When this Entity is synchronized from the server, it arrives with no extra data.
      * For this reason, when there is no metadata we fall back to a "do nothing" state.
      * This only runs when sync fails, which should be only from a TNTExplosive being ignited.
@@ -68,7 +69,7 @@ public class ExplosiveEntity extends Entity {
      */
     @Override
     public void tick() {
-        if (explosion == null) {
+        if(explosion == null) {
             explosion = SNRegistry.NULL_EXPLOSION.get();
             return;
         }
@@ -84,7 +85,7 @@ public class ExplosiveEntity extends Entity {
 
         --this.fuse;
         if (this.fuse <= 0) {
-            this.discard();
+            this.remove(RemovalReason.DISCARDED);
             this.explode();
         } else {
             this.updateInWaterStateAndDoFluidPushing();
@@ -101,8 +102,8 @@ public class ExplosiveEntity extends Entity {
      */
     protected void explode() {
         DummyExplosion explosion = new DummyExplosion(this.level, placer,
-                this.getX(), this.getY() - 1, this.getZ(),
-                this.explosion);
+            this.getX(), this.getY() - 1, this.getZ(),
+            this.explosion);
 
         explosion.runExplosion();
     }
@@ -114,7 +115,7 @@ public class ExplosiveEntity extends Entity {
 
     @Override
     protected void addAdditionalSaveData(CompoundTag compound) {
-        compound.putShort("fuse", (short) this.getFuse());
+        compound.putShort("fuse", (short)this.getFuse());
         compound.putString("explosionType", SNRegistry.getName(explosion).toString());
     }
 
@@ -134,12 +135,12 @@ public class ExplosiveEntity extends Entity {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    public int getFuse() {
-        return this.fuse;
-    }
-
     public void setFuse(int fuseIn) {
         this.entityData.set(FUSE, fuseIn);
         this.fuse = fuseIn;
+    }
+
+    public int getFuse() {
+        return this.fuse;
     }
 }
