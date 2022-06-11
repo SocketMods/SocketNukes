@@ -32,9 +32,9 @@ public abstract class CommonTileEntity extends BlockEntity {
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    protected void saveAdditional(CompoundTag compound) {
         compound.put("inv", itemHandler.serializeNBT());
-        return super.save(compound);
+        super.saveAdditional(compound);
     }
 
     @Override

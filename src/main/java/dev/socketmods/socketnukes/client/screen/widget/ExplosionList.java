@@ -8,7 +8,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,7 +40,7 @@ public class ExplosionList extends ObjectSelectionList<ExplosionList.ExplosionLi
 
             this.addEntry(entry);
 
-            if (SNRegistry.getName(entry.getType()).equals(selected))
+            if (SNRegistry.EXPLOSION_TYPE_REGISTRY.get().getKey(entry.getType()).equals(selected))
                 setSelected(entry);
         });
     }
@@ -104,7 +103,7 @@ public class ExplosionList extends ObjectSelectionList<ExplosionList.ExplosionLi
                 RenderSystem.enableTexture();
             }
 
-            String name = SNRegistry.getName(type).toString();
+            String name = SNRegistry.EXPLOSION_TYPE_REGISTRY.get().getKey(type.get()).toString();
             parent.font.drawShadow(stack, name, left + 3, top + 2, isSelected ? 0xFFFF55 : 0xFFFFFF);
         }
 
@@ -121,7 +120,7 @@ public class ExplosionList extends ObjectSelectionList<ExplosionList.ExplosionLi
 
         @Override
         public Component getNarration() {
-            return new TranslatableComponent("narrator.select", getType().getTranslationText());
+            return Component.translatable("narrator.select", getType().getTranslationText());
         }
     }
 

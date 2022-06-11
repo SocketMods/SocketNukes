@@ -175,7 +175,7 @@ public class VanillaExplosionType extends ExtendedExplosionType {
 
                 if (doBlocksDrop) {
                     ObjectArrayList<Pair<ItemStack, BlockPos>> objectarraylist = new ObjectArrayList<>();
-                    Collections.shuffle(meta.affectedBlocks, worldIn.random);
+                    Collections.shuffle(meta.affectedBlocks, new Random());
 
                     for (BlockPos blockpos : meta.affectedBlocks) {
                         BlockState blockstate = worldIn.getBlockState(blockpos);

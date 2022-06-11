@@ -5,6 +5,7 @@ import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class ItemModelProviders extends ItemModelProvider {
 
@@ -15,14 +16,14 @@ public class ItemModelProviders extends ItemModelProvider {
     @Override
     protected void registerModels() {
         // Exploder
-        String exploderResource = SNRegistry.getName(SNRegistry.EXPLODER_ITEM).getPath(); // getPath() is nullable
+        String exploderResource = ForgeRegistries.ITEMS.getKey(SNRegistry.EXPLODER_ITEM.get()).getPath(); // getPath() is nullable
         //generatedModels.put(exploderResource, factory.apply(exploderResource).texture("layer0", exploderResource));
         singleTexture("item/" + exploderResource,       // destination
                 mcLoc("item/generated"),                // "parent": ###
                 "layer0",                            // ###: TEXTURE
                 modLoc("items/" + exploderResource));   // LAYER: ###
 
-        String vanillaExplosive = SNRegistry.getName(SNRegistry.GENERIC_EXPLOSIVE).getPath();
+        String vanillaExplosive = ForgeRegistries.BLOCKS.getKey(SNRegistry.GENERIC_EXPLOSIVE.get()).getPath();
         cubeBottomTop(vanillaExplosive, modLoc("blocks/" + vanillaExplosive + "_side"), modLoc("blocks/" + vanillaExplosive + "_bottom"), modLoc("blocks/" + vanillaExplosive + "_top"));
 
     }

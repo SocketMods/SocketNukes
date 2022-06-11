@@ -4,7 +4,7 @@ import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 
 import java.util.function.Consumer;
@@ -25,7 +25,7 @@ public class RecipeProviders extends RecipeProvider {
         return RecipeProvider.has(item);
     }
 
-    public static CriterionTriggerInstance hasItemTag(Tag<Item> tagItem) {
+    public static CriterionTriggerInstance hasItemTag(TagKey<Item> tagItem) {
         return RecipeProvider.has(tagItem);
     }
 }

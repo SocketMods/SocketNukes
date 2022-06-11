@@ -4,6 +4,7 @@ import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.minecraft.advancements.Advancement;
+import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.HashCache;
@@ -26,7 +27,7 @@ public abstract class AdvancementProvider implements DataProvider {
   }
 
   @Override
-  public void run(HashCache cache) {
+  public void run(CachedOutput cache) {
     Path path = this.generator.getOutputFolder();
     Set<ResourceLocation> set = Sets.newHashSet();
     registerAdvancement((advancement) -> {
@@ -36,7 +37,7 @@ public abstract class AdvancementProvider implements DataProvider {
         Path path1 = getPath(path, advancement);
 
         try {
-          DataProvider.save(GSON, cache, advancement.deconstruct().serializeToJson(), path1);
+          DataProvider.saveStable(cache, advancement.deconstruct().serializeToJson(), path1);
         } catch (IOException ioexception) {
           LOGGER.error("Couldn't save advancement {}", path1, ioexception);
         }

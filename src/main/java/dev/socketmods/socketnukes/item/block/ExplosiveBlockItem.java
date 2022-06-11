@@ -7,8 +7,6 @@ import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
@@ -34,7 +32,7 @@ public class ExplosiveBlockItem extends BlockItem {
             for(RegistryObject<ExtendedExplosionType> explosionType : SNRegistry.EXPLOSIONS.getEntries()) {
                 ItemStack newItem = new ItemStack(this);
                 CompoundTag tag = newItem.getOrCreateTagElement(SocketNukes.MODID);
-                tag.putString("explosion", SNRegistry.getName(explosionType).toString());
+                tag.putString("explosion", SNRegistry.EXPLOSION_TYPE_REGISTRY.get().getKey(explosionType.get()).toString());
                 items.add(newItem);
             }
     }
@@ -47,6 +45,6 @@ public class ExplosiveBlockItem extends BlockItem {
     public Component getName(ItemStack stack) {
         ResourceLocation stackConfigLoc = new ResourceLocation(stack.getOrCreateTagElement(SocketNukes.MODID).getString("explosion"));
         Component stackConfigComponent = SNRegistry.getExplosionType(stackConfigLoc).getTranslationText();
-        return new TranslatableComponent(this.getDescriptionId(stack)).append(new TextComponent(" - ")).append(stackConfigComponent);
+        return Component.translatable(this.getDescriptionId(stack)).append(Component.literal(" - ")).append(stackConfigComponent);
     }
 }

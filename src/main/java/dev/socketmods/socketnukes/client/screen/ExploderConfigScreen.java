@@ -10,7 +10,7 @@ import dev.socketmods.socketnukes.networking.Network;
 import dev.socketmods.socketnukes.networking.packet.ExploderConfigChangedPacket;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -37,7 +37,7 @@ public class ExploderConfigScreen extends Screen {
     private ExplosionList list;
 
     public ExploderConfigScreen() {
-        super(new TranslatableComponent("socketnukes.title.exploderconfig"));
+        super(Component.translatable("socketnukes.title.exploderconfig"));
     }
 
     @Override
@@ -88,7 +88,7 @@ public class ExploderConfigScreen extends Screen {
     public void onClose() {
         ExplosionList.ExplosionListEntry entry = list.getSelected();
         if (entry != null)
-            config(SNRegistry.getName(entry.getType()));
+            config(SNRegistry.EXPLOSION_TYPE_REGISTRY.get().getKey(entry.getType()));
 
         super.onClose();
     }

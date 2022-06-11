@@ -34,7 +34,7 @@ public class BombRecipe extends SocketRecipeProvider {
      */
     public static CompoundTag forExplosion(ExtendedExplosionType type) {
         CompoundTag data = new CompoundTag();
-        data.putString("explosion", SNRegistry.getName(type).toString());
+        data.putString("explosion", SNRegistry.EXPLOSION_TYPE_REGISTRY.get().getKey(type).toString());
 
         CompoundTag nbt = new CompoundTag();
         nbt.put(SocketNukes.MODID, data);
@@ -60,6 +60,6 @@ public class BombRecipe extends SocketRecipeProvider {
                 .key('T', mid)
                 .addCriterion("has_tnt", RecipeProviders.hasItem(Items.TNT))
                 .setNBT(forExplosion(type.get()))
-                .build(consumer, SNRegistry.getName(type) +"_explosive");
+                .build(consumer, SNRegistry.EXPLOSION_TYPE_REGISTRY.get().getKey(type.get()) +"_explosive");
     }
 }

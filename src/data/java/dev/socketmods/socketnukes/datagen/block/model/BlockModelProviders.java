@@ -6,6 +6,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraftforge.client.model.generators.BlockModelProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class BlockModelProviders extends BlockModelProvider {
     public static ModelFile explosiveModel;
@@ -16,7 +17,7 @@ public class BlockModelProviders extends BlockModelProvider {
 
     @Override
     protected void registerModels() {
-        String vanillaExplosive = SNRegistry.getName(SNRegistry.GENERIC_EXPLOSIVE).getPath();
+        String vanillaExplosive = ForgeRegistries.BLOCKS.getKey(SNRegistry.GENERIC_EXPLOSIVE.get()).getPath();
         explosiveModel = cubeBottomTop(vanillaExplosive, modLoc("blocks/" + vanillaExplosive + "_side"), modLoc("blocks/" + vanillaExplosive + "_bottom"), modLoc("blocks/" + vanillaExplosive + "_top"));
     }
 

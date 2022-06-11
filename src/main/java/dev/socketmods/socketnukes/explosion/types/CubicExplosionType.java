@@ -35,6 +35,7 @@ import net.minecraftforge.event.ForgeEventFactory;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Creates a perfect cube explosion, removing everything except obsidian and bedrock.
@@ -127,7 +128,7 @@ public class CubicExplosionType extends ExtendedExplosionType {
 
                 if (doBlocksDrop) {
                     ObjectArrayList<Pair<ItemStack, BlockPos>> objectarraylist = new ObjectArrayList<>();
-                    Collections.shuffle(meta.affectedBlocks, worldIn.random);
+                    Collections.shuffle(meta.affectedBlocks, new Random());
 
                     for (BlockPos blockpos : meta.affectedBlocks) {
                         BlockState blockstate = worldIn.getBlockState(blockpos);

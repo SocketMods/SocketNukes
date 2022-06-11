@@ -14,7 +14,6 @@ public class AdvancementsProvider extends AdvancementProvider {
 
     @Override
     protected void registerAdvancement(Consumer<Advancement> consumer) {
-
     }
 
     @Override
