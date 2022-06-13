@@ -8,6 +8,7 @@ import dev.socketmods.socketnukes.networking.Network;
 import dev.socketmods.socketnukes.networking.packet.ExtendedExplosionPacket;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -128,7 +129,7 @@ public class CubicExplosionType extends ExtendedExplosionType {
 
                 if (doBlocksDrop) {
                     ObjectArrayList<Pair<ItemStack, BlockPos>> objectarraylist = new ObjectArrayList<>();
-                    Collections.shuffle(meta.affectedBlocks, new Random());
+                    Util.shuffle(meta.affectedBlocks, worldIn.random);
 
                     for (BlockPos blockpos : meta.affectedBlocks) {
                         BlockState blockstate = worldIn.getBlockState(blockpos);
