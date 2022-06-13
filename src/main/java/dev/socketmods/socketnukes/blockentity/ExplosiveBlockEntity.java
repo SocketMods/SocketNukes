@@ -1,4 +1,4 @@
-package dev.socketmods.socketnukes.tileentity;
+package dev.socketmods.socketnukes.blockentity;
 
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.core.BlockPos;
@@ -6,10 +6,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class ExplosiveTileEntity extends BlockEntity {
+public class ExplosiveBlockEntity extends BlockEntity {
     private ResourceLocation configuration;
 
-    public ExplosiveTileEntity(BlockPos pos, BlockState state) {
+    public ExplosiveBlockEntity(BlockPos pos, BlockState state) {
         super(SNRegistry.EXPLOSIVE_TE.get(), pos, state);
         configuration = SNRegistry.EXPLOSION_TYPE_REGISTRY.get().getKey(SNRegistry.NULL_EXPLOSION.get());
     }
