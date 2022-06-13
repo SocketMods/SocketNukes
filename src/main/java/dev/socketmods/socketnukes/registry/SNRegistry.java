@@ -45,15 +45,15 @@ public class SNRegistry {
 
     public static final DeferredRegister<EntityType<?>> ENTITYTYPES = DeferredRegister.create(ForgeRegistries.ENTITIES, SocketNukes.MODID);
 
-    public static final DeferredRegister<ExtendedExplosionType> EXPLOSIONS = DeferredRegister.create(ExtendedExplosionType.class, SocketNukes.MODID);
+    public static final DeferredRegister<ExtendedExplosionType> EXPLOSIONS = DeferredRegister.create(new ResourceLocation(SocketNukes.MODID, "explosion_types"), SocketNukes.MODID);
 
     /***********************************************
      *            SocketNukes Registries           *
      **********************************************/
 
-    public static Supplier<IForgeRegistry<ExtendedExplosionType>> EXPLOSION_TYPE_REGISTRY = EXPLOSIONS.makeRegistry("explosion_types", () ->
-            new RegistryBuilder<ExtendedExplosionType>().setMaxID(Integer.MAX_VALUE - 1).onAdd((owner, stage, id, obj, old) ->
-                SocketNukes.LOGGER.info("ExplosionType Added: " + getName(obj).toString() + " ")
+    public static Supplier<IForgeRegistry<ExtendedExplosionType>> EXPLOSION_TYPE_REGISTRY = EXPLOSIONS.makeRegistry(() ->
+            new RegistryBuilder<ExtendedExplosionType>().setMaxID(Integer.MAX_VALUE - 1).onAdd((owner, stage, id, key, obj, old) ->
+                SocketNukes.LOGGER.info("ExplosionType Added: " + key.location() + " ")
             ).setDefaultKey(new ResourceLocation(SocketNukes.MODID, "null"))
     );
 
@@ -116,13 +116,5 @@ public class SNRegistry {
 
     public static ExtendedExplosionType getExplosionType(ResourceLocation name) {
         return Objects.requireNonNull(EXPLOSION_TYPE_REGISTRY.get().getValue(name));
-    }
-
-    public static <T extends IForgeRegistryEntry<?>> ResourceLocation getName(T type) {
-        return Objects.requireNonNull(type.getRegistryName());
-    }
-
-    public static <T extends IForgeRegistryEntry<?>> ResourceLocation getName(Supplier<T> supplier) {
-        return getName(supplier.get());
     }
 }

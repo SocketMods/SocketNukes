@@ -5,6 +5,7 @@ import dev.socketmods.socketnukes.item.SocketItems;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.common.data.LanguageProvider;
 
@@ -39,6 +40,7 @@ public class EnUsLangProvider extends LanguageProvider {
     }
 
     private void add(ExtendedExplosionType type, String name) {
-        add(SNRegistry.getName(type).getNamespace() + ".explosions." + SNRegistry.getName(type).getPath(), name);
+        ResourceLocation key = SNRegistry.EXPLOSION_TYPE_REGISTRY.get().getKey(type);
+        add(key.getNamespace() + ".explosions." + key.getPath(), name);
     }
 }

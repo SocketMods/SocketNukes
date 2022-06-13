@@ -30,28 +30,24 @@ public class DataGen {
     public static void onGatherData(GatherDataEvent event) {
         LOGGER.info(DATAGEN, "Gathering data providers");
         DataGenerator generator = event.getGenerator();
-        if(event.includeServer()){
-            LOGGER.info(DATAGEN, "Adding data providers for server data");
-            generator.addProvider(new RecipeProviders(generator));
-            generator.addProvider(new AdvancementsProvider(generator));
-            generator.addProvider(new GLMProvider(generator));
-            generator.addProvider(new LootTableProviders(generator));
-            generator.addProvider(new RecipeProviders(generator));
-            BlockTagsProvider blockTags = new BlockTagProviders(generator, event.getExistingFileHelper());
-            generator.addProvider(blockTags);
-            generator.addProvider(new ItemTagProviders(generator, blockTags, event.getExistingFileHelper()));
-            generator.addProvider(new FluidTagsProviders(generator, event.getExistingFileHelper()));
+        LOGGER.info(DATAGEN, "Adding data providers for server data");
+        generator.addProvider(event.includeServer(), new RecipeProviders(generator));
+        generator.addProvider(event.includeServer(), new AdvancementsProvider(generator));
+        generator.addProvider(event.includeServer(), new GLMProvider(generator));
+        generator.addProvider(event.includeServer(), new LootTableProviders(generator));
+        generator.addProvider(event.includeServer(), new RecipeProviders(generator));
+        BlockTagsProvider blockTags = new BlockTagProviders(generator, event.getExistingFileHelper());
+        generator.addProvider(event.includeServer(), blockTags);
+        generator.addProvider(event.includeServer(), new ItemTagProviders(generator, blockTags, event.getExistingFileHelper()));
+        generator.addProvider(event.includeServer(), new FluidTagsProviders(generator, event.getExistingFileHelper()));
 
-        }
+        LOGGER.info(DATAGEN, "Adding data providers for client assets");
+        BlockModelProviders models = new BlockModelProviders(generator, event.getExistingFileHelper());
+        generator.addProvider(event.includeClient(), models);
+        generator.addProvider(event.includeClient(), new ItemModelProviders(generator, event.getExistingFileHelper()));
+        generator.addProvider(event.includeClient(), new EnUsLangProvider(generator));
+        generator.addProvider(event.includeClient(), new BlockStateProvider(generator, event.getExistingFileHelper(), models));
 
-        if(event.includeClient()){
-            LOGGER.info(DATAGEN, "Adding data providers for client assets");
-            BlockModelProviders models = new BlockModelProviders(generator, event.getExistingFileHelper());
-            generator.addProvider(models);
-            generator.addProvider(new ItemModelProviders(generator, event.getExistingFileHelper()));
-            generator.addProvider(new EnUsLangProvider(generator));
-            generator.addProvider(new BlockStateProvider(generator, event.getExistingFileHelper(), models));
-        }
     }
 
 }

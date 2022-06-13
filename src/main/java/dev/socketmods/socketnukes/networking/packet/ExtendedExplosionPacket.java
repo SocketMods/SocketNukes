@@ -1,6 +1,5 @@
 package dev.socketmods.socketnukes.networking.packet;
 
-import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -89,8 +88,8 @@ public class ExtendedExplosionPacket {
             buf.writeBlockPos(pos);
         }
 
-        buf.writeResourceLocation(SNRegistry.getName(this.explosionParticle));
-        buf.writeResourceLocation(SNRegistry.getName(this.explosionSound));
+        buf.writeResourceLocation(ForgeRegistries.PARTICLE_TYPES.getKey(this.explosionParticle));
+        buf.writeResourceLocation(ForgeRegistries.SOUND_EVENTS.getKey(this.explosionSound));
 
         buf.writeInt(this.entityDisplacements.size());
         for(Map.Entry<Integer, Vec3> entry : this.entityDisplacements.entrySet()) {

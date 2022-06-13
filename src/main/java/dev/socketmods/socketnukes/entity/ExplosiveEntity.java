@@ -115,7 +115,7 @@ public class ExplosiveEntity extends Entity {
     @Override
     protected void addAdditionalSaveData(CompoundTag compound) {
         compound.putShort("fuse", (short)this.getFuse());
-        compound.putString("explosionType", SNRegistry.getName(explosion).toString());
+        compound.putString("explosionType", SNRegistry.EXPLOSION_TYPE_REGISTRY.get().getKey(explosion).toString());
     }
 
     @Override

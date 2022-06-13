@@ -86,7 +86,7 @@ public abstract class RecipeTileEntity<T extends Recipe<?>> extends CommonTileEn
         Set<Recipe<?>> recipes = findRecipeByType(type, world);
         for (Recipe<?> recipe : recipes) {
             NonNullList<Ingredient> ingredients = recipe.getIngredients();
-            ingredients.forEach(ingredient -> Arrays.stream(ingredient.getItems()).collect(Collectors.toList()).forEach(itemStack -> inputs.add(itemStack.getItem())));
+            ingredients.forEach(ingredient -> Arrays.stream(ingredient.getItems()).toList().forEach(itemStack -> inputs.add(itemStack.getItem())));
         }
         return inputs;
     }

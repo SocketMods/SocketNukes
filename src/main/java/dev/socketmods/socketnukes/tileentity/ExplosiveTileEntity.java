@@ -11,7 +11,7 @@ public class ExplosiveTileEntity extends BlockEntity {
 
     public ExplosiveTileEntity(BlockPos pos, BlockState state) {
         super(SNRegistry.EXPLOSIVE_TE.get(), pos, state);
-        configuration = SNRegistry.NULL_EXPLOSION.get().getRegistryName();
+        configuration = SNRegistry.EXPLOSION_TYPE_REGISTRY.get().getKey(SNRegistry.NULL_EXPLOSION.get());
     }
 
 

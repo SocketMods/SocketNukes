@@ -5,7 +5,6 @@ import dev.socketmods.socketnukes.recipes.ICommonRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.inventory.ContainerData;
@@ -74,13 +73,13 @@ public abstract class MachineTileEntity<T extends Recipe<?>> extends RecipeTileE
 
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    public void saveAdditional(CompoundTag compound) {
         compound.putInt("burnTime", burnTime);
         compound.putInt("cookingTime", cookingTime);
         compound.putInt("cookingTimeTotal", cookingTimeTotal);
         compound.putInt("recipeUsed", recipeUsed);
         compound.putBoolean("isBurning", isBurning);
-        return super.save(compound);
+        super.saveAdditional(compound);
     }
 
     public boolean isBurning() {
@@ -247,7 +246,7 @@ public abstract class MachineTileEntity<T extends Recipe<?>> extends RecipeTileE
 
     @Override
     public Component getDisplayName() {
-        return new TranslatableComponent(getScreenName());
+        return Component.translatable(getScreenName());
     }
 
     protected abstract String getScreenName();

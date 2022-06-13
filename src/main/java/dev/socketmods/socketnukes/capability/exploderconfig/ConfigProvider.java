@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -27,7 +28,7 @@ public class ConfigProvider implements ICapabilitySerializable<CompoundTag> {
     }
 
     @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction dir) {
+    public <T> @NotNull LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction dir) {
         if(cap == Capabilities.EXPLODER_CONFIGURATION_CAPABILITY) {
             return configOptional.cast();
         }

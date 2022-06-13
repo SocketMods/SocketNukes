@@ -5,7 +5,8 @@ import dev.socketmods.socketnukes.explosion.ExplosionProperties;
 import dev.socketmods.socketnukes.explosion.meta.ExplosionMetaPackage;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -13,7 +14,6 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ import java.util.List;
  * @author Curle
  */
 
-public class ExtendedExplosionType extends ForgeRegistryEntry<ExtendedExplosionType> {
+public class ExtendedExplosionType{
     /**
      * These Explosion types are singleton - Registry Entries
      * Thus, they need to encode core behavior WITHOUT being instance specific.
@@ -137,9 +137,9 @@ public class ExtendedExplosionType extends ForgeRegistryEntry<ExtendedExplosionT
         dropPositionArray.add(Pair.of(stack, pos));
     }
 
-    public TranslatableComponent getTranslationText() {
-        ResourceLocation name = SNRegistry.getName(this);
-        return new TranslatableComponent(name.getNamespace() + ".explosions." + name.getPath());
+    public MutableComponent getTranslationText() {
+        ResourceLocation name = SNRegistry.EXPLOSION_TYPE_REGISTRY.get().getKey(this);
+        return Component.translatable(name.getNamespace() + ".explosions." + name.getPath());
     }
 
 }
