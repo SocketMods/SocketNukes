@@ -1,12 +1,9 @@
 package dev.socketmods.socketnukes.datagen.utils.loottable;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import dev.socketmods.socketnukes.SocketNukes;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.HashCache;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -33,7 +30,6 @@ import java.util.Set;
 public abstract class BaseLootTableProvider extends LootTableProvider {
 
   private static final Logger LOGGER = LogManager.getLogger();
-  private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
   protected final Set<Map<Block, LootTable.Builder>> lootTables = new HashSet<>();
   public static Map<ResourceLocation, LootTable> tables = new HashMap<>();

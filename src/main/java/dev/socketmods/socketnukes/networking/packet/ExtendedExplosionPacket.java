@@ -1,6 +1,5 @@
 package dev.socketmods.socketnukes.networking.packet;
 
-import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;

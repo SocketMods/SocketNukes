@@ -1,6 +1,7 @@
 package dev.socketmods.socketnukes.explosion.meta;
 
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
@@ -17,11 +18,11 @@ import java.util.Map;
  */
 public class ExplosionMetaPackage {
 
-    public List<BlockPos> affectedBlocks;
+    public ObjectArrayList<BlockPos> affectedBlocks;
     public Map<Entity, Vec3> entityDisplacements;
 
     public ExplosionMetaPackage() {
-        this.affectedBlocks = new ArrayList<>();
+        this.affectedBlocks = new ObjectArrayList<>();
         this.entityDisplacements = new HashMap<>();
     }
 }
