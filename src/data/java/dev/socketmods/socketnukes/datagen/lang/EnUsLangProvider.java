@@ -30,6 +30,9 @@ public class EnUsLangProvider extends LanguageProvider {
         add(SNRegistry.NULL_EXPLOSION.get(), "Null");
         add(SNRegistry.BOLB_EXPLOSION.get(), "Bolb");
 
+        add(SNRegistry.POWERED_FURNACE_BLOCK.get(), "Powered Furnace");
+        add("blockentity.socketmods.powered_furnace", "Powered Furnace");
+
         add(SocketItems.SOCKETNUKES_GROUP, "SocketNukes - Explosives");
 
         add("socketnukes.title.exploderconfig", "Exploderiser Configuration");

@@ -5,7 +5,7 @@ import dev.socketmods.socketnukes.capability.Capabilities;
 import dev.socketmods.socketnukes.entity.ExplosiveEntity;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import dev.socketmods.socketnukes.registry.SNRegistry;
-import dev.socketmods.socketnukes.tileentity.ExplosiveTileEntity;
+import dev.socketmods.socketnukes.blockentity.ExplosiveBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -64,8 +64,8 @@ public class TNTExplosive extends BaseEntityBlock {
         super.setPlacedBy(world, pos, state, placer, stack);
 
         BlockEntity tileEntity = world.getBlockEntity(pos);
-        if(stack.getItem() == SNRegistry.GENERIC_EXPLOSIVE_ITEM.get() && tileEntity instanceof ExplosiveTileEntity) {
-            ExplosiveTileEntity explosive = (ExplosiveTileEntity) tileEntity;
+        if(stack.getItem() == SNRegistry.GENERIC_EXPLOSIVE_ITEM.get() && tileEntity instanceof ExplosiveBlockEntity) {
+            ExplosiveBlockEntity explosive = (ExplosiveBlockEntity) tileEntity;
 
             ResourceLocation config = new ResourceLocation(stack.getOrCreateTagElement(SocketNukes.MODID).getString("explosion"));
             explosive.setConfiguration(config);
@@ -84,8 +84,8 @@ public class TNTExplosive extends BaseEntityBlock {
     @Override
     public void onCaughtFire(BlockState state, Level world, BlockPos pos, @org.jetbrains.annotations.Nullable Direction face, @org.jetbrains.annotations.Nullable LivingEntity igniter) {
         BlockEntity tileEntity = world.getBlockEntity(pos);
-        if(tileEntity instanceof ExplosiveTileEntity) {
-            ExplosiveTileEntity explosive = (ExplosiveTileEntity) tileEntity;
+        if(tileEntity instanceof ExplosiveBlockEntity) {
+            ExplosiveBlockEntity explosive = (ExplosiveBlockEntity) tileEntity;
             ResourceLocation config = explosive.getConfiguration();
             ExtendedExplosionType explosion = SNRegistry.getExplosionType(config);
 
@@ -234,7 +234,7 @@ public class TNTExplosive extends BaseEntityBlock {
     @org.jetbrains.annotations.Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState state) {
-        return new ExplosiveTileEntity(blockPos, state);
+        return new ExplosiveBlockEntity(blockPos, state);
     }
 
     @org.jetbrains.annotations.Nullable

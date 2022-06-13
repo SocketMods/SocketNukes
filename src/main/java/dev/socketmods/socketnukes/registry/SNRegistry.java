@@ -3,6 +3,9 @@ package dev.socketmods.socketnukes.registry;
 import com.google.common.collect.ImmutableSet;
 import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.block.explosive.TNTExplosive;
+import dev.socketmods.socketnukes.block.tier1.PoweredFurnaceBlock;
+import dev.socketmods.socketnukes.blockentity.tier1.PoweredFurnaceBlockEntity;
+import dev.socketmods.socketnukes.container.tier1.PoweredFurnaceMenu;
 import dev.socketmods.socketnukes.entity.BolbEntity;
 import dev.socketmods.socketnukes.entity.ExplosiveEntity;
 import dev.socketmods.socketnukes.explosion.ExplosionProperties;
@@ -13,7 +16,7 @@ import dev.socketmods.socketnukes.explosion.types.VanillaExplosionType;
 import dev.socketmods.socketnukes.item.SocketItems;
 import dev.socketmods.socketnukes.item.block.ExplosiveBlockItem;
 import dev.socketmods.socketnukes.item.util.ExploderItem;
-import dev.socketmods.socketnukes.tileentity.ExplosiveTileEntity;
+import dev.socketmods.socketnukes.blockentity.ExplosiveBlockEntity;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -21,11 +24,14 @@ import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.network.IContainerFactory;
 import net.minecraftforge.registries.*;
 
 import java.util.Objects;
@@ -41,7 +47,7 @@ public class SNRegistry {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, SocketNukes.MODID);
 
     public static final DeferredRegister<BlockEntityType<?>> TETYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, SocketNukes.MODID);
-    public static final DeferredRegister<MenuType<?>> CONTAINERTYPES = DeferredRegister.create(ForgeRegistries.CONTAINERS, SocketNukes.MODID);
+    public static final DeferredRegister<MenuType<?>> MENUTYPES = DeferredRegister.create(ForgeRegistries.CONTAINERS, SocketNukes.MODID);
 
     public static final DeferredRegister<EntityType<?>> ENTITYTYPES = DeferredRegister.create(ForgeRegistries.ENTITIES, SocketNukes.MODID);
 
@@ -63,10 +69,12 @@ public class SNRegistry {
 
     // BLOCKS
     public static final RegistryObject<Block> GENERIC_EXPLOSIVE = BLOCKS.register("explosive", TNTExplosive::new);
+    public static final RegistryObject<Block> POWERED_FURNACE_BLOCK = BLOCKS.register("powered_furnace", PoweredFurnaceBlock::new);
 
     // ITEMS
     public static final RegistryObject<Item> EXPLODER_ITEM = ITEMS.register("exploder_item", () -> new ExploderItem(SocketItems.EXPLODER_PROPERTIES));
     public static final RegistryObject<Item> GENERIC_EXPLOSIVE_ITEM = ITEMS.register("explosive", () -> new ExplosiveBlockItem(SocketItems.EXPLOSIVE_PROPERTIES));
+    public static final RegistryObject<Item> POWERED_FURNACE_ITEM = ITEMS.register("powered_furnace", () -> new BlockItem(POWERED_FURNACE_BLOCK.get(), SocketItems.EXPLOSIVE_PROPERTIES));
 
     // EXPLOSIONS
     public static final RegistryObject<VanillaExplosionType> VANILLA_EXPLOSION = EXPLOSIONS.register("vanilla", () ->
@@ -92,20 +100,31 @@ public class SNRegistry {
             new EntityType<>(BolbEntity::new, MobCategory.MISC, true, true, false, false, ImmutableSet.of(), EntityDimensions.scalable(2.04F, 2.04F), 10, 1)
     );
 
-    // TILE ENTITY TYPE
+    // MENU TYPES
+
+    public static final RegistryObject<MenuType<PoweredFurnaceMenu>> POWERED_FURNACE_MENU = MENUTYPES.register("powered_furnace", () ->
+            new MenuType<>((IContainerFactory<PoweredFurnaceMenu>) PoweredFurnaceMenu::new)
+    );
+
+    // BLOCK ENTITY TYPE
 
     // We can't sanely provide non null data-fixers for a TileEntityType
     @SuppressWarnings("ConstantConditions")
-    public static final RegistryObject<BlockEntityType<ExplosiveTileEntity>> EXPLOSIVE_TE = TETYPES.register("explosive", () ->
-            BlockEntityType.Builder.of(ExplosiveTileEntity::new, GENERIC_EXPLOSIVE.get()).build(null)
+    public static final RegistryObject<BlockEntityType<ExplosiveBlockEntity>> EXPLOSIVE_TE = TETYPES.register("explosive", () ->
+            BlockEntityType.Builder.of(ExplosiveBlockEntity::new, GENERIC_EXPLOSIVE.get()).build(null)
     );
+
+    public static final RegistryObject<BlockEntityType<PoweredFurnaceBlockEntity>> POWERED_FURNACE_BE = TETYPES.register("powered_furnace", () ->
+        BlockEntityType.Builder.of(PoweredFurnaceBlockEntity::new, POWERED_FURNACE_BLOCK.get()).build(null)
+    );
+
 
     public static void initialize() {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
         ITEMS.register(modBus);
         BLOCKS.register(modBus);
         TETYPES.register(modBus);
-        CONTAINERTYPES.register(modBus);
+        MENUTYPES.register(modBus);
         EXPLOSIONS.register(modBus);
         ENTITYTYPES.register(modBus);
     }

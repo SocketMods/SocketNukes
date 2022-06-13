@@ -32,4 +32,5 @@ public class Capabilities {
             e.addListener(provider::invalidate);
         }
     }
+
 }

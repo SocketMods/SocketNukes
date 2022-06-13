@@ -1,6 +1,6 @@
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-package dev.socketmods.socketnukes.recipes;
+package dev.socketmods.socketnukes.block.tier1;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 

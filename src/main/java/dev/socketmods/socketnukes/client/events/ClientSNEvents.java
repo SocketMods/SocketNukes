@@ -8,6 +8,7 @@ import dev.socketmods.socketnukes.client.render.bolb.BolbHatLayer;
 import dev.socketmods.socketnukes.client.render.bolb.BolbModel;
 import dev.socketmods.socketnukes.client.render.layer.PlayerHatLayer;
 import dev.socketmods.socketnukes.registry.SNRegistry;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
@@ -19,6 +20,7 @@ import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import java.util.Objects;
 
@@ -29,6 +31,12 @@ import java.util.Objects;
  */
 @Mod.EventBusSubscriber(modid = SocketNukes.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientSNEvents {
+
+    @SubscribeEvent
+    public static void clientSetup(FMLClientSetupEvent e) {
+        e.enqueueWork(() -> {
+        });
+    }
 
     @SubscribeEvent
     public static void entityRenderers(EntityRenderersEvent.RegisterRenderers event) {

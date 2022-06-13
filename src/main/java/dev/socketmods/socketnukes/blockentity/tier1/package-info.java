@@ -1,6 +1,6 @@
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-package dev.socketmods.socketnukes.tileentity;
+package dev.socketmods.socketnukes.blockentity.tier1;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
