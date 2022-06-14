@@ -7,6 +7,8 @@ import dev.socketmods.socketnukes.client.render.bolb.BolbEntityRenderer;
 import dev.socketmods.socketnukes.client.render.bolb.BolbHatLayer;
 import dev.socketmods.socketnukes.client.render.bolb.BolbModel;
 import dev.socketmods.socketnukes.client.render.layer.PlayerHatLayer;
+import dev.socketmods.socketnukes.client.screen.menu.tier1.PoweredFurnaceScreen;
+import dev.socketmods.socketnukes.container.tier1.PoweredFurnaceMenu;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.model.PlayerModel;
@@ -33,6 +35,7 @@ public class ClientSNEvents {
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent e) {
         e.enqueueWork(() -> {
+            MenuScreens.register(SNRegistry.POWERED_FURNACE_MENU.get(), PoweredFurnaceScreen::new);
         });
     }
 

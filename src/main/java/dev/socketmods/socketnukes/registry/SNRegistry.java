@@ -20,6 +20,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -38,6 +40,11 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 public class SNRegistry {
+
+    /***********************************************
+     *               Tag Key Instances             *
+     ***********************************************/
+    public static final TagKey<Item> POWER_SOURCE = ItemTags.create(new ResourceLocation(SocketNukes.MODID, "power_sources"));
 
     /***********************************************
      *         Deferred Register Instances         *
