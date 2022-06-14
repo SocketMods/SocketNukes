@@ -28,7 +28,7 @@ public class ItemModelProviders extends ItemModelProvider {
                 modLoc("items/" + exploderResource));   // LAYER: ###
 
 
-        cubeBottomTop(SNRegistry.POWERED_FURNACE.get());
+        cubeBottomTop(SNRegistry.POWERED_FURNACE_BLOCK.get());
         cubeBottomTop(SNRegistry.GENERIC_EXPLOSIVE.get());
     }
 

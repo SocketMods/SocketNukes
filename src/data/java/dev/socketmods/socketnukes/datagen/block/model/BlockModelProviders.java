@@ -21,7 +21,7 @@ public class BlockModelProviders extends BlockModelProvider {
     @Override
     protected void registerModels() {
         String vanillaExplosive = path(SNRegistry.GENERIC_EXPLOSIVE.get());
-        String poweredFurnace = path(SNRegistry.POWERED_FURNACE.get());
+        String poweredFurnace = path(SNRegistry.POWERED_FURNACE_BLOCK.get());
 
         explosiveModel = cubeBottomTop(vanillaExplosive, sideModel(vanillaExplosive), bottomModel(vanillaExplosive), topModel(vanillaExplosive));
         poweredFurnaceModel = cubeBottomTop(poweredFurnace, sideModel(poweredFurnace), bottomModel(poweredFurnace), topModel(poweredFurnace));
