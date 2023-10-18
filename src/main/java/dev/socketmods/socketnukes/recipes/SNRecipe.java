@@ -1,6 +1,7 @@
 package dev.socketmods.socketnukes.recipes;
 
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -32,7 +33,7 @@ public abstract class SNRecipe implements ICommonRecipe {
     public abstract NonNullList<Ingredient> getIngredients();
 
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(RegistryAccess p_267052_) {
         return ItemStack.EMPTY;
     }
 

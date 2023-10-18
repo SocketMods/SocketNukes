@@ -156,7 +156,7 @@ public abstract class MachineTileEntity<T extends Recipe<?>> extends RecipeTileE
             ItemStack input = this.itemHandler.getStackInSlot(0);
             ItemStack output = recipe.getResultItem(level.registryAccess());
             if (recipe instanceof CommonRecipe) {
-                output = ((CommonRecipe) recipe).getOutput().get(0);
+                output = ((CommonRecipe) recipe).getOutput(level.registryAccess()).get(0);
             }
             ItemStack outputSlot = this.itemHandler.getStackInSlot(2);
             if (outputSlot.isEmpty()) {

@@ -1,6 +1,7 @@
 package dev.socketmods.socketnukes.recipes;
 
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.ExperienceOrb;
@@ -52,7 +53,7 @@ public abstract class CommonRecipe extends SNRecipe {
     }
 
     @Override
-    public NonNullList<ItemStack> getOutput() {
+    public NonNullList<ItemStack> getOutput(RegistryAccess access) {
         NonNullList<ItemStack> copy = NonNullList.create();
         copy.addAll(result);
         return copy;
@@ -64,7 +65,7 @@ public abstract class CommonRecipe extends SNRecipe {
     }
 
     @Override
-    public ItemStack assemble(RecipeWrapper inv) {
+    public ItemStack assemble(RecipeWrapper inv, RegistryAccess access) {
         return result.get(0);
     }
 }
