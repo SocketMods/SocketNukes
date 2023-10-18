@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -57,12 +58,12 @@ public class ClientSNEvents {
     }
 
     @SubscribeEvent
-    public static void registerModels(ModelRegistryEvent event) {
-        ForgeModelBakery.addSpecialModel(new ResourceLocation(SocketNukes.MODID, "block/hat"));
+    public static void registerModels(ModelEvent.RegisterAdditional event) {
+        event.register(new ResourceLocation(SocketNukes.MODID, "block/hat"));
     }
 
     @SubscribeEvent
-    public static void bakeModels(ModelBakeEvent event) {
-        PlayerHatLayer.HAT_MODEL = event.getModelRegistry().get(new ResourceLocation(SocketNukes.MODID, "block/hat"));
+    public static void bakeModels(ModelEvent.BakingCompleted event) {
+        PlayerHatLayer.HAT_MODEL = event.getModelManager().getModel(new ResourceLocation(SocketNukes.MODID, "block/hat"));
     }
 }
