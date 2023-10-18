@@ -102,7 +102,7 @@ public class ExplosiveEntity extends Entity {
      */
     protected void explode() {
         DummyExplosion explosion = new DummyExplosion(this.level(), placer,
-            this.getX(), this.getY() - 1, this.getZ(),
+                this.blockPosition().getX(), this.blockPosition().getY() - 1, this.blockPosition().getZ(),
             this.explosion);
 
         explosion.runExplosion();

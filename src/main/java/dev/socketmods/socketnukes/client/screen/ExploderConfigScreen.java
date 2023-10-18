@@ -65,13 +65,14 @@ public class ExploderConfigScreen extends Screen {
 
     @Override
     public void render(GuiGraphics stack, int mouseX, int mouseY, float partialTicks) {
-        // Due to the way the Screen / Gui System is designed we can safely assume that `minecraft` is non null here
+        // Due to the way the Screen / Gui System is designed we can safely assume that `minecraft` is nonnull here
         assert minecraft != null;
 
         stack.drawCenteredString(this.font, this.title, this.width / 2, 20, 0xFFFFFF);
 
         RenderSystem.setShaderTexture(0, BACKGROUND);
-        stack.blit(guiLeft, guiTop, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+        // TODO: NO GUI for now
+        //stack.blit(guiLeft, guiTop, 0, SCREEN_WIDTH, SCREEN_HEIGHT );
 
         RenderSystem.setShaderTexture(0, Screen.BACKGROUND_LOCATION);
 
