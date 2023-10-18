@@ -20,6 +20,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -40,10 +41,10 @@ public class SNRegistry {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, SocketNukes.MODID);
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, SocketNukes.MODID);
 
-    public static final DeferredRegister<BlockEntityType<?>> TETYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, SocketNukes.MODID);
-    public static final DeferredRegister<MenuType<?>> CONTAINERTYPES = DeferredRegister.create(ForgeRegistries.CONTAINERS, SocketNukes.MODID);
+    public static final DeferredRegister<BlockEntityType<?>> TETYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, SocketNukes.MODID);
+    public static final DeferredRegister<MenuType<?>> CONTAINERTYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, SocketNukes.MODID);
 
-    public static final DeferredRegister<EntityType<?>> ENTITYTYPES = DeferredRegister.create(ForgeRegistries.ENTITIES, SocketNukes.MODID);
+    public static final DeferredRegister<EntityType<?>> ENTITYTYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, SocketNukes.MODID);
 
     public static final DeferredRegister<ExtendedExplosionType> EXPLOSIONS = DeferredRegister.create(new ResourceLocation(SocketNukes.MODID, "explosion_types"), SocketNukes.MODID);
 
@@ -84,12 +85,13 @@ public class SNRegistry {
     );
 
     // ENTITY TYPE
+    // TODO: Look up what FeatureFlagSet does
     public static final RegistryObject<EntityType<ExplosiveEntity>> EXPLOSIVE_ENTITY_TYPE = ENTITYTYPES.register("explosive", () ->
-        new EntityType<>(ExplosiveEntity::create, MobCategory.MISC, true, true, false, false, ImmutableSet.of(), EntityDimensions.fixed(1f, 1f), 200, 1)
+        new EntityType<>(ExplosiveEntity::create, MobCategory.MISC, true, true, false, false, ImmutableSet.of(), EntityDimensions.fixed(1f, 1f), 200, 1, FeatureFlagSet.of())
     );
 
     public static final RegistryObject<EntityType<BolbEntity>> BOLB_ENTITY_TYPE = ENTITYTYPES.register("bolb", () ->
-            new EntityType<>(BolbEntity::new, MobCategory.MISC, true, true, false, false, ImmutableSet.of(), EntityDimensions.scalable(2.04F, 2.04F), 10, 1)
+            new EntityType<>(BolbEntity::new, MobCategory.MISC, true, true, false, false, ImmutableSet.of(), EntityDimensions.scalable(2.04F, 2.04F), 10, 1, FeatureFlagSet.of())
     );
 
     // TILE ENTITY TYPE
