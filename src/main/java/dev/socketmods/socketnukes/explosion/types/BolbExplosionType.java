@@ -25,7 +25,7 @@ public class BolbExplosionType extends ExtendedExplosionType {
     private static final int BOLB_MAX_SIZE = 4;
 
     public BolbExplosionType(ExplosionProperties properties) {
-        super(0, Collections.emptyList(), 1, DamageSource.GENERIC, false);
+        super(0, Collections.emptyList(), 1, null, false);
         this.properties = properties;
     }
 

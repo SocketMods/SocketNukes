@@ -139,12 +139,12 @@ public abstract class MachineTileEntity<T extends Recipe<?>> extends RecipeTileE
         recipeUsed = burnTime;
         if (isBurning()) {
             isDirty = true;
-            if (fuel.hasContainerItem()) {
-                itemHandler.setStackInSlot(getFuelSlot(), fuel.getContainerItem());
+            if (fuel.hasCraftingRemainingItem()) {
+                itemHandler.setStackInSlot(getFuelSlot(), fuel.getCraftingRemainingItem());
             } else if (!fuel.isEmpty()) {
                 fuel.shrink(1);
                 if (fuel.isEmpty()) {
-                    itemHandler.setStackInSlot(getFuelSlot(), fuel.getContainerItem());
+                    itemHandler.setStackInSlot(getFuelSlot(), fuel.getCraftingRemainingItem());
                 }
             }
         }
@@ -154,7 +154,7 @@ public abstract class MachineTileEntity<T extends Recipe<?>> extends RecipeTileE
     protected void smelt(@Nullable Recipe<?> recipe) {
         if (recipe != null && this.canSmelt(recipe)) {
             ItemStack input = this.itemHandler.getStackInSlot(0);
-            ItemStack output = recipe.getResultItem();
+            ItemStack output = recipe.getResultItem(level.registryAccess());
             if (recipe instanceof CommonRecipe) {
                 output = ((CommonRecipe) recipe).getOutput().get(0);
             }
@@ -175,14 +175,14 @@ public abstract class MachineTileEntity<T extends Recipe<?>> extends RecipeTileE
 
     protected boolean canSmelt(@Nullable Recipe<?> recipeIn) {
         if (!this.itemHandler.getStackInSlot(0).isEmpty() && recipeIn != null) {
-            ItemStack output = recipeIn.getResultItem();
+            ItemStack output = recipeIn.getResultItem(level.registryAccess());
             if (output.isEmpty()) {
                 return false;
             } else {
                 ItemStack outputSlot = this.itemHandler.getStackInSlot(2);
                 if (outputSlot.isEmpty()) {
                     return true;
-                } else if (!outputSlot.sameItem(output)) {
+                } else if (!outputSlot.is(output.getItem())) {
                     return false;
                 } else {
                     return outputSlot.getCount() + output.getCount() <= output.getMaxStackSize(); // Forge fix: make furnace respect stack sizes in furnace recipes

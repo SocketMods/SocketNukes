@@ -1,6 +1,7 @@
 package dev.socketmods.socketnukes.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import dev.socketmods.socketnukes.entity.ExplosiveEntity;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.client.Minecraft;
@@ -8,6 +9,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.TntMinecartRenderer;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -39,9 +41,9 @@ public class ExplosiveEntityRenderer extends EntityRenderer<ExplosiveEntity> {
             matrixStackIn.scale(f1, f1, f1);
         }
 
-        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-90.0F));
+        matrixStackIn.mulPose(Axis.YP.rotationDegrees(-90.0F));
         matrixStackIn.translate(-0.5D, -0.5D, 0.5D);
-        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(90.0F));
+        matrixStackIn.mulPose(Axis.YP.rotationDegrees(90.0F));
         TntMinecartRenderer.renderWhiteSolidBlock(Minecraft.getInstance().getBlockRenderer(), SNRegistry.GENERIC_EXPLOSIVE.get().defaultBlockState(), matrixStackIn, bufferIn, packedLightIn, entityIn.getFuse() / 5 % 2 == 0);
         matrixStackIn.popPose();
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);

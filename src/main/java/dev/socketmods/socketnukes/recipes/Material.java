@@ -35,7 +35,7 @@ public class Material implements Predicate<ItemStack> {
     }
 
     public static Material deserialize(JsonObject object) {
-        Ingredient ingredient = CraftingHelper.getIngredient(object.get("ingredient"));
+        Ingredient ingredient = CraftingHelper.getIngredient(object.get("ingredient"), true);
         int count = GsonHelper.getAsInt(object, "count", 1);
         if (count <= 0) {
             throw new IllegalArgumentException("Material count must be a positive integer.");

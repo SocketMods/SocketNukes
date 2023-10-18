@@ -32,18 +32,18 @@ public class Network {
         CHANNEL.messageBuilder(ExtendedExplosionPacket.class, PACKETID++, NetworkDirection.PLAY_TO_CLIENT)
                 .encoder(ExtendedExplosionPacket::toBytes)
                 .decoder(ExtendedExplosionPacket::new)
-                .consumer(ExtendedExplosionPacket::handle)
+                .consumerMainThread(ExtendedExplosionPacket::handle)
                 .add();
         CHANNEL.messageBuilder(ExploderConfigChangedPacket.class, PACKETID++, NetworkDirection.PLAY_TO_SERVER)
                 .encoder(ExploderConfigChangedPacket::toBytes)
                 .decoder(ExploderConfigChangedPacket::new)
-                .consumer(ExploderConfigChangedPacket::handle)
+                .consumerMainThread(ExploderConfigChangedPacket::handle)
                 .add();
     }
 
     // Send an arbitrary packet to the given player, from the server.
     public static void sendToClient(Object packet, ServerPlayer player) {
-        CHANNEL.sendTo(packet, player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+        CHANNEL.sendTo(packet, player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
     }
 
     // Send an arbitrary packet to the server, from the client.

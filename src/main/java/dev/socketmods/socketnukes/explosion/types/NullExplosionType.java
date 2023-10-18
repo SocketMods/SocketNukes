@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class NullExplosionType extends ExtendedExplosionType {
 
     public NullExplosionType() {
-        super(0, new ArrayList<>(), 0, DamageSource.GENERIC, false);
+        super(0, new ArrayList<>(), 0, null, false);
         this.setFuseTime(10);
     }
 }
