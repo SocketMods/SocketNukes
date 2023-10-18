@@ -26,7 +26,10 @@ public class ExplosiveBlockItem extends BlockItem {
         super(SNRegistry.GENERIC_EXPLOSIVE.get(), properties);
     }
 
-    @Override
+
+
+
+    // TODO: Move to other place SNItems or get new name
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
         if(group == SocketItems.SOCKETNUKES_GROUP)
             for(RegistryObject<ExtendedExplosionType> explosionType : SNRegistry.EXPLOSIONS.getEntries()) {
