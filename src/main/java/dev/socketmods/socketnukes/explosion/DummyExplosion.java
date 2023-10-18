@@ -29,7 +29,7 @@ public class DummyExplosion extends Explosion {
 
     protected float radius;
 
-    public DummyExplosion(Level worldIn, @Nullable Entity entityIn, double x, double y, double z, float size, List<BlockPos> affectedPositions) {
+    public DummyExplosion(Level worldIn, @Nullable Entity entityIn, int x, int y, int z, float size, List<BlockPos> affectedPositions) {
         super(worldIn, entityIn, x, y, z, size, affectedPositions);
         this.world = worldIn;
         this.source = entityIn;
@@ -37,7 +37,7 @@ public class DummyExplosion extends Explosion {
         this.radius = size;
     }
 
-    public DummyExplosion(Level worldIn, @Nullable Entity entityIn, double x, double y, double z, ExtendedExplosionType type) {
+    public DummyExplosion(Level worldIn, @Nullable Entity entityIn, int x, int y, int z, ExtendedExplosionType type) {
         super(worldIn, entityIn, x, y, z, type.getRadius(), new ArrayList<>());
         this.world = worldIn;
         this.source = entityIn;

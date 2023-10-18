@@ -19,8 +19,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
@@ -55,7 +55,7 @@ public abstract class MachineBlock extends CommonMachineBlock {
         if (!state.is(newState.getBlock())) {
             BlockEntity te = worldIn.getBlockEntity(pos);
             if (te instanceof CommonTileEntity) {
-                LazyOptional<IItemHandler> inventory = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+                LazyOptional<IItemHandler> inventory = te.getCapability(ForgeCapabilities.ITEM_HANDLER);
                 inventory.ifPresent(inv -> dropInventoryItems(worldIn, pos, inv));
             }
         }
@@ -69,7 +69,7 @@ public abstract class MachineBlock extends CommonMachineBlock {
             BlockEntity tile = worldIn.getBlockEntity(pos);
             if (tile instanceof MachineTileEntity) {
                 MachineTileEntity CommonTe = (MachineTileEntity) tile;
-                NetworkHooks.openGui((ServerPlayer) player, CommonTe, tile.getBlockPos());
+                NetworkHooks.openScreen((ServerPlayer) player, CommonTe, tile.getBlockPos());
             } else {
                 throw new IllegalStateException("Missing Container provider");
             }

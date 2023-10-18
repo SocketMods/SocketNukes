@@ -1,15 +1,15 @@
 buildscript {
     repositories {
-        maven { url = 'https://maven.minecraftforge.net/' }
+        maven { url = 'https://maven.neoforged.net/' }
         jcenter()
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        classpath group: 'net.neoforged', name: 'NeoGradle', version: '6.+', changing: true
         classpath group: 'org.ajoberstar.grgit', name: 'grgit-gradle', 'version': '4.1.1'
     }
 }
-apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'net.neoforged.gradle'
 apply plugin: 'org.ajoberstar.grgit'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
@@ -93,7 +93,7 @@ configurations {
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
+    minecraft "net.neoforged:forge:${mc_version}-${forge_version}"
 
     dataImplementation sourceSets.main.output
 }

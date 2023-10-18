@@ -9,6 +9,7 @@ import dev.socketmods.socketnukes.client.screen.widget.ExplosionList;
 import dev.socketmods.socketnukes.networking.Network;
 import dev.socketmods.socketnukes.networking.packet.ExploderConfigChangedPacket;
 import dev.socketmods.socketnukes.registry.SNRegistry;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -63,14 +64,14 @@ public class ExploderConfigScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphics stack, int mouseX, int mouseY, float partialTicks) {
         // Due to the way the Screen / Gui System is designed we can safely assume that `minecraft` is non null here
         assert minecraft != null;
 
-        drawCenteredString(stack, this.font, this.title, this.width / 2, 20, 0xFFFFFF);
+        stack.drawCenteredString(this.font, this.title, this.width / 2, 20, 0xFFFFFF);
 
         RenderSystem.setShaderTexture(0, BACKGROUND);
-        blit(stack, guiLeft, guiTop, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+        stack.blit(guiLeft, guiTop, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
         RenderSystem.setShaderTexture(0, Screen.BACKGROUND_LOCATION);
 

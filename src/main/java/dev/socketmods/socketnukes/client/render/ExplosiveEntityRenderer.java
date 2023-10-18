@@ -1,7 +1,6 @@
 package dev.socketmods.socketnukes.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
 import dev.socketmods.socketnukes.entity.ExplosiveEntity;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.client.Minecraft;
@@ -12,6 +11,7 @@ import net.minecraft.client.renderer.entity.TntMinecartRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.InventoryMenu;
+import org.joml.Vector3f;
 
 /**
  * Renderer class for Explosive Entities.

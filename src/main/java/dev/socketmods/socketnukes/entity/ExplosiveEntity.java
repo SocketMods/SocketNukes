@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -78,7 +79,7 @@ public class ExplosiveEntity extends Entity {
 
         this.move(MoverType.SELF, this.getDeltaMovement());
         this.setDeltaMovement(this.getDeltaMovement().scale(0.98D));
-        if (this.onGround) {
+        if (this.onGround()) {
             this.setDeltaMovement(this.getDeltaMovement().multiply(0.7D, -0.5D, 0.7D));
         }
 
@@ -88,8 +89,8 @@ public class ExplosiveEntity extends Entity {
             this.explode();
         } else {
             this.updateInWaterStateAndDoFluidPushing();
-            if (this.level.isClientSide) {
-                this.level.addParticle(ParticleTypes.SMOKE, this.getX(), this.getY() + 0.5D, this.getZ(), 0.0D, 0.0D, 0.0D);
+            if (this.level().isClientSide) {
+                this.level().addParticle(ParticleTypes.SMOKE, this.getX(), this.getY() + 0.5D, this.getZ(), 0.0D, 0.0D, 0.0D);
             }
         }
 
@@ -100,7 +101,7 @@ public class ExplosiveEntity extends Entity {
      * This is where all the work for abstraction comes together.
      */
     protected void explode() {
-        DummyExplosion explosion = new DummyExplosion(this.level, placer,
+        DummyExplosion explosion = new DummyExplosion(this.level(), placer,
             this.getX(), this.getY() - 1, this.getZ(),
             this.explosion);
 
@@ -130,7 +131,7 @@ public class ExplosiveEntity extends Entity {
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 

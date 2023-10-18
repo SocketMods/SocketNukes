@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.*;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -65,7 +66,7 @@ public class ExplosionList extends ObjectSelectionList<ExplosionList.ExplosionLi
         }
 
         @Override
-        public void render(PoseStack stack, int idx, int top, int left, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean isMouseOver, float partialTicks) {
+        public void render(GuiGraphics stack, int idx, int top, int left, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean isMouseOver, float partialTicks) {
             boolean isSelected = getSelected() == this;
 
             if (!isSelected) {

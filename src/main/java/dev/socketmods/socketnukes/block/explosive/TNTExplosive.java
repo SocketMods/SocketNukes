@@ -29,7 +29,6 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,7 +45,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class TNTExplosive extends BaseEntityBlock {
     public TNTExplosive() {
-        super(BlockBehaviour.Properties.of(Material.EXPLOSIVE));
+        super(BlockBehaviour.Properties.of());
     }
 
     /**
@@ -177,7 +176,7 @@ public class TNTExplosive extends BaseEntityBlock {
      */
     @Override
     public void wasExploded(Level worldIn, BlockPos pos, Explosion explosionIn) {
-        explode(worldIn, pos, explosionIn.getSourceMob(), SNRegistry.VANILLA_EXPLOSION.get(), true);
+        explode(worldIn, pos, explosionIn.getIndirectSourceEntity(), SNRegistry.VANILLA_EXPLOSION.get(), true);
     }
 
     /**
