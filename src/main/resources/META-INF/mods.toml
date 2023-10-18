@@ -26,6 +26,6 @@ Boom goes the bombs and the missiles!
 [[dependencies.socketnukes]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.19,1.20)"
+    versionRange="[1.20.1, 1.20.2)"
     ordering="NONE"
     side="BOTH"
