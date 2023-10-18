@@ -82,8 +82,6 @@ public class ExplosionList extends ObjectSelectionList<ExplosionList.ExplosionLi
                 int l1 = x0 + width / 2 - entryWidth / 2;
                 int i2 = x0 + width / 2 + entryWidth / 2;
 
-                RenderSystem.disableTexture();
-
                 float f = parent.isFocused() ? 0.25F : 0.125F;
                 //TODO: RenderSystem.color4f(f, f, f, 1.0F);
                 bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
@@ -100,12 +98,10 @@ public class ExplosionList extends ObjectSelectionList<ExplosionList.ExplosionLi
                 bufferbuilder.vertex((i2 - 1), (i1 - 1), 0.0D).endVertex();
                 bufferbuilder.vertex((l1 + 1), (i1 - 1), 0.0D).endVertex();
                 tessellator.end();
-
-                RenderSystem.enableTexture();
             }
 
             String name = SNRegistry.EXPLOSION_TYPE_REGISTRY.get().getKey(type.get()).toString();
-            parent.font.drawShadow(stack, name, left + 3, top + 2, isSelected ? 0xFFFF55 : 0xFFFFFF);
+            stack.drawString(parent.font, name, left + 3, top + 2, isSelected ? 0xFFFF55 : 0xFFFFFF, true);
         }
 
         @Override
