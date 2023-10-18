@@ -28,6 +28,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -52,7 +53,7 @@ public class CubicExplosionType extends ExtendedExplosionType {
     private static final int STAGE_BREAK = 2;
 
     public CubicExplosionType(ExplosionProperties props) {
-        super(4, Arrays.asList(Blocks.OBSIDIAN, Blocks.BEDROCK), 2, DamageSource.GENERIC, false);
+        super(4, Arrays.asList(Blocks.OBSIDIAN, Blocks.BEDROCK), 2, null, false);
         this.properties = props;
         this.setFuseTime(80);
     }
@@ -130,26 +131,30 @@ public class CubicExplosionType extends ExtendedExplosionType {
                 if (doBlocksDrop) {
                     ObjectArrayList<Pair<ItemStack, BlockPos>> objectarraylist = new ObjectArrayList<>();
                     Util.shuffle(meta.affectedBlocks, worldIn.random);
-
-                    for (BlockPos blockpos : meta.affectedBlocks) {
+                    for(BlockPos blockpos : meta.affectedBlocks) {
                         BlockState blockstate = worldIn.getBlockState(blockpos);
+                        Block block = blockstate.getBlock();
+
+                        Explosion vanillaExplosion2 = new DummyExplosion(worldIn, placer, source.getX(), source.getY(), source.getZ(), radius, meta.affectedBlocks);
+
                         if (!blockstate.isAir()) {
                             BlockPos blockpos1 = blockpos.immutable();
                             worldIn.getProfiler().push("explosion_blocks");
+                            if (blockstate.canDropFromExplosion(worldIn, blockpos, vanillaExplosion2)) {
+                                Level level = worldIn;
+                                if (level instanceof ServerLevel serverlevel) {
+                                    BlockEntity blockentity = blockstate.hasBlockEntity() ? worldIn.getBlockEntity(blockpos) : null;
+                                    LootParams.Builder lootparams$builder = (new LootParams.Builder(serverlevel)).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(blockpos)).withParameter(LootContextParams.TOOL, ItemStack.EMPTY).withOptionalParameter(LootContextParams.BLOCK_ENTITY, blockentity).withOptionalParameter(LootContextParams.THIS_ENTITY, placer);
+                                    lootparams$builder.withParameter(LootContextParams.EXPLOSION_RADIUS, (float) this.radius);
 
-                            Explosion vanillaExplosion2 = new DummyExplosion(worldIn, placer, source.getX(), source.getY(), source.getZ(), radius, meta.affectedBlocks);
+                                    boolean flag1 = placer instanceof Player;
+                                    blockstate.spawnAfterBreak(serverlevel, blockpos, ItemStack.EMPTY, flag1);
 
-                            if (blockstate.canDropFromExplosion(worldIn, blockpos, vanillaExplosion2) && worldIn instanceof ServerLevel) {
-                                BlockEntity blockEntity = blockstate.hasBlockEntity() ? worldIn.getBlockEntity(blockpos) : null;
-                                LootContext.Builder lootcontext$builder = (new LootContext.Builder((ServerLevel) worldIn)).withRandom(worldIn.random).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(blockpos)).withParameter(LootContextParams.TOOL, ItemStack.EMPTY).withOptionalParameter(LootContextParams.BLOCK_ENTITY, blockEntity).withOptionalParameter(LootContextParams.THIS_ENTITY, placer);
-                                if (this.doBlocksDrop) {
-                                    lootcontext$builder.withParameter(LootContextParams.EXPLOSION_RADIUS, (float) radius);
+                                    blockstate.getDrops(lootparams$builder).forEach((stack) -> handleExplosionDrops(objectarraylist, stack, blockpos1));
                                 }
-
-                                blockstate.getDrops(lootcontext$builder).forEach((stack) -> handleExplosionDrops(objectarraylist, stack, blockpos1));
                             }
-                            if(!worldIn.isClientSide)
-                                blockstate.onBlockExploded(worldIn, blockpos, vanillaExplosion2);
+
+                            blockstate.onBlockExploded(worldIn, blockpos, vanillaExplosion2);
                             worldIn.getProfiler().pop();
                         }
                     }
