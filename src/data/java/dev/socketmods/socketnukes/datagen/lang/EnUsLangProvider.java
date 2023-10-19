@@ -1,7 +1,6 @@
 package dev.socketmods.socketnukes.datagen.lang;
 
 import dev.socketmods.socketnukes.SocketNukes;
-import dev.socketmods.socketnukes.item.SocketItems;
 import dev.socketmods.socketnukes.registry.ExtendedExplosionType;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.data.PackOutput;
@@ -31,7 +30,7 @@ public class EnUsLangProvider extends LanguageProvider {
         add(SNRegistry.NULL_EXPLOSION.get(), "Null");
         add(SNRegistry.BOLB_EXPLOSION.get(), "Bolb");
 
-        add(SocketItems.SOCKETNUKES_GROUP, "SocketNukes - Explosives");
+        add(SNRegistry.SOCKETNUKES_GROUP.get(), "SocketNukes - Explosives");
 
         add("socketnukes.title.exploderconfig", "Exploderiser Configuration");
     }

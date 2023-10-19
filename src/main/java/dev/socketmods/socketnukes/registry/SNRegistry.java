@@ -15,6 +15,9 @@ import dev.socketmods.socketnukes.item.block.ExplosiveBlockItem;
 import dev.socketmods.socketnukes.item.util.ExploderItem;
 import dev.socketmods.socketnukes.tileentity.ExplosiveTileEntity;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityDimensions;
@@ -22,7 +25,9 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -47,6 +52,8 @@ public class SNRegistry {
     public static final DeferredRegister<EntityType<?>> ENTITYTYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, SocketNukes.MODID);
 
     public static final DeferredRegister<ExtendedExplosionType> EXPLOSIONS = DeferredRegister.create(new ResourceLocation(SocketNukes.MODID, "explosion_types"), SocketNukes.MODID);
+
+    public static final DeferredRegister<CreativeModeTab> CREATIVETABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, SocketNukes.MODID);
 
     /***********************************************
      *            SocketNukes Registries           *
@@ -84,6 +91,21 @@ public class SNRegistry {
             new BolbExplosionType(new ExplosionProperties(true, false, ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, SoundEvents.ANVIL_LAND))
     );
 
+    // CREATIVE TAB
+    public static final RegistryObject<CreativeModeTab> SOCKETNUKES_GROUP = CREATIVETABS.register("sn_creative_group", () -> CreativeModeTab.builder()
+            .title(Component.translatable(SocketNukes.MODID + ".main"))
+            .icon(() -> new ItemStack(SNRegistry.GENERIC_EXPLOSIVE_ITEM.get()))
+            .displayItems((p_270258_, p_259752_) -> {
+                p_259752_.accept(SNRegistry.GENERIC_EXPLOSIVE_ITEM.get());
+                p_259752_.accept(SNRegistry.EXPLODER_ITEM.get());
+                for(RegistryObject<ExtendedExplosionType> explosionType : SNRegistry.EXPLOSIONS.getEntries()) {
+                    ItemStack newItem = new ItemStack(GENERIC_EXPLOSIVE_ITEM.get());
+                    CompoundTag tag = newItem.getOrCreateTagElement(SocketNukes.MODID);
+                    tag.putString("explosion", SNRegistry.EXPLOSION_TYPE_REGISTRY.get().getKey(explosionType.get()).toString());
+                    p_259752_.accept(newItem);
+                }
+            }).build());
+
     // ENTITY TYPE
     // TODO: Look up what FeatureFlagSet does
     public static final RegistryObject<EntityType<ExplosiveEntity>> EXPLOSIVE_ENTITY_TYPE = ENTITYTYPES.register("explosive", () ->
@@ -110,7 +132,9 @@ public class SNRegistry {
         CONTAINERTYPES.register(modBus);
         EXPLOSIONS.register(modBus);
         ENTITYTYPES.register(modBus);
+        CREATIVETABS.register(modBus);
     }
+
 
     public static ExtendedExplosionType getExplosionType(String name) {
         return Objects.requireNonNull(EXPLOSION_TYPE_REGISTRY.get().getValue(new ResourceLocation(name)));
