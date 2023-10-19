@@ -2,7 +2,7 @@ package dev.socketmods.socketnukes.datagen.block.model;
 
 import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.registry.SNRegistry;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraftforge.client.model.generators.BlockModelProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
@@ -11,8 +11,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class BlockModelProviders extends BlockModelProvider {
     public static ModelFile explosiveModel;
 
-    public BlockModelProviders(DataGenerator generatorIn, ExistingFileHelper existingFileHelper) {
-        super(generatorIn, SocketNukes.MODID, existingFileHelper);
+    public BlockModelProviders(PackOutput output, ExistingFileHelper existingFileHelper) {
+        super(output, SocketNukes.MODID, existingFileHelper);
     }
 
     @Override

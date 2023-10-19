@@ -1,19 +1,24 @@
 package dev.socketmods.socketnukes.datagen.tags;
 
 import dev.socketmods.socketnukes.SocketNukes;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.tags.FluidTagsProvider;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import org.jetbrains.annotations.Nullable;
+import net.minecraftforge.data.event.GatherDataEvent;
 
 public class FluidTagsProviders extends FluidTagsProvider {
 
-    public FluidTagsProviders(DataGenerator generatorIn, @Nullable ExistingFileHelper existingFileHelper) {
-        super(generatorIn, SocketNukes.MODID, existingFileHelper);
+    public FluidTagsProviders(GatherDataEvent event) {
+        super(
+                event.getGenerator().getPackOutput(),
+                event.getLookupProvider(),
+                SocketNukes.MODID,
+                event.getExistingFileHelper()
+        );
     }
 
     @Override
-    protected void addTags() {
+    protected void addTags(HolderLookup.Provider provider) {
 
     }
+
 }

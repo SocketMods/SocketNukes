@@ -1,7 +1,7 @@
 package dev.socketmods.socketnukes.datagen.recipes;
 
 import net.minecraft.advancements.CriterionTriggerInstance;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.tags.TagKey;
@@ -11,12 +11,13 @@ import java.util.function.Consumer;
 
 public class RecipeProviders extends RecipeProvider {
 
-    public RecipeProviders(DataGenerator generatorIn) {
-        super(generatorIn);
+    public RecipeProviders(PackOutput output) {
+        super(output);
     }
 
+
     @Override
-    protected void buildCraftingRecipes(Consumer<FinishedRecipe> consumer) {
+    protected void buildRecipes(Consumer<FinishedRecipe> consumer) {
         new BombRecipe(consumer);
     }
 
