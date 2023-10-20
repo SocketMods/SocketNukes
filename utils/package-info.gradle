@@ -5,7 +5,7 @@ import java.util.stream.Collectors
  *
  *  Based on: https://stackoverflow.com/a/40091450
  */
-task generatePackageInfos() {
+tasks.register('generatePackageInfos') {
     group = "utility"
     description = "Generates package-info.java for all packages"
 
@@ -31,7 +31,7 @@ task generatePackageInfos() {
 
                 // Skip if package-info.java exists and contains the expected string
                 def packageInfo = new File(directory, "package-info.java")
-                if (packageInfo.exists() && packageString.equals(packageInfo.text.replace('\r\n', '\n'))) return
+                if (packageInfo.exists() && packageString == packageInfo.text.replace('\r\n', '\n')) return
 
                 // Write package-info.java
                 logger.info "Writing package-info.java for: $packageInfo"
@@ -43,7 +43,7 @@ task generatePackageInfos() {
 }
 
 // Always generate the package-infos for all of the compile tasks
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     dependsOn generatePackageInfos
 }
 
