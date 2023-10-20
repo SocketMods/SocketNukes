@@ -25,6 +25,9 @@ public class EnUsLangProvider extends LanguageProvider {
         add(SNRegistry.EXPLOSIVE_ENTITY_TYPE.get(), "Pop Filter");
         add(SNRegistry.BOLB_ENTITY_TYPE.get(), "Bolb");
 
+        add(SNRegistry.POWERED_FURNACE_ITEM.get(), "Powered Furnace");
+        add(SNRegistry.IRON_PLATE_ITEM.get(), "Iron Plate");
+
         add(SNRegistry.VANILLA_EXPLOSION.get(), "Vanilla");
         add(SNRegistry.CUBIC_EXPLOSION.get(), "Cubic");
         add(SNRegistry.NULL_EXPLOSION.get(), "Null");
@@ -36,7 +39,7 @@ public class EnUsLangProvider extends LanguageProvider {
     }
 
     private void add(CreativeModeTab group, String name) {
-        add("itemGroup." + Objects.requireNonNull(((TranslatableContents)group.getDisplayName().getContents()).getKey()), name);
+        add(Objects.requireNonNull(((TranslatableContents)group.getDisplayName().getContents()).getKey()), name);
     }
 
     private void add(ExtendedExplosionType type, String name) {

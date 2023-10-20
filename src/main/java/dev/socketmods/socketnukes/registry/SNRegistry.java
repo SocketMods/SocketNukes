@@ -90,6 +90,10 @@ public class SNRegistry {
     public static final RegistryObject<Item> GENERIC_EXPLOSIVE_ITEM = ITEMS.register("explosive", () -> new ExplosiveBlockItem(SocketItems.EXPLOSIVE_PROPERTIES));
     public static final RegistryObject<Item> POWERED_FURNACE_ITEM = ITEMS.register("powered_furnace", () -> new BlockItem(POWERED_FURNACE_BLOCK.get(), SocketItems.EXPLOSIVE_PROPERTIES));
 
+    // CRAFTING ITEMS
+
+    public static final RegistryObject<Item> IRON_PLATE_ITEM = ITEMS.register("iron_plate", () -> new Item(SocketItems.CRAFTING_PROPERTIES));
+
     // EXPLOSIONS
     public static final RegistryObject<VanillaExplosionType> VANILLA_EXPLOSION = EXPLOSIONS.register("vanilla", () ->
             new VanillaExplosionType(new ExplosionProperties(true, false, ParticleTypes.EXPLOSION_EMITTER, SoundEvents.GENERIC_EXPLODE))
@@ -119,9 +123,10 @@ public class SNRegistry {
                     tab.accept(newItem);
                 }
                 tab.accept(SNRegistry.POWERED_FURNACE_ITEM.get());
+                tab.accept(SNRegistry.IRON_PLATE_ITEM.get());
 
-            }).build());
-
+            }).build()
+    );
 
     public static final RegistryObject<MenuType<PoweredFurnaceMenu>> POWERED_FURNACE_MENU = CONTAINERTYPES.register("powered_furnace", () ->
             new MenuType<>((IContainerFactory<PoweredFurnaceMenu>) PoweredFurnaceMenu::new, FeatureFlagSet.of())
