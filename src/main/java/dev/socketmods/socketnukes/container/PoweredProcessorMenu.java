@@ -1,18 +1,16 @@
 package dev.socketmods.socketnukes.container;
 
 import dev.socketmods.socketnukes.blockentity.PoweredRecipeMachine;
-import dev.socketmods.socketnukes.container.slot.PowerStorageSlot;
-import dev.socketmods.socketnukes.container.slot.SimpleResultSlot;
-import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.*;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.SlotItemHandler;
 
 /**
  * The abstract Menu used for Powered Recipe Machines that take RF and process a single item into a single output.
@@ -40,7 +38,7 @@ public abstract class PoweredProcessorMenu<T extends PoweredRecipeMachine<?>> ex
     public PoweredProcessorMenu(int windowID, Inventory inv, T blockEntity, ContainerData data, MenuType<?> type) {
         super(type, windowID);
         this.blockEntity = blockEntity;
-        this.level = inv.player.level;
+        this.level = inv.player.level();
         this.data = data;
 
         addPlayerInventory(inv);
@@ -56,11 +54,11 @@ public abstract class PoweredProcessorMenu<T extends PoweredRecipeMachine<?>> ex
     protected abstract void addMenuSlots();
 
     public int getEnergyStored() {
-        return blockEntity.getCapability(CapabilityEnergy.ENERGY).map(IEnergyStorage::getEnergyStored).orElse(0);
+        return blockEntity.getCapability(ForgeCapabilities.ENERGY).map(IEnergyStorage::getEnergyStored).orElse(0);
     }
 
     public int getMaxEnergy() {
-        return blockEntity.getCapability(CapabilityEnergy.ENERGY).map(IEnergyStorage::getMaxEnergyStored).orElse(0);
+        return blockEntity.getCapability(ForgeCapabilities.ENERGY).map(IEnergyStorage::getMaxEnergyStored).orElse(0);
     }
 
     public boolean isSmelting() {

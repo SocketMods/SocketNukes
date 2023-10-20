@@ -1,14 +1,12 @@
 package dev.socketmods.socketnukes.block.tier1;
 
 import dev.socketmods.socketnukes.blockentity.tier1.PoweredFurnaceBlockEntity;
-import dev.socketmods.socketnukes.container.tier1.PoweredFurnaceMenu;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
@@ -21,9 +19,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.network.IContainerFactory;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,7 +31,7 @@ public class PoweredFurnaceBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
     public PoweredFurnaceBlock() {
-        super(BlockBehaviour.Properties.of(Material.METAL));
+        super(BlockBehaviour.Properties.of());
         registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
     }
 
@@ -70,7 +66,7 @@ public class PoweredFurnaceBlock extends BaseEntityBlock {
         if (!level.isClientSide) {
             BlockEntity entity = level.getBlockEntity(pos);
             if (entity instanceof PoweredFurnaceBlockEntity poweredFurnace) {
-                NetworkHooks.openGui((ServerPlayer) player, poweredFurnace, pos);
+                NetworkHooks.openScreen((ServerPlayer) player, poweredFurnace, pos);
             }
         }
 

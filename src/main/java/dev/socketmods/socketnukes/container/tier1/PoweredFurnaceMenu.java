@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.SimpleContainerData;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class PoweredFurnaceMenu extends PoweredProcessorMenu<PoweredFurnaceBlockEntity> {
@@ -20,12 +20,12 @@ public class PoweredFurnaceMenu extends PoweredProcessorMenu<PoweredFurnaceBlock
     }
 
     public PoweredFurnaceMenu(int windowID, Inventory inv, FriendlyByteBuf buf) {
-        this(windowID, inv, (PoweredFurnaceBlockEntity) inv.player.level.getBlockEntity(buf.readBlockPos()), new SimpleContainerData(2));
+        this(windowID, inv, (PoweredFurnaceBlockEntity) inv.player.level().getBlockEntity(buf.readBlockPos()), new SimpleContainerData(2));
     }
 
     @Override
     protected void addMenuSlots() {
-        this.blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(cap -> {
+        this.blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(cap -> {
             this.addSlot(new SlotItemHandler(cap, 0, 66, 33));
             this.addSlot(new SimpleResultSlot(cap, 1, 114, 33));
             this.addSlot(new PowerStorageSlot(cap, 2, 8, 44));

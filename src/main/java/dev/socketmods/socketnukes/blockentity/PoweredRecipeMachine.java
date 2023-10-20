@@ -1,38 +1,28 @@
 package dev.socketmods.socketnukes.blockentity;
 
 import dev.socketmods.socketnukes.capability.EnergyStorageWrapper;
-import dev.socketmods.socketnukes.container.tier1.PoweredFurnaceMenu;
 import dev.socketmods.socketnukes.registry.SNRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -101,9 +91,9 @@ public abstract class PoweredRecipeMachine<T extends Recipe<Container>> extends 
 
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap) {
-        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+        if (cap == ForgeCapabilities.ITEM_HANDLER)
             return lazyItemHandler.cast();
-        else if (cap == CapabilityEnergy.ENERGY)
+        else if (cap == ForgeCapabilities.ENERGY)
             return lazyEnergy.cast();
 
         else return super.getCapability(cap);
@@ -138,7 +128,7 @@ public abstract class PoweredRecipeMachine<T extends Recipe<Container>> extends 
      * Point the machine's Block at this method to inherit all of the processing done by this class.
      */
     public static void tick(Level level, BlockPos pos, BlockState state, PoweredRecipeMachine<?> entity) {
-        entity.getCapability(CapabilityEnergy.ENERGY).ifPresent(cap -> {
+        entity.getCapability(ForgeCapabilities.ENERGY).ifPresent(cap -> {
 
             // If there's a suitable charging item in the port, and we can take all of its charge, do so and remove the item.
             if (entity.hasEnergyItem() && cap.getEnergyStored() + 5000 < cap.getMaxEnergyStored()) {
@@ -209,7 +199,7 @@ public abstract class PoweredRecipeMachine<T extends Recipe<Container>> extends 
                 .getRecipeFor(recipeType, inventory, level);
 
         return match.isPresent() && canInsertAmountIntoOutputSlot(inventory)
-                && canInsertItemIntoOutputSlot(inventory, match.get().getResultItem());
+                && canInsertItemIntoOutputSlot(inventory, match.get().getResultItem(level.registryAccess()));
     }
 
     /**
@@ -227,10 +217,10 @@ public abstract class PoweredRecipeMachine<T extends Recipe<Container>> extends 
 
         if(match.isPresent()) {
             itemHandler.extractItem(0,1, false);
-            if (itemHandler.getStackInSlot(1).getItem() == match.get().getResultItem().getItem())
+            if (itemHandler.getStackInSlot(1).getItem() == match.get().getResultItem(level.registryAccess()).getItem())
                 itemHandler.getStackInSlot(1).grow(1);
             else
-                itemHandler.setStackInSlot(1, match.get().getResultItem());
+                itemHandler.setStackInSlot(1, match.get().getResultItem(level.registryAccess()));
 
             resetProgress();
         }
@@ -240,7 +230,7 @@ public abstract class PoweredRecipeMachine<T extends Recipe<Container>> extends 
      * Return whether the furnace has enough energy to continue to smelt a single item.
      */
     public boolean hasEnergy() {
-        return getCapability(CapabilityEnergy.ENERGY).map(IEnergyStorage::getEnergyStored).orElse(0) > 50;
+        return getCapability(ForgeCapabilities.ENERGY).map(IEnergyStorage::getEnergyStored).orElse(0) > 50;
     }
 
     /**

@@ -5,8 +5,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.container.tier1.PoweredFurnaceMenu;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -20,7 +22,7 @@ public class PoweredFurnaceScreen extends AbstractContainerScreen<PoweredFurnace
     }
 
     @Override
-    protected void renderBg(PoseStack p_97787_, float p_97788_, int p_97789_, int p_97790_) {
+    protected void renderBg(GuiGraphics graphics, float p_97788_, int p_97789_, int p_97790_) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         RenderSystem.setShaderTexture(0, BACKGROUND);
@@ -28,24 +30,24 @@ public class PoweredFurnaceScreen extends AbstractContainerScreen<PoweredFurnace
         int middleX = (width - imageWidth) / 2;
         int middleY = (height - imageHeight) / 2;
 
-        this.blit(p_97787_, middleX, middleY, 0, 0, imageWidth, imageHeight);
+        graphics.blit(middleX, middleY, 0, 0, imageWidth, imageHeight);
 
         if (menu.isSmelting()) {
-            this.blit(p_97787_, middleX + 86, middleY + 34, 176, 25, menu.getScaledProgress(), 36);
-            this.blit(p_97787_, middleX + 66, middleY + 53, 176, 0, 14, 14);
+            graphics.blit(middleX + 86, middleY + 34, 176, 25, menu.getScaledProgress(), 36);
+            graphics.blit(middleX + 66, middleY + 53, 176, 0, 14, 14);
         }
     }
 
 
     @Override
-    protected void renderLabels(PoseStack matrixStack, int mouseX, int mouseY) {
-        drawString(matrixStack, Minecraft.getInstance().font, "Energy: " + menu.getEnergyStored() + " / " + menu.getMaxEnergy(), 10, 10, 0xffffff);
+    protected void renderLabels(GuiGraphics matrixStack, int mouseX, int mouseY) {
+        matrixStack.drawString(Minecraft.getInstance().font, "Energy: " + menu.getEnergyStored() + " / " + menu.getMaxEnergy(), 10, 10, 0xffffff);
     }
 
     @Override
-    public void render(PoseStack p_97795_, int p_97796_, int p_97797_, float p_97798_) {
-        renderBackground(p_97795_);
-        super.render(p_97795_, p_97796_, p_97797_, p_97798_);
-        renderTooltip(p_97795_, p_97796_, p_97797_);
+    public void render(GuiGraphics graphics, int p_97796_, int p_97797_, float p_97798_) {
+        renderBackground(graphics);
+        super.render(graphics, p_97796_, p_97797_, p_97798_);
+        renderTooltip(graphics, p_97796_, p_97797_);
     }
 }
