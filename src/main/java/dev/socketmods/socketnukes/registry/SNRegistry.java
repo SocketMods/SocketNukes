@@ -2,8 +2,10 @@ package dev.socketmods.socketnukes.registry;
 
 import com.google.common.collect.ImmutableSet;
 import dev.socketmods.socketnukes.SocketNukes;
+import dev.socketmods.socketnukes.block.ConveyorBlock;
 import dev.socketmods.socketnukes.block.explosive.TNTExplosive;
 import dev.socketmods.socketnukes.block.tier1.PoweredFurnaceBlock;
+import dev.socketmods.socketnukes.blockentity.ConveyorBlockEntity;
 import dev.socketmods.socketnukes.blockentity.ExplosiveBlockEntity;
 import dev.socketmods.socketnukes.blockentity.tier1.PoweredFurnaceBlockEntity;
 import dev.socketmods.socketnukes.container.tier1.PoweredFurnaceMenu;
@@ -35,7 +37,9 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.IContainerFactory;
@@ -85,10 +89,14 @@ public class SNRegistry {
     public static final RegistryObject<Block> GENERIC_EXPLOSIVE = BLOCKS.register("explosive", TNTExplosive::new);
     public static final RegistryObject<Block> POWERED_FURNACE_BLOCK = BLOCKS.register("powered_furnace", PoweredFurnaceBlock::new);
 
+    public static final RegistryObject<Block> CONVEYOR_BLOCK = BLOCKS.register("conveyor", ConveyorBlock::new);
+
     // ITEMS
     public static final RegistryObject<Item> EXPLODER_ITEM = ITEMS.register("exploder_item", () -> new ExploderItem(SocketItems.EXPLODER_PROPERTIES));
     public static final RegistryObject<Item> GENERIC_EXPLOSIVE_ITEM = ITEMS.register("explosive", () -> new ExplosiveBlockItem(SocketItems.EXPLOSIVE_PROPERTIES));
     public static final RegistryObject<Item> POWERED_FURNACE_ITEM = ITEMS.register("powered_furnace", () -> new BlockItem(POWERED_FURNACE_BLOCK.get(), SocketItems.EXPLOSIVE_PROPERTIES));
+
+    public static final RegistryObject<Item> CONVEYOR_ITEM = ITEMS.register("conveyor", () -> new BlockItem(CONVEYOR_BLOCK.get(), SocketItems.CRAFTING_PROPERTIES));
 
     // CRAFTING ITEMS
 
@@ -124,6 +132,7 @@ public class SNRegistry {
                 }
                 tab.accept(SNRegistry.POWERED_FURNACE_ITEM.get());
                 tab.accept(SNRegistry.IRON_PLATE_ITEM.get());
+                tab.accept(SNRegistry.CONVEYOR_ITEM.get());
 
             }).build()
     );
@@ -152,6 +161,10 @@ public class SNRegistry {
 
     public static final RegistryObject<BlockEntityType<PoweredFurnaceBlockEntity>> POWERED_FURNACE_BE = TETYPES.register("powered_furnace", () ->
             BlockEntityType.Builder.of(PoweredFurnaceBlockEntity::new, POWERED_FURNACE_BLOCK.get()).build(null)
+    );
+
+    public static final RegistryObject<BlockEntityType<ConveyorBlockEntity>> CONVEYOR_BE = TETYPES.register("conveyor", () ->
+            BlockEntityType.Builder.of(ConveyorBlockEntity::new, CONVEYOR_BLOCK.get()).build(null)
     );
 
     public static void initialize() {

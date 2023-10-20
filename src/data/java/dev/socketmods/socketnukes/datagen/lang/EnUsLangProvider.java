@@ -26,6 +26,7 @@ public class EnUsLangProvider extends LanguageProvider {
         add(SNRegistry.BOLB_ENTITY_TYPE.get(), "Bolb");
 
         add(SNRegistry.POWERED_FURNACE_ITEM.get(), "Powered Furnace");
+        add(SNRegistry.CONVEYOR_ITEM.get(), "Conveyor");
         add(SNRegistry.IRON_PLATE_ITEM.get(), "Iron Plate");
 
         add(SNRegistry.VANILLA_EXPLOSION.get(), "Vanilla");

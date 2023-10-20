@@ -3,6 +3,7 @@ package dev.socketmods.socketnukes.client.events;
 import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.client.render.ExplosiveEntityRenderer;
 import dev.socketmods.socketnukes.client.render.SNModelLayers;
+import dev.socketmods.socketnukes.client.render.blockentity.ConveyorBERenderer;
 import dev.socketmods.socketnukes.client.render.bolb.BolbEntityRenderer;
 import dev.socketmods.socketnukes.client.render.bolb.BolbHatLayer;
 import dev.socketmods.socketnukes.client.render.bolb.BolbModel;
@@ -43,6 +44,8 @@ public class ClientSNEvents {
     public static void entityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(SNRegistry.EXPLOSIVE_ENTITY_TYPE.get(), ExplosiveEntityRenderer::new);
         event.registerEntityRenderer(SNRegistry.BOLB_ENTITY_TYPE.get(), BolbEntityRenderer::new);
+
+        event.registerBlockEntityRenderer(SNRegistry.CONVEYOR_BE.get(), ConveyorBERenderer::new);
     }
 
     @SubscribeEvent

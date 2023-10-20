@@ -2,15 +2,21 @@ package dev.socketmods.socketnukes.datagen.block.model;
 
 import dev.socketmods.socketnukes.SocketNukes;
 import dev.socketmods.socketnukes.registry.SNRegistry;
+import net.minecraft.client.model.Model;
 import net.minecraft.data.PackOutput;
+import net.minecraft.server.packs.PackType;
 import net.minecraftforge.client.model.generators.BlockModelProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.io.FileNotFoundException;
+
 public class BlockModelProviders extends BlockModelProvider {
     public static ModelFile explosiveModel;
     public static ModelFile poweredFurnaceModel;
+
+    public static ModelFile conveyorModel;
 
     public BlockModelProviders(PackOutput output, ExistingFileHelper existingFileHelper) {
         super(output, SocketNukes.MODID, existingFileHelper);
@@ -23,6 +29,7 @@ public class BlockModelProviders extends BlockModelProvider {
 
         String poweredFurnace = ForgeRegistries.BLOCKS.getKey(SNRegistry.POWERED_FURNACE_BLOCK.get()).getPath();
         poweredFurnaceModel = cubeBottomTop(poweredFurnace, modLoc("block/" + poweredFurnace + "_side"), modLoc("block/" + poweredFurnace + "_bottom"), modLoc("block/" + poweredFurnace + "_top"));
+
     }
 
 }
