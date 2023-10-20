@@ -15,6 +15,5 @@ public class BlockStateProvider extends net.minecraftforge.client.model.generato
     protected void registerStatesAndModels() {
         simpleBlock(SNRegistry.GENERIC_EXPLOSIVE.get(), BlockModelProviders.explosiveModel);
         horizontalBlock(SNRegistry.POWERED_FURNACE_BLOCK.get(), BlockModelProviders.poweredFurnaceModel);
-
     }
 }
