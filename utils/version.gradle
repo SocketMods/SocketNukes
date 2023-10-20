@@ -5,7 +5,7 @@
  * @return If the version should not contain the commit and branch information
  */
 static boolean isMainBranch(String branchName) {
-    return branchName.equals("HEAD") || branchName.equals("main") || branchName.matches("\\d+.\\d+.[\\dx]+")
+    return branchName == "HEAD" || branchName == "main" || branchName.matches("\\d+.\\d+.[\\dx]+")
 }
 
 /**
@@ -31,7 +31,7 @@ String calculateVersion() {
         String commitHash = split[2]
         if (tag.startsWith("v")) tag = tag.substring(1) // Remove 'v' prefixes from tags
 
-        boolean hasClassifier = release_type != null && !release_type.equals("release")
+        boolean hasClassifier = release_type != null && release_type != "release"
 
         String version = "${tag}.${commitCount}"
         // Append classifier if it exists
