@@ -59,7 +59,7 @@ public class VanillaExplosionType extends ExtendedExplosionType {
 
     public VanillaExplosionType(ExplosionProperties properties) {
         super(4, Arrays.asList(Blocks.BEDROCK, Blocks.OBSIDIAN, Blocks.CRYING_OBSIDIAN),
-                3, null, false);
+                3, false);
         this.properties = properties;
         this.setFuseTime(80);
     }
@@ -149,7 +149,7 @@ public class VanillaExplosionType extends ExtendedExplosionType {
                                 currentEntityDistanceZ = currentEntityDistanceZ / pythagoreanDistance;
                                 double rayLength = Explosion.getSeenPercent(explosionPos, currentEntity);
                                 double damageFalloff = (1.0D - currentEntityDistanceToExplosion) * rayLength;
-                                currentEntity.hurt(this.getDamageSource(), (float) ((int) ((damageFalloff * damageFalloff + damageFalloff) / 2.0D * 7.0D * (double) radiusx2 + 1.0D)));
+                                currentEntity.hurt(this.getDamageSource(currentEntity), (float) ((int) ((damageFalloff * damageFalloff + damageFalloff) / 2.0D * 7.0D * (double) radiusx2 + 1.0D)));
                                 if (currentEntity instanceof LivingEntity) {
                                     damageFalloff = ProtectionEnchantment.getExplosionKnockbackAfterDampener((LivingEntity) currentEntity, damageFalloff);
                                 }

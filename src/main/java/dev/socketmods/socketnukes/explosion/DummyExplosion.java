@@ -48,7 +48,7 @@ public class DummyExplosion extends Explosion {
 
     // Execute the explosion extensibly.
     // TODO: tick delay?
-    public void runExplosion() {
+    public void runExplosion(Entity e) {
         if(!explosionType.prepareExplosion(world, position, source)) return;
 
         ExplosionMetaPackage meta = new ExplosionMetaPackage();

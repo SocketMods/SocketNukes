@@ -31,7 +31,7 @@ import java.util.List;
  * @author Curle
  */
 
-public class ExtendedExplosionType{
+public abstract class ExtendedExplosionType {
     /**
      * These Explosion types are singleton - Registry Entries
      * Thus, they need to encode core behavior WITHOUT being instance specific.
@@ -49,9 +49,7 @@ public class ExtendedExplosionType{
 
     // For explosives that don't use conventional "big boom" damage, they can specify their own.
     // eg. napalm bombs cause fire damage
-    protected DamageSource damageSource;
-    public DamageSource getDamageSource() { return damageSource; }
-    public void setDamageSource(DamageSource source) { this.damageSource = source; }
+    public DamageSource getDamageSource(Entity e) { return e.damageSources().generic(); }
 
     // For explosives that totally annihilate the area, return false.
     // Analogous to Explosion.Mode.BREAK/DESTROY
@@ -73,10 +71,9 @@ public class ExtendedExplosionType{
     public void setFuseTime(int newFuseTime) { this.fuseTime = newFuseTime; }
     public int getFuseTime() { return fuseTime; }
 
-    public ExtendedExplosionType(int blastRadius, List<Block> immuneBlocks, int stages, DamageSource damage, boolean annihilateMode) {
+    public ExtendedExplosionType(int blastRadius, List<Block> immuneBlocks, int stages, boolean annihilateMode) {
         this.immuneBlocks = immuneBlocks;
         this.radius = blastRadius;
-        this.damageSource = damage;
         this.doBlocksDrop = !annihilateMode;
         this.explosionStages = stages;
         this.fuseTime = 80;

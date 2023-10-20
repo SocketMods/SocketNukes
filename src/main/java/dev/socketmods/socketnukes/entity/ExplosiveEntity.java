@@ -105,7 +105,7 @@ public class ExplosiveEntity extends Entity {
                 this.blockPosition().getX(), this.blockPosition().getY() - 1, this.blockPosition().getZ(),
             this.explosion);
 
-        explosion.runExplosion();
+        explosion.runExplosion(this);
     }
 
     @Override
