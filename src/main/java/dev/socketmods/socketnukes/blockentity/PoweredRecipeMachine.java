@@ -50,7 +50,7 @@ public abstract class PoweredRecipeMachine<T extends Recipe<Container>> extends 
     protected final EnergyStorageWrapper energy = new EnergyStorageWrapper(15000, 1000);
     protected final LazyOptional<IEnergyStorage> lazyEnergy = LazyOptional.of(() -> energy);
 
-    protected final ContainerData data;
+    public final ContainerData data;
     // Recipe processing progress.
     protected int progress = 0;
     // Recipes take 72 ticks by default to progress.
@@ -121,6 +121,7 @@ public abstract class PoweredRecipeMachine<T extends Recipe<Container>> extends 
         itemHandler.deserializeNBT(tag.getCompound("inventory"));
         energy.deserializeNBT(tag.get("energy"));
         progress = tag.getInt("progress");
+        data.set(1, 72);
     }
 
     /**
@@ -145,7 +146,7 @@ public abstract class PoweredRecipeMachine<T extends Recipe<Container>> extends 
                     // Start (or continue) processing it
                     entity.progress++;
                     // If we're processing an item, consume 50 rf/t.
-                    ((EnergyStorageWrapper)cap).consumeEnergy(50);
+                    ((EnergyStorageWrapper)cap).consumeEnergy(5);
                     // Inform nearby blocks that we are, or have started, processing
                     setChanged(level, pos, state);
 

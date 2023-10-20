@@ -109,15 +109,17 @@ public class SNRegistry {
     public static final RegistryObject<CreativeModeTab> SOCKETNUKES_GROUP = CREATIVETABS.register("sn_creative_group", () -> CreativeModeTab.builder()
             .title(Component.translatable(SocketNukes.MODID + ".main"))
             .icon(() -> new ItemStack(SNRegistry.GENERIC_EXPLOSIVE_ITEM.get()))
-            .displayItems((p_270258_, p_259752_) -> {
-                p_259752_.accept(SNRegistry.GENERIC_EXPLOSIVE_ITEM.get());
-                p_259752_.accept(SNRegistry.EXPLODER_ITEM.get());
+            .displayItems((params, tab) -> {
+                tab.accept(SNRegistry.GENERIC_EXPLOSIVE_ITEM.get());
+                tab.accept(SNRegistry.EXPLODER_ITEM.get());
                 for(RegistryObject<ExtendedExplosionType> explosionType : SNRegistry.EXPLOSIONS.getEntries()) {
                     ItemStack newItem = new ItemStack(GENERIC_EXPLOSIVE_ITEM.get());
                     CompoundTag tag = newItem.getOrCreateTagElement(SocketNukes.MODID);
                     tag.putString("explosion", SNRegistry.EXPLOSION_TYPE_REGISTRY.get().getKey(explosionType.get()).toString());
-                    p_259752_.accept(newItem);
+                    tab.accept(newItem);
                 }
+                tab.accept(SNRegistry.POWERED_FURNACE_ITEM.get());
+
             }).build());
 
 

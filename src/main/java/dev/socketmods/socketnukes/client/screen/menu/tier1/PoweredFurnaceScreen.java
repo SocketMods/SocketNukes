@@ -9,6 +9,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -30,11 +31,11 @@ public class PoweredFurnaceScreen extends AbstractContainerScreen<PoweredFurnace
         int middleX = (width - imageWidth) / 2;
         int middleY = (height - imageHeight) / 2;
 
-        graphics.blit(middleX, middleY, 0, 0, imageWidth, imageHeight);
+        graphics.blit(BACKGROUND, middleX, middleY, 0, 0, imageWidth, imageHeight);
 
         if (menu.isSmelting()) {
-            graphics.blit(middleX + 86, middleY + 34, 176, 25, menu.getScaledProgress(), 36);
-            graphics.blit(middleX + 66, middleY + 53, 176, 0, 14, 14);
+            graphics.blit(BACKGROUND, middleX + 84, middleY + 34, 176, 25, menu.getScaledProgress(), 36);
+            graphics.blit(BACKGROUND, middleX + 66, middleY + 53, 176, 0, 14, 14);
         }
     }
 

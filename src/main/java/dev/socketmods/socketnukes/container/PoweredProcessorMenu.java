@@ -11,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * The abstract Menu used for Powered Recipe Machines that take RF and process a single item into a single output.
@@ -35,11 +36,11 @@ public abstract class PoweredProcessorMenu<T extends PoweredRecipeMachine<?>> ex
 
     protected final int TE_INVENTORY_SLOT_COUNT = 3;
 
-    public PoweredProcessorMenu(int windowID, Inventory inv, T blockEntity, ContainerData data, MenuType<?> type) {
+    public PoweredProcessorMenu(int windowID, Inventory inv, T blockEntity, @Nullable ContainerData data, MenuType<?> type) {
         super(type, windowID);
         this.blockEntity = blockEntity;
         this.level = inv.player.level();
-        this.data = data;
+        this.data = data == null ? blockEntity.data : data;
 
         addPlayerInventory(inv);
         addPlayerHotbar(inv);

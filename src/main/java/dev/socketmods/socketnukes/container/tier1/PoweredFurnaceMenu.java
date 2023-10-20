@@ -10,17 +10,18 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.SlotItemHandler;
 
+import javax.annotation.Nullable;
+
 public class PoweredFurnaceMenu extends PoweredProcessorMenu<PoweredFurnaceBlockEntity> {
-    public PoweredFurnaceMenu(int windowID, Inventory inv, PoweredFurnaceBlockEntity blockEntity, ContainerData data) {
+    public PoweredFurnaceMenu(int windowID, Inventory inv, PoweredFurnaceBlockEntity blockEntity, @Nullable ContainerData data) {
         super(windowID, inv, blockEntity, data, SNRegistry.POWERED_FURNACE_MENU.get());
     }
 
     public PoweredFurnaceMenu(int windowID, Inventory inv, FriendlyByteBuf buf) {
-        this(windowID, inv, (PoweredFurnaceBlockEntity) inv.player.level().getBlockEntity(buf.readBlockPos()), new SimpleContainerData(2));
+        this(windowID, inv, (PoweredFurnaceBlockEntity) inv.player.level().getBlockEntity(buf.readBlockPos()), null);
     }
 
     @Override
