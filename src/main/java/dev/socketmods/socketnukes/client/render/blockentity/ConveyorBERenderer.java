@@ -35,7 +35,7 @@ public class ConveyorBERenderer implements BlockEntityRenderer<ConveyorBlockEnti
             pPoseStack.translate(1f, 0.9f, 1f);
         } else {
             pPoseStack.scale(1f, 1f, 1f);
-            pPoseStack.translate(facing == Direction.EAST ? 0.5f : facing == Direction.SOUTH ? 0f : 1f, 0.9f, facing == Direction.NORTH ? 0.5f : facing == Direction.WEST ? 0f : 1f);
+            pPoseStack.translate(facing == Direction.EAST ? 0.5f : facing == Direction.SOUTH ? 0f : 1f, 0.5f, facing == Direction.NORTH ? 0.5f : facing == Direction.WEST ? 0f : 1f);
         }
 
         pPoseStack.mulPose(Axis.XP.rotationDegrees(90));
