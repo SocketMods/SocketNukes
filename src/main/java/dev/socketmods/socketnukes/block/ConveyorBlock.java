@@ -42,22 +42,13 @@ public class ConveyorBlock extends Block implements EntityBlock {
         
         Half half = null;
         for (Direction a : Direction.values()) {
+            if (a == facing) continue;
+
             BlockState state = pContext.getLevel().getBlockState(blockpos.relative(a));
             if (state.getBlock() instanceof ConveyorBlock) {
-                // we mustn't match the conveyor against the one "ahead" of it, so we need to duplicate these branches but exclude the switch case from the facing checks.
                 switch (a) {
-                    case NORTH -> {
+                    case NORTH, EAST -> {
                         if (facing == Direction.SOUTH || facing == Direction.EAST) {
-                            half = Half.RIGHT;
-                            state.setValue(HALF, Half.LEFT);
-                        } else if(facing == Direction.WEST) {
-                            half = Half.LEFT;
-                            state.setValue(HALF, Half.RIGHT);
-                        }
-                    }
-
-                    case EAST -> {
-                        if (facing == Direction.SOUTH) {
                             half = Half.RIGHT;
                             state.setValue(HALF, Half.LEFT);
                         } else if(facing == Direction.NORTH || facing == Direction.WEST) {
@@ -66,23 +57,13 @@ public class ConveyorBlock extends Block implements EntityBlock {
                         }
                     }
 
-                    case SOUTH -> {
-                        if (facing == Direction.EAST) {
+                    case SOUTH, WEST -> {
+                        if (facing == Direction.SOUTH || facing == Direction.EAST) {
                             half = Half.LEFT;
                             state.setValue(HALF, Half.RIGHT);
                         } else if(facing == Direction.NORTH || facing == Direction.WEST) {
                             half = Half.RIGHT;
                             state.setValue(HALF, Half.LEFT);
-                        }
-                    }
-
-                    case WEST -> {
-                        if (facing == Direction.SOUTH || facing == Direction.EAST) {
-                            half = Half.RIGHT;
-                            state.setValue(HALF, Half.LEFT);
-                        } else if(facing == Direction.NORTH) {
-                            half = Half.LEFT;
-                            state.setValue(HALF, Half.RIGHT);
                         }
                     }
                 }
