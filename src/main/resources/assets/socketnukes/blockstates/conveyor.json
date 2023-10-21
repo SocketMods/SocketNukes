@@ -1,7 +1,48 @@
 {
   "variants": {
-    "": {
+    "facing=east,conveyor_half=lone": {
+      "model": "socketnukes:block/conveyor",
+      "y": 90
+    },
+    "facing=west,conveyor_half=lone": {
+      "model": "socketnukes:block/conveyor",
+      "y": 90
+    },
+    "facing=north,conveyor_half=lone": {
       "model": "socketnukes:block/conveyor"
+    },
+    "facing=south,conveyor_half=lone": {
+      "model": "socketnukes:block/conveyor"
+    },
+    "facing=east,conveyor_half=left": {
+      "model": "socketnukes:block/conveyor-left",
+      "y": 90
+    },
+    "facing=west,conveyor_half=left": {
+      "model": "socketnukes:block/conveyor-left",
+      "y": 270
+    },
+    "facing=north,conveyor_half=left": {
+      "model": "socketnukes:block/conveyor-left"
+    },
+    "facing=south,conveyor_half=left": {
+      "model": "socketnukes:block/conveyor-left",
+      "y": 180
+    },
+    "facing=east,conveyor_half=right": {
+      "model": "socketnukes:block/conveyor-right",
+      "y": 90
+    },
+    "facing=west,conveyor_half=right": {
+      "model": "socketnukes:block/conveyor-right",
+      "y": 270
+    },
+    "facing=north,conveyor_half=right": {
+      "model": "socketnukes:block/conveyor-right"
+    },
+    "facing=south,conveyor_half=right": {
+      "model": "socketnukes:block/conveyor-right",
+      "y": 180
     }
   }
 }
